@@ -12,7 +12,7 @@ import {
 } from '@openimis/fe-core';
 import PaymentPointFilter from './PaymentPointFilter';
 import {
-  DEFAULT_PAGE_SIZE, MODULE_NAME, RIGHT_PAYMENT_POINT_SEARCH, ROWS_PER_PAGE_OPTIONS,
+  DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYMENT_POINT_ROUTE, RIGHT_PAYMENT_POINT_SEARCH, ROWS_PER_PAGE_OPTIONS,
 } from '../../constants';
 
 function PaymentPointSearcher({
@@ -44,7 +44,7 @@ function PaymentPointSearcher({
   const rowIdentifier = (paymentPoint) => paymentPoint.id;
 
   const openPaymentPoint = (paymentPoint) => rights.includes(RIGHT_PAYMENT_POINT_SEARCH) && history.push(
-    `/${modulesManager.getRef('payroll.route.paymentPoint')}/${paymentPoint?.id}`,
+    `/${modulesManager.getRef(PAYROLL_PAYMENT_POINT_ROUTE)}/${paymentPoint?.id}`,
   );
 
   const itemFormatters = () => [

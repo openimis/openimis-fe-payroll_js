@@ -1,11 +1,12 @@
 import React from 'react';
 import _debounce from 'lodash/debounce';
 
-import { Grid } from '@material-ui/core';
+import { FormControlLabel, Grid, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 import {
   TextInput,
+  ControlledField,
   useModulesManager,
   useTranslations,
 } from '@openimis/fe-core';
@@ -75,6 +76,30 @@ function PaymentPointFilter({
           onChange={onChangeStringFilter('location', CONTAINS_LOOKUP)}
         />
       </Grid>
+      <ControlledField
+        module="payroll"
+        id="paymentPointFilter.showHistory"
+        field={(
+          <Grid item xs={12} className={classes.item}>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  checked={filters?.showHistory?.value}
+                  onChange={() => onChangeFilters([
+                    {
+                      id: 'showHistory',
+                      value: !filters?.showHistory?.value,
+                      filter: `showHistory: ${!filters?.showHistory?.value}`,
+                    },
+                  ])}
+                />
+                )}
+              label={formatMessage('tooltip.showHistory')}
+            />
+          </Grid>
+          )}
+      />
     </Grid>
   );
 }

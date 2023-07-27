@@ -4,6 +4,8 @@
     "payroll.paymentPoint.code": "Code",
     "payroll.paymentPoint.location": "Location",
     "payroll.tooltip.viewDetails": "View details",
-    "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found"
+    "payroll.createButton.tooltip": "Create",
+    "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",
+    "payroll.tooltip.showHistory": "Show history"
 
 }
