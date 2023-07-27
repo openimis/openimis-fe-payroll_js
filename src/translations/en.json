@@ -1,7 +1,7 @@
 {
     "payroll.paymentPoint.page.title": "Payment Points",
     "payroll.paymentPoint.route": "Payment Points",
-    "payroll.paymentPoint.code": "Code",
+    "payroll.paymentPoint.name": "Name",
     "payroll.paymentPoint.location": "Location",
     "payroll.tooltip.viewDetails": "View details",
     "payroll.createButton.tooltip": "Create",
