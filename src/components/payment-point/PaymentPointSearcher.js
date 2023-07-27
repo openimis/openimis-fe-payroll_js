@@ -29,13 +29,13 @@ function PaymentPointSearcher({
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
   const headers = () => [
-    'paymentPoint.code',
+    'paymentPoint.name',
     'paymentPoint.location',
     'emptyLabel',
   ];
 
   const sorts = () => [
-    ['code', true],
+    ['name', true],
     ['location', true],
   ];
 

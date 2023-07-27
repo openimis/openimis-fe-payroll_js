@@ -9,6 +9,7 @@ import {
   ControlledField,
   useModulesManager,
   useTranslations,
+  PublishedComponent,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -60,20 +61,27 @@ function PaymentPointFilter({
 
   return (
     <Grid container className={classes.form}>
-      <Grid item xs={2} className={classes.item}>
+      <ControlledField
+        module="payroll"
+        id="PaymentPointFilter.location"
+        field={(
+          <Grid item xs={12}>
+            <PublishedComponent
+              pubRef="location.DetailedLocationFilter"
+              withNull
+              filters={filters}
+              onChangeFilters={onChangeFilters}
+              anchor="parentLocation"
+            />
+          </Grid>
+          )}
+      />
+      <Grid item xs={3} className={classes.item}>
         <TextInput
           module="payroll"
-          label={formatMessage('paymentPoint.code')}
-          value={filterTextFieldValue('code')}
-          onChange={onChangeStringFilter('code', CONTAINS_LOOKUP)}
-        />
-      </Grid>
-      <Grid item xs={2} className={classes.item}>
-        <TextInput
-          module="payroll"
-          label={formatMessage('paymentPoint.location')}
-          value={filterTextFieldValue('location')}
-          onChange={onChangeStringFilter('location', CONTAINS_LOOKUP)}
+          label={formatMessage('paymentPoint.name')}
+          value={filterTextFieldValue('name')}
+          onChange={onChangeStringFilter('name', CONTAINS_LOOKUP)}
         />
       </Grid>
       <ControlledField
