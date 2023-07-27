@@ -15,6 +15,13 @@ const PAYMENT_POINT_PROJECTION = [
   'location',
 ];
 
+const PAYROLL_PROJECTION = [
+  'id',
+  'name',
+  'benefitPlan',
+  'paymentPlan'
+];
+
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
@@ -22,6 +29,16 @@ const formatPaymentPointGQL = (paymentPoint) => {
   ${paymentPoint?.location ? `location: ${paymentPoint.location}` : ''}
   `;
   return paymentPointGQL;
+};
+
+const formatPayrollGQL = (payroll) => {
+  const payrollGQL = `
+  ${payroll?.id ? `id: "${payroll.id}"` : ''}
+  ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
+  ${payroll?.benefitPlan ? `benefitPlan: ${payroll.benefitPlan}` : ''}
+  ${payroll?.paymentPlan ? `paymentPlan: ${payroll.paymentPlan}` : ''}
+  `;
+  return payrollGQL;
 };
 
 const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLabel) => {
@@ -68,6 +85,30 @@ export function updatePaymentPoint(paymentPoint, clientMutationLabel) {
     MUTATION_SERVICE.PAYMENT_POINT.UPDATE,
     formatPaymentPointGQL(paymentPoint),
     ACTION_TYPE.UPDATE_PAYMENT_POINT,
+    clientMutationLabel,
+  );
+}
+
+export function fetchPayrolls(modulesManager, params) {
+  const payload = formatPageQueryWithCount('payrolls', params, PAYROLL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.SEARCH_PAYROLLS);
+}
+
+export function deletePayrolls(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${decodeId(payroll?.id)}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.DELETE,
+    payrollUuids,
+    ACTION_TYPE.DELETE_PAYROLL,
+    clientMutationLabel,
+  );
+}
+
+export function createPayroll(payroll, clientMutationLabel) {
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.CREATE,
+    formatPayrollGQL(payroll),
+    ACTION_TYPE.CREATE_PAYROLL,
     clientMutationLabel,
   );
 }

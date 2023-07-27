@@ -6,6 +6,12 @@
     "payroll.tooltip.viewDetails": "View details",
     "payroll.createButton.tooltip": "Create",
     "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",
-    "payroll.tooltip.showHistory": "Show history"
-
+    "payroll.tooltip.showHistory": "Show history",
+    "payroll.payroll.page.title": "Payrolls",
+    "payroll.payroll.route": "Payrolls",
+    "payroll.payroll.name": "Name",
+    "payroll.payroll.paymentPlan": "Payment Plan",
+    "payroll.payroll.benefitPlan": "Benefit Plan",
+    "payroll.payroll.customFilter": "Custom Filter",
+    "payroll.payrollSearcher.results": "{totalCount} Payrolls Found"
 }
