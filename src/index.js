@@ -9,8 +9,8 @@ import { FormattedMessage } from '@openimis/fe-core';
 import { RIGHT_PAYMENT_POINT_SEARCH } from './constants';
 import reducer from './reducer';
 import messages_en from './translations/en.json';
-import PaymentPointPage from './pages/PaymentPointPage';
-import PaymentPointsPage from './pages/PaymentPointsPage';
+import PaymentPointPage from './pages/payment-point/PaymentPointPage';
+import PaymentPointsPage from './pages/payment-point/PaymentPointsPage';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';

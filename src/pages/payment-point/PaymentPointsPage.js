@@ -17,8 +17,8 @@ import {
   PAYROLL_PAYMENT_POINT_ROUTE,
   RIGHT_PAYMENT_POINT_CREATE,
   RIGHT_PAYMENT_POINT_SEARCH,
-} from '../constants';
-import PaymentPointSearcher from '../components/payment-point/PaymentPointSearcher';
+} from '../../constants';
+import PaymentPointSearcher from '../../components/payment-point/PaymentPointSearcher';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
