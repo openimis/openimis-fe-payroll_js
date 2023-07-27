@@ -11,14 +11,14 @@ import { ERROR, REQUEST, SUCCESS } from './utils/action-type';
 
 const PAYMENT_POINT_PROJECTION = [
   'id',
-  'code',
+  'name',
   'location',
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
-  ${paymentPoint?.code ? `code: "${formatGQLString(paymentPoint.code)}"` : ''}
+  ${paymentPoint?.code ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
   ${paymentPoint?.location ? `location: ${paymentPoint.location}` : ''}
   `;
   return paymentPointGQL;
