@@ -14,11 +14,13 @@ import {
   clearConfirm,
   journalize,
 } from '@openimis/fe-core';
+import { createPaymentPoint, deletePaymentPoint, updatePaymentPoint } from '../../actions';
 import {
   MODULE_NAME,
   RIGHT_PAYMENT_POINT_UPDATE,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
+import { mutationLabel, pageTitle } from '../../utils/string-utils';
 import PaymentPointHeadPanel from './PaymentPointHeadPanel';
 
 const useStyles = makeStyles((theme) => ({
@@ -74,27 +76,39 @@ function PaymentPointPage({
   // TODO: To be finished after BE
   // useEffect(() => () => clearBenefitPlan(), []);
 
-  const titleParams = (paymentPoint) => ({
-    name: paymentPoint?.name,
-  });
-
   const mandatoryFieldsEmpty = () => {
     if (editedPaymentPoint?.name) return false;
+    if (editedPaymentPoint?.locations) return false;
     return true;
   };
 
-  const canSave = !mandatoryFieldsEmpty();
+  const canSave = () => !mandatoryFieldsEmpty();
 
   // TODO: Implement when mutation will be ready
-  const handleSave = () => {};
+  const handleSave = () => {
+    if (paymentPoint?.id) {
+      updatePaymentPoint(
+        editedPaymentPoint,
+        formatMessageWithValues('paymentPoint.mutation.updateLabel', mutationLabel(paymentPoint)),
+      );
+    } else {
+      createPaymentPoint(
+        editedPaymentPoint,
+        formatMessageWithValues('paymentPoint.mutation.create', mutationLabel(paymentPoint)),
+      );
+    }
+  };
 
   // TODO: Implement when mutation will be ready
-  const deletePaymentPointCallback = () => {};
+  const deletePaymentPointCallback = () => deletePaymentPoint(
+    paymentPoint,
+    formatMessageWithValues('paymentPoint.mutation.deleteLabel', mutationLabel(paymentPoint)),
+  );
 
   const openDeletePaymentPointConfirmDialog = () => {
     setConfirmedAction(() => deletePaymentPointCallback);
     coreConfirm(
-      formatMessageWithValues('paymentPoint.delete.confirm.title', titleParams(paymentPoint)),
+      formatMessageWithValues('paymentPoint.delete.confirm.title', pageTitle(paymentPoint)),
       formatMessage('paymentPoint.delete.confirm.message'),
     );
   };
@@ -112,8 +126,8 @@ function PaymentPointPage({
     <div className={classes.page}>
       <Form
         module="payroll"
-        title={formatMessageWithValues('PaymentPointPage.title', titleParams(paymentPoint))}
-        titleParams={titleParams(paymentPoint)}
+        title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
+        titleParams={pageTitle(paymentPoint)}
         openDirty
         benefitPlan={editedPaymentPoint}
         edited={editedPaymentPoint}
@@ -146,10 +160,7 @@ const mapStateToProps = (state, props) => ({
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
-  fetchingPaymentPoint: state.payroll.fetchingPaymentPoint,
-  fetchedPaymentPoint: state.payroll.fetchedPaymentPoint,
   paymentPoint: state.payroll.paymentPoint,
-  errorPaymentPoint: state.payroll.errorPaymentPoint,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentPointPage);

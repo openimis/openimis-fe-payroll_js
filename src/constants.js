@@ -12,4 +12,8 @@ export const CONTAINS_LOOKUP = 'Icontains';
 export const ROWS_PER_PAGE_OPTIONS = [10, 20, 50, 100];
 export const EMPTY_STRING = '';
 
+export const MAX_LENGTH = {
+  NAME: 50,
+};
+
 export const MODULE_NAME = 'payroll';

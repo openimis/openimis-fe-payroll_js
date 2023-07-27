@@ -3,9 +3,13 @@
     "payroll.paymentPoint.route": "Payment Points",
     "payroll.paymentPoint.name": "Name",
     "payroll.paymentPoint.location": "Location",
+    "payroll.paymentPoint.mutation.createLabel": "Create Payment Point {id}",
+    "payroll.paymentPoint.mutation.deleteLabel": "Delete Payment Point {id}",
+    "payroll.paymentPoint.mutation.updateLabel": "Update Payment Point {id}",
     "payroll.tooltip.viewDetails": "View details",
-    "payroll.createButton.tooltip": "Create",
+    "payroll.tooltip.createButton": "Create",
+    "payroll.tooltip.showHistory": "Show history",
     "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",
-    "payroll.tooltip.showHistory": "Show history"
-
+    "payroll.paymentPoint.delete.confirm.title": "Delete Payment Point {name}",
+    "payroll.paymentPoint.delete.confirm.message": "Are you sure you want to delete the Payment Point? This will result in permanent, irreversible changes."
 }
