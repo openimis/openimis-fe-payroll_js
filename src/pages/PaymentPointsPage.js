@@ -8,12 +8,11 @@ import {
   useModulesManager,
   useTranslations,
 } from '@openimis/fe-core';
-import PaymentPointSearcher from '../components/payment-point/PaymentPointSearcher';
-
 import {
   MODULE_NAME,
   RIGHT_PAYMENT_POINT_SEARCH,
 } from '../constants';
+import PaymentPointSearcher from '../components/payment-point/PaymentPointSearcher';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
