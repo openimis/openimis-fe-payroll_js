@@ -86,24 +86,24 @@ function PaymentPointFilter({
       </Grid>
       <ControlledField
         module="payroll"
-        id="paymentPointFilter.showHistory"
+        id="paymentPointFilter.isDeleted"
         field={(
           <Grid item xs={12} className={classes.item}>
             <FormControlLabel
               control={(
                 <Checkbox
                   color="primary"
-                  checked={filters?.showHistory?.value}
+                  checked={filters?.isDeleted?.value}
                   onChange={() => onChangeFilters([
                     {
-                      id: 'showHistory',
-                      value: !filters?.showHistory?.value,
-                      filter: `showHistory: ${!filters?.showHistory?.value}`,
+                      id: 'isDeleted',
+                      value: !filters?.isDeleted?.value,
+                      filter: `isDeleted: ${!filters?.isDeleted?.value}`,
                     },
                   ])}
                 />
                 )}
-              label={formatMessage('tooltip.showHistory')}
+              label={formatMessage('tooltip.isDeleted')}
             />
           </Grid>
           )}
