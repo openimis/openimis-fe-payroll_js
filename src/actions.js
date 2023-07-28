@@ -11,10 +11,10 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 
-const PAYMENT_POINT_PROJECTION = [
+const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
   'name',
-  'location',
+  `location ${modulesManager.getProjection('location.Location.FlatProjection')}`,
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
@@ -42,7 +42,7 @@ const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLab
 };
 
 export function fetchPaymentPoints(modulesManager, params) {
-  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_POINTS);
 }
 

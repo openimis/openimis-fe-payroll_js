@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
 import { connect, useSelector } from 'react-redux';
 
 import { IconButton, Tooltip } from '@material-ui/core';
@@ -10,12 +11,14 @@ import {
   useModulesManager,
   useTranslations,
 } from '@openimis/fe-core';
-import PaymentPointFilter from './PaymentPointFilter';
+import { fetchPaymentPoints } from '../../actions';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYMENT_POINT_ROUTE, RIGHT_PAYMENT_POINT_SEARCH, ROWS_PER_PAGE_OPTIONS,
 } from '../../constants';
+import PaymentPointFilter from './PaymentPointFilter';
 
 function PaymentPointSearcher({
+  fetchPaymentPoints,
   fetchingPaymentPoints,
   fetchedPaymentPoints,
   errorPaymentPoints,
@@ -39,7 +42,7 @@ function PaymentPointSearcher({
     ['location', true],
   ];
 
-  const fetch = () => {};
+  const fetch = (params) => fetchPaymentPoints(modulesManager, params);
 
   const rowIdentifier = (paymentPoint) => paymentPoint.id;
 
@@ -67,6 +70,13 @@ function PaymentPointSearcher({
     <PaymentPointFilter filters={filters} onChangeFilters={onChangeFilters} />
   );
 
+  const defaultFilters = () => ({
+    isDeleted: {
+      value: false,
+      filter: 'isDeleted: false',
+    },
+  });
+
   return (
     <Searcher
       module="payroll"
@@ -85,6 +95,7 @@ function PaymentPointSearcher({
       defaultPageSize={DEFAULT_PAGE_SIZE}
       rowIdentifier={rowIdentifier}
       onDoubleClick={onDoubleClick}
+      defaultFilters={defaultFilters()}
     />
   );
 }
@@ -98,4 +109,6 @@ const mapStateToProps = (state) => ({
   totalCount: state.payroll.paymentPointsTotalCount,
 });
 
-export default connect(mapStateToProps, null)(PaymentPointSearcher);
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchPaymentPoints }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentPointSearcher);
