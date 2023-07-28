@@ -10,7 +10,9 @@ import {
   parseData,
   decodeId,
 } from '@openimis/fe-core';
-import { ERROR, REQUEST, SUCCESS } from './utils/action-type';
+import {
+  CLEAR, ERROR, REQUEST, SUCCESS,
+} from './utils/action-type';
 
 export const ACTION_TYPE = {
   MUTATION: 'PAYROLL_MUTATION',
@@ -21,6 +23,7 @@ export const ACTION_TYPE = {
   CREATE_PAYROLL: 'PAYROLL_MUTATION_CREATE_PAYROLL',
   DELETE_PAYROLL: 'PAYROLL_MUTATION_DELETE_PAYROLL',
   SEARCH_PAYROLLS: 'PAYROLL_PAYROLLS',
+  GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
 };
 
 export const MUTATION_SERVICE = {
@@ -46,7 +49,7 @@ const STORE_STATE = {
   paymentPointsTotalCount: 0,
   fetchingPaymentPoint: false,
   fetchedPaymentPoint: false,
-  paymentPoint: null,
+  paymentPoint: {},
   errorPaymentPoint: null,
 
   fetchingPayrolls: false,
@@ -124,6 +127,39 @@ function reducer(
         fetchingPayrolls: false,
         errorPayrolls: formatServerError(action.payload),
       };  
+    case REQUEST(ACTION_TYPE.GET_PAYMENT_POINT):
+      return {
+        ...state,
+        fetchingPaymentPoint: true,
+        fetchedPaymentPoint: false,
+        paymentPoint: [],
+        errorPaymentPoint: null,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYMENT_POINT):
+      return {
+        ...state,
+        fetchingPaymentPoint: false,
+        fetchedPaymentPoint: true,
+        paymentPoint: parseData(action.payload.data.paymentPoints)?.map((paymentPoint) => ({
+          ...paymentPoint,
+          id: decodeId(paymentPoint.id),
+        }))?.[0],
+        errorPaymentPoint: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_PAYMENT_POINT):
+      return {
+        ...state,
+        fetchingPaymentPoint: false,
+        errorPaymentPoint: formatServerError(action.payload),
+      };
+    case CLEAR(ACTION_TYPE.GET_PAYMENT_POINT):
+      return {
+        ...state,
+        fetchingPaymentPoint: false,
+        fetchedPaymentPoint: false,
+        paymentPoint: {},
+        errorPaymentPoint: null,
+      };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
     case ERROR(ACTION_TYPE.MUTATION):

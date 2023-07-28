@@ -33,6 +33,7 @@ const DEFAULT_CONFIG = {
     { path: `${ROUTE_PAYMENT_POINT}/:payment_cycle_uuid?`, component: PaymentPointPage },
     { path: ROUTE_PAYROLLS, component: PayrollsPage },
     { path: `${ROUTE_PAYROLL}/:payroll_uuid?`, component: PayrollPage },
+    { path: `${ROUTE_PAYMENT_POINT}/:payment_point_uuid?`, component: PaymentPointPage },
   ],
   'invoice.MainMenu': [
     {
