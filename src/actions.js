@@ -7,7 +7,9 @@ import {
 } from '@openimis/fe-core';
 
 import { ACTION_TYPE, MUTATION_SERVICE } from './reducer';
-import { ERROR, REQUEST, SUCCESS } from './utils/action-type';
+import {
+  CLEAR, ERROR, REQUEST, SUCCESS,
+} from './utils/action-type';
 
 const PAYMENT_POINT_PROJECTION = [
   'id',
@@ -43,6 +45,17 @@ export function fetchPaymentPoints(modulesManager, params) {
   const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
   return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_POINTS);
 }
+
+export function fetchPaymentPoint(modulesManager, params) {
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
+  return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
+}
+
+export const clearPaymentPoint = () => (dispatch) => {
+  dispatch({
+    type: CLEAR(ACTION_TYPE.GET_PAYMENT_POINT),
+  });
+};
 
 export function deletePaymentPoint(paymentPoint, clientMutationLabel) {
   const paymentPointUuids = `ids: ["${decodeId(paymentPoint?.id)}"]`;

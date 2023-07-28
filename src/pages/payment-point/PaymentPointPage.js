@@ -14,7 +14,12 @@ import {
   clearConfirm,
   journalize,
 } from '@openimis/fe-core';
-import { createPaymentPoint, deletePaymentPoint, updatePaymentPoint } from '../../actions';
+import {
+  // clearPaymentPoint,
+  createPaymentPoint,
+  deletePaymentPoint,
+  updatePaymentPoint,
+} from '../../actions';
 import {
   MODULE_NAME,
   RIGHT_PAYMENT_POINT_UPDATE,
@@ -74,7 +79,7 @@ function PaymentPointPage({
   useEffect(() => setEditedPaymentPoint(paymentPoint), [paymentPoint]);
 
   // TODO: To be finished after BE
-  // useEffect(() => () => clearBenefitPlan(), []);
+  // useEffect(() => () => clearPaymentPoint(), []);
 
   const mandatoryFieldsEmpty = () => {
     if (editedPaymentPoint?.name) return false;
@@ -140,7 +145,6 @@ function PaymentPointPage({
         rights={rights}
         actions={actions}
         setConfirmedAction={setConfirmedAction}
-        // readOnly={!!benefitPlanUuid}
         saveTooltip={formatMessage('tooltip.save')}
       />
     </div>
