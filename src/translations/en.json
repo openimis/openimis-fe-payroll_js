@@ -18,5 +18,9 @@
     "payroll.payroll.customFilter": "Custom Filter",
     "payroll.payrollSearcher.results": "{totalCount} Payrolls Found",
     "payroll.paymentPoint.delete.confirm.title": "Delete Payment Point {name}",
-    "payroll.paymentPoint.delete.confirm.message": "Are you sure you want to delete the Payment Point? This will result in permanent, irreversible changes."
+    "payroll.paymentPoint.delete.confirm.message": "Are you sure you want to delete the Payment Point? This will result in permanent, irreversible changes.",
+     
+    "payroll.payroll.delete.confirm.title": "Delete Payroll {name}",
+    "payroll.payroll.delete.confirm.message": "Are you sure you want to delete the Payroll? This will result in permanent, irreversible changes.",
+    "payroll.payrollPage.title": "Payroll"
 }

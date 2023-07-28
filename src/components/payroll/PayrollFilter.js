@@ -9,6 +9,7 @@ import {
   ControlledField,
   useModulesManager,
   useTranslations,
+  PublishedComponent,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -60,7 +61,7 @@ function PayrollFilter({
 
   return (
     <Grid container className={classes.form}>
-      <Grid item xs={2} className={classes.item}>
+      <Grid item xs={3} className={classes.item}>
         <TextInput
           module="payroll"
           label={formatMessage('payroll.name')}
@@ -68,22 +69,36 @@ function PayrollFilter({
           onChange={onChangeStringFilter('name', CONTAINS_LOOKUP)}
         />
       </Grid>
-      <Grid item xs={2} className={classes.item}>
-        <TextInput
-          module="payroll"
-          label={formatMessage('payroll.benefitPlan')}
-          value={filterTextFieldValue('benefitPlan')}
-          onChange={onChangeStringFilter('benefitPlan', CONTAINS_LOOKUP)}
-        />
-      </Grid>
-      <Grid item xs={2} className={classes.item}>
-        <TextInput
-          module="payroll"
-          label={formatMessage('payroll.paymentPlan')}
-          value={filterTextFieldValue('paymentPlan')}
-          onChange={onChangeStringFilter('paymentPlan', CONTAINS_LOOKUP)}
-        />
-      </Grid>
+      <ControlledField
+        module="payroll"
+        id="PayrollFilter.benefitPlan"
+        field={(
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="socialProtection.BenefitPlanPicker"
+              withNull
+              filters={filters}
+              onChange={onChangeStringFilter('benefitPlan')}
+              value={filterTextFieldValue('benefitPlan')}
+            />
+          </Grid>
+          )}
+      />
+      <ControlledField
+        module="payroll"
+        id="PayrollFilter.paymentPlan"
+        field={(
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="contributionPlan.PaymentPlanPicker"
+              withNull
+              filters={filters}
+              onChange={onChangeStringFilter('paymentPlan')}
+              value={filterTextFieldValue('paymentPlan')}
+            />
+          </Grid>
+          )}
+      />
       <ControlledField
         module="payroll"
         id="payrollFilter.showHistory"
