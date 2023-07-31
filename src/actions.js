@@ -20,8 +20,9 @@ const PAYMENT_POINT_PROJECTION = (modulesManager) => [
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
-  ${paymentPoint?.code ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
-  ${paymentPoint?.location ? `location: ${paymentPoint.location}` : ''}
+  ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
+  ${paymentPoint?.locations ? `locationId: ${decodeId(paymentPoint.locations.id)}` : ''}
+  ${paymentPoint?.manager ? `ppmId: ${decodeId(paymentPoint.manager.iUser.id)}` : ''}
   `;
   return paymentPointGQL;
 };
