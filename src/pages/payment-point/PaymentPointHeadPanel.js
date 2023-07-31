@@ -37,6 +37,16 @@ class PaymentPointHeadPanel extends FormPanel {
           />
         </Grid>
         <Grid xs={3} className={classes.item}>
+          <PublishedComponent
+            pubRef="admin.PaymentPointManagerPicker"
+            required
+            withPlaceholder
+            withLabel
+            value={paymentPoint?.manager}
+            onChange={(ppm) => this.updateAttribute('manager', ppm)}
+          />
+        </Grid>
+        <Grid xs={3} className={classes.item}>
           <TextInput
             module="payroll"
             label="paymentPoint.name"

@@ -15,7 +15,7 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import {
-  // clearPaymentPoint,
+  clearPaymentPoint,
   createPaymentPoint,
   deletePaymentPoint,
   updatePaymentPoint,
@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PaymentPointPage({
+  clearPaymentPoint,
+  createPaymentPoint,
+  deletePaymentPoint,
+  updatePaymentPoint,
   paymentPointUuid,
   rights,
   confirmed,
@@ -79,11 +83,10 @@ function PaymentPointPage({
   useEffect(() => setEditedPaymentPoint(paymentPoint), [paymentPoint]);
 
   // TODO: To be finished after BE
-  // useEffect(() => () => clearPaymentPoint(), []);
+  useEffect(() => () => clearPaymentPoint(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPaymentPoint?.name) return false;
-    if (editedPaymentPoint?.locations) return false;
+    if (editedPaymentPoint?.name && editedPaymentPoint?.locations) return false;
     return true;
   };
 
@@ -99,7 +102,7 @@ function PaymentPointPage({
     } else {
       createPaymentPoint(
         editedPaymentPoint,
-        formatMessageWithValues('paymentPoint.mutation.create', mutationLabel(paymentPoint)),
+        formatMessageWithValues('paymentPoint.mutation.createLabel', mutationLabel(paymentPoint)),
       );
     }
   };
@@ -119,7 +122,7 @@ function PaymentPointPage({
   };
 
   const actions = [
-    !!paymentPoint && {
+    !!paymentPointUuid && {
       doIt: openDeletePaymentPointConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -134,7 +137,6 @@ function PaymentPointPage({
         title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
         titleParams={pageTitle(paymentPoint)}
         openDirty
-        benefitPlan={editedPaymentPoint}
         edited={editedPaymentPoint}
         onEditedChanged={setEditedPaymentPoint}
         back={back}
@@ -153,6 +155,10 @@ function PaymentPointPage({
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  clearPaymentPoint,
+  createPaymentPoint,
+  deletePaymentPoint,
+  updatePaymentPoint,
   coreConfirm,
   clearConfirm,
   journalize,
