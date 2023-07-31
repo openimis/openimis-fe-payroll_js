@@ -53,16 +53,16 @@ class PayrollHeadPanel extends FormPanel {
       />
       <ControlledField
         module="payroll"
-        id="PayrollFilter.paymentPlan"
+        id="PayrollFilter.paymentPoint"
         field={(
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
-              pubRef="contributionPlan.PaymentPlanPicker"
+              pubRef="payroll.PaymentPointPicker"
               withNull
               required
               filterLabels={false}
-              onChange={(paymentPlan) => this.updateAttribute('paymentPlan', paymentPlan)}
-              value={payroll?.paymentPlan}
+              onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
+              value={payroll?.paymentPoint}
             />
           </Grid>
           )}

@@ -13,6 +13,8 @@ import PaymentPointPage from './pages/payment-point/PaymentPointPage';
 import PaymentPointsPage from './pages/payment-point/PaymentPointsPage';
 import PayrollPage from './pages/payroll/PayrollPage';
 import PayrollsPage from './pages/payroll/PayrollsPage';
+import { PayrollBillsTabLabel, PayrollBillsTabPanel } from './pages/payroll/PayrollBillTabPanel';
+import PaymentPointPicker from './components/payment-point/PaymentPointPicker';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -27,6 +29,8 @@ const DEFAULT_CONFIG = {
     { key: 'payroll.route.paymentPoint', ref: ROUTE_PAYMENT_POINT },
     { key: 'payroll.route.payrolls', ref: ROUTE_PAYROLLS },
     { key: 'payroll.route.payroll', ref: ROUTE_PAYROLL },
+    { key: "payroll.PaymentPointPicker", ref: PaymentPointPicker },
+    { key: "payroll.PaymentPointPicker.projection", ref: ["id", "name", "location"] },
   ],
   'core.Router': [
     { path: ROUTE_PAYMENT_POINTS, component: PaymentPointsPage },
@@ -49,6 +53,8 @@ const DEFAULT_CONFIG = {
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
   ],
+  'payroll.TabPanel.label': [PayrollBillsTabLabel],
+  'payroll.TabPanel.panel': [PayrollBillsTabPanel],
 };
 
 export const PayrollModule = (cfg) => ({ ...DEFAULT_CONFIG, ...cfg });

@@ -24,6 +24,7 @@ export const ACTION_TYPE = {
   DELETE_PAYROLL: 'PAYROLL_MUTATION_DELETE_PAYROLL',
   SEARCH_PAYROLLS: 'PAYROLL_PAYROLLS',
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
+  GET_PAYROLL_BILLS: 'PAYROLL_PAYROLL_BILLS',
 };
 
 export const MUTATION_SERVICE = {
@@ -62,7 +63,16 @@ const STORE_STATE = {
   fetchedPayroll: false,
   payroll: null,
   errorPayroll: null,
+
+  fetchingPayrollBills: true,
+  fetchedPayrollBills: false,
+  payrollBills: [],
+  errorPayrollBills: null,
+  payrollBillsPageInfo: {},
+  payrollBillsTotalCount: 0,
 };
+
+const getEnumValue = (enumElement) => enumElement?.substring(ENUM_PREFIX_LENGTH);
 
 function reducer(
   state = STORE_STATE,
@@ -159,6 +169,50 @@ function reducer(
         fetchedPaymentPoint: false,
         paymentPoint: {},
         errorPaymentPoint: null,
+      };
+    case CLEAR(ACTION_TYPE.GET_PAYROLL):
+      return {
+        ...state,
+        fetchingPayroll: true,
+        fetchedPayroll: false,
+        payroll: null,
+        errorPayroll: null,
+      };
+    case REQUEST(ACTION_TYPE.GET_PAYROLL_BILLS):
+      return {
+        ...state,
+        fetchingPayrollBills: true,
+        fetchedPayrollBills: false,
+        payrollBills: [],
+        errorPayrollBills: null,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYROLL_BILLS):
+      return {
+        ...state,
+        fetchingPayrollBills: false,
+        fetchedPayrollBills: true,
+        payrollBills: parseData(action.payload.data.bill)?.map((bill) => ({
+          ...bill,
+          id: decodeId(bill.id),
+          status: getEnumValue(bill?.status),
+        })),
+        errorPayrollBills: formatGraphQLError(action.payload),
+        payrollBillsPageInfo: pageInfo(action.payload.data.bill),
+        payrollBillsTotalCount: action.payload.data.bill?.totalCount ?? 0,
+      };
+    case ERROR(ACTION_TYPE.GET_PAYROLL_BILLS):
+      return {
+        ...state,
+        fetchingPayrollBills: false,
+        errorPayrollBills: formatServerError(action.payload),
+    };
+    case CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS):
+      return {
+        ...state,
+        fetchingPayrollBills: true,
+        fetchedPayrollBills: false,
+        payrollBills: [],
+        errorPayrollBills: null,
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

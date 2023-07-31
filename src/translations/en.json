@@ -22,5 +22,23 @@
      
     "payroll.payroll.delete.confirm.title": "Delete Payroll {name}",
     "payroll.payroll.delete.confirm.message": "Are you sure you want to delete the Payroll? This will result in permanent, irreversible changes.",
-    "payroll.payrollPage.title": "Payroll"
+    "payroll.payrollPage.title": "Payroll",
+    "payroll.PayrollBillsTab.label": "Bills",
+    "payroll.tooltip.any": "Any",
+
+    "payroll.viewDetailsButton.tooltip": "Details",
+    "payroll.bills.pageTitle": "Bills",
+    "payroll.bills.searcherResultsTitle": "{billsTotalCount} Bills Found",
+    "payroll.bills.subject": "Subject",
+    "payroll.bills.thirdparty": "Sender",
+    "payroll.bills.code": "Code",
+    "payroll.bills.dateBill": "Date Bill",
+    "payroll.bills.amountTotal": "Amount Total",
+    "payroll.bills.status.label": "Status",
+    "payroll.bills.status.DRAFT": "Draft",
+    "payroll.bills.status.VALIDATED": "Validated",
+    "payroll.bills.status.PAYED": "Payed",
+    "payroll.bills.status.CANCELLED": "Cancelled",
+    "payroll.bills.status.DELETED": "Deleted",
+    "payroll.bills.status.SUSPENDED": "Suspended"
 }

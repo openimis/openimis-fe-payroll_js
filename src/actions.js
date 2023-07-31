@@ -7,6 +7,7 @@ import {
 } from '@openimis/fe-core';
 
 import { ACTION_TYPE, MUTATION_SERVICE } from './reducer';
+import { ENUM_PREFIX_LENGTH } from './constants';
 import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
@@ -23,6 +24,41 @@ const PAYROLL_PROJECTION = [
   'benefitPlan',
   'paymentPlan'
 ];
+
+const BILL_FULL_PROJECTION = [
+    'id',
+    'isDeleted',
+    'jsonExt',
+    'dateCreated',
+    'dateUpdated',
+    'dateValidFrom',
+    'dateValidTo',
+    'replacementUuid',
+    'thirdpartyType',
+    'thirdpartyTypeName',
+    'thirdpartyId',
+    'thirdparty',
+    'codeTp',
+    'code',
+    'codeExt',
+    'dateDue',
+    'datePayed',
+    'amountDiscount',
+    'amountNet',
+    'amountTotal',
+    'taxAnalysis',
+    'status',
+    'currencyTpCode',
+    'currencyCode',
+    'note',
+    'terms',
+    'paymentReference',
+    'subjectType',
+    'subjectTypeName',
+    'subjectId',
+    'subject',
+    'dateBill',
+  ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
@@ -125,3 +161,14 @@ export function createPayroll(payroll, clientMutationLabel) {
     clientMutationLabel,
   );
 }
+
+export function fetchPayrollBills(params) {
+  const payload = formatPageQueryWithCount('bill', params, BILL_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.GET_PAYROLL_BILLS);
+}
+
+export const clearPayrollBills = () => (dispatch) => {
+  dispatch({
+    type: CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS),
+  });
+};

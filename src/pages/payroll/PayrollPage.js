@@ -26,6 +26,7 @@ import {
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
 import PayrollHeadPanel from './PayrollHeadPanel';
+import PayrollTab from './PayrollTab';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
@@ -134,6 +135,7 @@ function PayrollPage({
         canSave={canSave}
         save={handleSave}
         HeadPanel={PayrollHeadPanel}
+        Panels={[PayrollTab]}
         rights={rights}
         actions={actions}
         setConfirmedAction={setConfirmedAction}

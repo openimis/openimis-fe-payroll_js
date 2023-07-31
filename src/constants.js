@@ -23,3 +23,26 @@ export const MAX_LENGTH = {
 };
 
 export const MODULE_NAME = 'payroll';
+
+export const PAYROLL_BILLS_LIST_TAB_VALUE = 'payrollBillsTab';
+
+export const PAYROLL_TABS_LABEL_CONTRIBUTION_KEY = 'payroll.TabPanel.label';
+export const PAYROLL_TABS_PANEL_CONTRIBUTION_KEY = 'payroll.TabPanel.panel';
+
+export const RIGHT_BILL_SEARCH = 156101;
+export const RIGHT_BILL_CREATE = 156102;
+export const RIGHT_BILL_UPDATE = 156103;
+export const RIGHT_BILL_DELETE = 156104;
+
+export const INVOICE_BILL_ROUTE = 'bill.route.bill';
+export const GET_SUBJECT_AND_THIRDPARTY_TYPE_PICKER_REF = 'bill.util.getSubjectAndThirdpartyTypePicker';
+export const ENUM_PREFIX_LENGTH = 2;
+
+export const STATUS = {
+  DRAFT: '0',
+  VALIDATED: '1',
+  PAYED: '2',
+  CANCELLED: '3',
+  DELETED: '4',
+  SUSPENDED: '5',
+};

@@ -86,15 +86,15 @@ function PayrollFilter({
       />
       <ControlledField
         module="payroll"
-        id="PayrollFilter.paymentPlan"
+        id="PayrollFilter.paymentPoint"
         field={(
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
-              pubRef="contributionPlan.PaymentPlanPicker"
+              pubRef="payroll.PaymentPointPicker"
               withNull
               filters={filters}
-              onChange={onChangeStringFilter('paymentPlan')}
-              value={filterTextFieldValue('paymentPlan')}
+              onChange={onChangeStringFilter('paymentPoint')}
+              value={filterTextFieldValue('paymentPoint')}
             />
           </Grid>
           )}
