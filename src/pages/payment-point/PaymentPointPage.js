@@ -31,6 +31,7 @@ import PaymentPointHeadPanel from './PaymentPointHeadPanel';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
+  lockedPage: theme.page.locked,
 }));
 
 function PaymentPointPage({
@@ -45,6 +46,8 @@ function PaymentPointPage({
   submittingMutation,
   mutation,
   paymentPoint,
+  coreConfirm,
+  clearConfirm,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -54,6 +57,7 @@ function PaymentPointPage({
   const [editedPaymentPoint, setEditedPaymentPoint] = useState({});
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
+  const pageLocked = editedPaymentPoint?.isDeleted;
 
   const back = () => history.goBack();
 
@@ -86,7 +90,11 @@ function PaymentPointPage({
   useEffect(() => () => clearPaymentPoint(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPaymentPoint?.name && editedPaymentPoint?.location && editedPaymentPoint?.ppm) return false;
+    if (
+      editedPaymentPoint?.name
+      && editedPaymentPoint?.location
+      && editedPaymentPoint?.ppm
+      && !editedPaymentPoint?.isDeleted) return false;
     return true;
   };
 
@@ -121,7 +129,7 @@ function PaymentPointPage({
   };
 
   const actions = [
-    !!paymentPointUuid && {
+    !!paymentPointUuid && !pageLocked && {
       doIt: openDeletePaymentPointConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -130,24 +138,28 @@ function PaymentPointPage({
 
   return (
     rights.includes(RIGHT_PAYMENT_POINT_UPDATE) && (
-    <div className={classes.page}>
-      <Form
-        module="payroll"
-        title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
-        titleParams={pageTitle(paymentPoint)}
-        openDirty
-        edited={editedPaymentPoint}
-        onEditedChanged={setEditedPaymentPoint}
-        back={back}
-        mandatoryFieldsEmpty={mandatoryFieldsEmpty}
-        canSave={canSave}
-        save={handleSave}
-        HeadPanel={PaymentPointHeadPanel}
-        rights={rights}
-        actions={actions}
-        setConfirmedAction={setConfirmedAction}
-        saveTooltip={formatMessage('tooltip.save')}
-      />
+    <div className={pageLocked ? classes.lockedPage : null}>
+      <div className={classes.page}>
+        <Form
+          module="payroll"
+          title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
+          titleParams={pageTitle(paymentPoint)}
+          openDirty
+          edited={editedPaymentPoint}
+          onEditedChanged={setEditedPaymentPoint}
+          back={back}
+          mandatoryFieldsEmpty={mandatoryFieldsEmpty}
+          canSave={canSave}
+          save={handleSave}
+          HeadPanel={PaymentPointHeadPanel}
+          readOnly={pageLocked}
+          rights={rights}
+          actions={actions}
+          setConfirmedAction={setConfirmedAction}
+          saveTooltip={formatMessage('tooltip.save')}
+        />
+      </div>
+
     </div>
     )
   );
