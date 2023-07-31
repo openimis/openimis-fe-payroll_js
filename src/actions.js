@@ -7,7 +7,9 @@ import {
 } from '@openimis/fe-core';
 
 import { ACTION_TYPE, MUTATION_SERVICE } from './reducer';
-import { ERROR, REQUEST, SUCCESS } from './utils/action-type';
+import {
+  CLEAR, ERROR, REQUEST, SUCCESS,
+} from './utils/action-type';
 
 const PAYMENT_POINT_MANAGER_PROJECTION = [
   'id',
@@ -24,11 +26,14 @@ const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   `ppm { ${PAYMENT_POINT_MANAGER_PROJECTION.join(' ')} }`,
 ];
 
+//   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
+
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
-  ${paymentPoint?.code ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
-  ${paymentPoint?.location ? `location: ${paymentPoint.location}` : ''}
+  ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
+  ${paymentPoint?.location ? `locationId: ${decodeId(paymentPoint.location.id)}` : ''}
+  ${paymentPoint?.ppm ? `ppmId: ${decodeId(paymentPoint.ppm.iUser.id)}` : ''}
   `;
   return paymentPointGQL;
 };
@@ -53,8 +58,19 @@ export function fetchPaymentPoints(modulesManager, params) {
   return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_POINTS);
 }
 
+export function fetchPaymentPoint(modulesManager, params) {
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
+  return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
+}
+
+export const clearPaymentPoint = () => (dispatch) => {
+  dispatch({
+    type: CLEAR(ACTION_TYPE.GET_PAYMENT_POINT),
+  });
+};
+
 export function deletePaymentPoint(paymentPoint, clientMutationLabel) {
-  const paymentPointUuids = `ids: ["${decodeId(paymentPoint?.id)}"]`;
+  const paymentPointUuids = `ids: ["${paymentPoint?.id}"]`;
   return PERFORM_MUTATION(
     MUTATION_SERVICE.PAYMENT_POINT.DELETE,
     paymentPointUuids,
