@@ -1,5 +1,6 @@
 {
     "payroll.paymentPoint.page.title": "Payment Points",
+    "payroll.PaymentPointPage.title": "Payment Point {name}",
     "payroll.paymentPoint.route": "Payment Points",
     "payroll.paymentPoint.name": "Name",
     "payroll.paymentPoint.location": "Location",
@@ -8,6 +9,8 @@
     "payroll.paymentPoint.mutation.updateLabel": "Update Payment Point {id}",
     "payroll.tooltip.viewDetails": "View details",
     "payroll.createButton.tooltip": "Create",
+    "payroll.tooltip.save": "Save",
+    "payroll.tooltip.delete": "Delete",
     "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",
     "payroll.tooltip.isDeleted": "Show history",
     "payroll.paymentPoint.delete.confirm.title": "Delete Payment Point {name}",
