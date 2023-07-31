@@ -70,7 +70,7 @@ export const clearPaymentPoint = () => (dispatch) => {
 };
 
 export function deletePaymentPoint(paymentPoint, clientMutationLabel) {
-  const paymentPointUuids = `ids: ["${decodeId(paymentPoint?.id)}"]`;
+  const paymentPointUuids = `ids: ["${paymentPoint?.id}"]`;
   return PERFORM_MUTATION(
     MUTATION_SERVICE.PAYMENT_POINT.DELETE,
     paymentPointUuids,
