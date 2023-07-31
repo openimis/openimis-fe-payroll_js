@@ -9,7 +9,7 @@
     "payroll.paymentPoint.mutation.deleteLabel": "Delete Payment Point {id}",
     "payroll.paymentPoint.mutation.updateLabel": "Update Payment Point {id}",
     "payroll.tooltip.viewDetails": "View details",
-    "payroll.createButton.tooltip": "Create",
+    "payroll.tooltip.createButton": "Create",
     "payroll.tooltip.save": "Save",
     "payroll.tooltip.delete": "Delete",
     "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",

@@ -26,12 +26,14 @@ const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   `ppm { ${PAYMENT_POINT_MANAGER_PROJECTION.join(' ')} }`,
 ];
 
+//   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
+
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
   ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
-  ${paymentPoint?.locations ? `locationId: ${decodeId(paymentPoint.locations.id)}` : ''}
-  ${paymentPoint?.manager ? `ppmId: ${decodeId(paymentPoint.manager.iUser.id)}` : ''}
+  ${paymentPoint?.location ? `locationId: ${decodeId(paymentPoint.location.id)}` : ''}
+  ${paymentPoint?.ppm ? `ppmId: ${decodeId(paymentPoint.ppm.iUser.id)}` : ''}
   `;
   return paymentPointGQL;
 };
@@ -57,7 +59,7 @@ export function fetchPaymentPoints(modulesManager, params) {
 }
 
 export function fetchPaymentPoint(modulesManager, params) {
-  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
 }
 

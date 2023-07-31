@@ -94,7 +94,7 @@ function reducer(
         ...state,
         fetchingPaymentPoint: false,
         fetchedPaymentPoint: true,
-        paymentPoint: parseData(action.payload.data.paymentPoints)?.map((paymentPoint) => ({
+        paymentPoint: parseData(action.payload.data.paymentPoint)?.map((paymentPoint) => ({
           ...paymentPoint,
           id: decodeId(paymentPoint.id),
         }))?.[0],

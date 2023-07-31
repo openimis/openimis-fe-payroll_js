@@ -32,8 +32,8 @@ class PaymentPointHeadPanel extends FormPanel {
             withNull
             required
             filterLabels={false}
-            value={paymentPoint?.locations}
-            onChange={(locations) => this.updateAttribute('locations', locations)}
+            value={paymentPoint?.location}
+            onChange={(locations) => this.updateAttribute('location', locations)}
           />
         </Grid>
         <Grid xs={3} className={classes.item}>
@@ -42,8 +42,8 @@ class PaymentPointHeadPanel extends FormPanel {
             required
             withPlaceholder
             withLabel
-            value={paymentPoint?.manager}
-            onChange={(ppm) => this.updateAttribute('manager', ppm)}
+            value={paymentPoint?.ppm}
+            onChange={(ppm) => this.updateAttribute('ppm', ppm)}
           />
         </Grid>
         <Grid xs={3} className={classes.item}>

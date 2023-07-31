@@ -53,8 +53,8 @@ function PaymentPointSearcher({
 
   const itemFormatters = () => [
     (paymentPoint) => paymentPoint.name,
-    ({ ppm }) => `${ppm.loginName} ${ppm.lastName} ${ppm.otherNames}`,
-    ({ location }) => `${location.code} ${location.name}`,
+    ({ ppm }) => `${ppm?.loginName} ${ppm?.lastName} ${ppm?.otherNames}`,
+    ({ location }) => `${location?.code} ${location?.name}`,
     (paymentPoint) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
         <IconButton

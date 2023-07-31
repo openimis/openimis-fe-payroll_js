@@ -18,6 +18,7 @@ import {
   clearPaymentPoint,
   createPaymentPoint,
   deletePaymentPoint,
+  fetchPaymentPoint,
   updatePaymentPoint,
 } from '../../actions';
 import {
@@ -38,6 +39,7 @@ function PaymentPointPage({
   deletePaymentPoint,
   updatePaymentPoint,
   paymentPointUuid,
+  fetchPaymentPoint,
   rights,
   confirmed,
   submittingMutation,
@@ -57,8 +59,7 @@ function PaymentPointPage({
 
   useEffect(() => {
     if (paymentPointUuid) {
-      // TODO: To be changed after BE implementation
-      // fetchPaymentPoint(modulesManager, [`id: "${paymentPointUuid}"`]);
+      fetchPaymentPoint(modulesManager, [`id: "${paymentPointUuid}"`]);
     }
   }, [paymentPointUuid]);
 
@@ -82,17 +83,15 @@ function PaymentPointPage({
 
   useEffect(() => setEditedPaymentPoint(paymentPoint), [paymentPoint]);
 
-  // TODO: To be finished after BE
   useEffect(() => () => clearPaymentPoint(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPaymentPoint?.name && editedPaymentPoint?.locations) return false;
+    if (editedPaymentPoint?.name && editedPaymentPoint?.location && editedPaymentPoint?.ppm) return false;
     return true;
   };
 
   const canSave = () => !mandatoryFieldsEmpty();
 
-  // TODO: Implement when mutation will be ready
   const handleSave = () => {
     if (paymentPoint?.id) {
       updatePaymentPoint(
@@ -105,9 +104,9 @@ function PaymentPointPage({
         formatMessageWithValues('paymentPoint.mutation.createLabel', mutationLabel(paymentPoint)),
       );
     }
+    back();
   };
 
-  // TODO: Implement when mutation will be ready
   const deletePaymentPointCallback = () => deletePaymentPoint(
     paymentPoint,
     formatMessageWithValues('paymentPoint.mutation.deleteLabel', mutationLabel(paymentPoint)),
@@ -159,6 +158,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   createPaymentPoint,
   deletePaymentPoint,
   updatePaymentPoint,
+  fetchPaymentPoint,
   coreConfirm,
   clearConfirm,
   journalize,
