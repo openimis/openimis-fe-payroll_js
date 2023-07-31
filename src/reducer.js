@@ -65,15 +65,15 @@ function reducer(
     case SUCCESS(ACTION_TYPE.SEARCH_PAYMENT_POINTS):
       return {
         ...state,
-        paymentPoints: parseData(action.payload.data.paymentPoints)?.map((paymentPoint) => ({
+        paymentPoints: parseData(action.payload.data.paymentPoint)?.map((paymentPoint) => ({
           ...paymentPoint,
           id: decodeId(paymentPoint.id),
         })),
         fetchingPaymentPoints: false,
         fetchedPaymentPoints: true,
         errorPaymentPoints: formatGraphQLError(action.payload),
-        paymentPointsPageInfo: pageInfo(action.payload.data.paymentPoints),
-        paymentPointsTotalCount: action.payload.data.paymentPoints?.totalCount ?? 0,
+        paymentPointsPageInfo: pageInfo(action.payload.data.paymentPoint),
+        paymentPointsTotalCount: action.payload.data.paymentPoint?.totalCount ?? 0,
       };
     case ERROR(ACTION_TYPE.SEARCH_PAYMENT_POINTS):
       return {

@@ -3,6 +3,7 @@
     "payroll.PaymentPointPage.title": "Payment Point {name}",
     "payroll.paymentPoint.route": "Payment Points",
     "payroll.paymentPoint.name": "Name",
+    "payroll.paymentPoint.manager": "Payment Point Manager",
     "payroll.paymentPoint.location": "Location",
     "payroll.paymentPoint.mutation.createLabel": "Create Payment Point {id}",
     "payroll.paymentPoint.mutation.deleteLabel": "Delete Payment Point {id}",

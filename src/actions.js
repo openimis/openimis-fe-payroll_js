@@ -11,10 +11,19 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 
+const PAYMENT_POINT_MANAGER_PROJECTION = [
+  'id',
+  'uuid',
+  'lastName',
+  'otherNames',
+  'loginName',
+];
+
 const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
   'name',
   `location ${modulesManager.getProjection('location.Location.FlatProjection')}`,
+  `ppm { ${PAYMENT_POINT_MANAGER_PROJECTION.join(' ')} }`,
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {

@@ -33,6 +33,7 @@ function PaymentPointSearcher({
 
   const headers = () => [
     'paymentPoint.name',
+    'paymentPoint.manager',
     'paymentPoint.location',
     'emptyLabel',
   ];
@@ -51,8 +52,9 @@ function PaymentPointSearcher({
   );
 
   const itemFormatters = () => [
-    (paymentPoint) => paymentPoint.code,
     (paymentPoint) => paymentPoint.name,
+    ({ ppm }) => `${ppm.loginName} ${ppm.lastName} ${ppm.otherNames}`,
+    ({ location }) => `${location.code} ${location.name}`,
     (paymentPoint) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
         <IconButton
