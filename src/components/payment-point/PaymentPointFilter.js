@@ -10,6 +10,7 @@ import {
   useModulesManager,
   useTranslations,
   PublishedComponent,
+  decodeId,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -36,6 +37,8 @@ function PaymentPointFilter({
   const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
 
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFAULT_DEBOUNCE_TIME);
+
+  const filterValue = (filterName) => filters?.[filterName]?.value ?? null;
 
   const filterTextFieldValue = (filterName) => filters?.[filterName]?.value ?? EMPTY_STRING;
 
@@ -65,7 +68,7 @@ function PaymentPointFilter({
         module="payroll"
         id="PaymentPointFilter.location"
         field={(
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <PublishedComponent
               pubRef="location.DetailedLocationFilter"
               withNull
@@ -76,7 +79,28 @@ function PaymentPointFilter({
           </Grid>
           )}
       />
-      <Grid item xs={3} className={classes.item}>
+      <ControlledField
+        module="payroll"
+        id="admin.PaymentPointManagerPicker"
+        field={(
+          <Grid className={classes.item} xs={3}>
+            <PublishedComponent
+              pubRef="admin.PaymentPointManagerPicker"
+              value={filterValue('ppm_Uuid')}
+              withPlaceholder
+              withLabel
+              onChange={(manager) => onChangeFilters([
+                {
+                  id: 'ppm_Uuid',
+                  value: manager,
+                  filter: `ppm_Uuid: "${manager?.id && decodeId(manager.id)}"`,
+                },
+              ])}
+            />
+          </Grid>
+          )}
+      />
+      <Grid xs={3} className={classes.item}>
         <TextInput
           module="payroll"
           label={formatMessage('paymentPoint.name')}
@@ -88,7 +112,7 @@ function PaymentPointFilter({
         module="payroll"
         id="paymentPointFilter.isDeleted"
         field={(
-          <Grid item xs={12} className={classes.item}>
+          <Grid xs={12} className={classes.item}>
             <FormControlLabel
               control={(
                 <Checkbox
