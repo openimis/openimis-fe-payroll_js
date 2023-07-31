@@ -10,7 +10,6 @@ import {
   useModulesManager,
   useTranslations,
   PublishedComponent,
-  decodeId,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -86,14 +85,14 @@ function PaymentPointFilter({
           <Grid className={classes.item} xs={3}>
             <PublishedComponent
               pubRef="admin.PaymentPointManagerPicker"
-              value={filterValue('ppm_Uuid')}
+              value={filterValue('ppm_Id')}
               withPlaceholder
               withLabel
               onChange={(manager) => onChangeFilters([
                 {
-                  id: 'ppm_Uuid',
+                  id: 'ppm_Id',
                   value: manager,
-                  filter: `ppm_Uuid: "${manager?.id && decodeId(manager.id)}"`,
+                  filter: `ppm_Id: "${manager?.iUser?.id}"`,
                 },
               ])}
             />
