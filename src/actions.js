@@ -75,9 +75,9 @@ const BENEFIT_PLAN_FULL_PROJECTION = () => [
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
-  `benefitPlan {${BENEFIT_PLAN_FULL_PROJECTION().join(' ')}}`,
-  `paymentPoint {${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')}}`,
-  `{bill ${BILL_FULL_PROJECTION().join(' ')}}`,
+  `benefitPlan { ${BENEFIT_PLAN_FULL_PROJECTION().join(' ')} }`,
+  `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
+  `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
