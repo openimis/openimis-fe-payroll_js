@@ -26,7 +26,7 @@ import PayrollBillFilter from './PayrollBillFilter';
 function PayrollBillSearcher({
   rights,
   payrollUuid,
-  fetchPayroll,
+  // fetchPayrollBills,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -44,7 +44,7 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  const fetch = () => fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+  // const fetch = (params) => fetchPayrollBills(params);
 
   const headers = () => {
     const headers = [
