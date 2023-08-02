@@ -10,6 +10,7 @@ import {
   useModulesManager,
   useTranslations,
   PublishedComponent,
+  decodeId,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -88,11 +89,11 @@ function PaymentPointFilter({
               value={filterValue('ppm_Id')}
               withPlaceholder
               withLabel
-              onChange={(manager) => onChangeFilters([
+              onChange={(ppm) => onChangeFilters([
                 {
                   id: 'ppm_Id',
-                  value: manager,
-                  filter: `ppm_Id: "${manager?.iUser?.id}"`,
+                  value: ppm,
+                  filter: `ppm_Id: "${ppm?.id && decodeId(ppm?.id)}"`,
                 },
               ])}
             />

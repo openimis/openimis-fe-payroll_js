@@ -11,30 +11,20 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 
-const PAYMENT_POINT_MANAGER_PROJECTION = [
-  'id',
-  'uuid',
-  'lastName',
-  'otherNames',
-  'loginName',
-];
-
 const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
   'name',
   'isDeleted',
   `location ${modulesManager.getProjection('location.Location.FlatProjection')}`,
-  `ppm { ${PAYMENT_POINT_MANAGER_PROJECTION.join(' ')} }`,
+  `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
 ];
-
-//   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
 
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
   ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
   ${paymentPoint?.location ? `locationId: ${decodeId(paymentPoint.location.id)}` : ''}
-  ${paymentPoint?.ppm ? `ppmId: ${decodeId(paymentPoint.ppm.iUser.id)}` : ''}
+  ${paymentPoint?.ppm ? `ppmId: "${decodeId(paymentPoint.ppm.id)}"` : ''}
   `;
   return paymentPointGQL;
 };
