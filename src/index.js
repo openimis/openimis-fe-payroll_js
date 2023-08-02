@@ -24,7 +24,7 @@ const DEFAULT_CONFIG = {
   ],
   'core.Router': [
     { path: ROUTE_PAYMENT_POINTS, component: PaymentPointsPage },
-    { path: `${ROUTE_PAYMENT_POINT}/:payment_cycle_uuid?`, component: PaymentPointPage },
+    { path: `${ROUTE_PAYMENT_POINT}/:payment_point_uuid?`, component: PaymentPointPage },
   ],
   'invoice.MainMenu': [
     {

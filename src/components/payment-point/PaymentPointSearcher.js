@@ -81,13 +81,14 @@ function PaymentPointSearcher({
 
   const headers = () => [
     'paymentPoint.name',
-    'paymentPoint.manager',
+    'paymentPoint.ppm',
     'paymentPoint.location',
     'emptyLabel',
   ];
 
   const sorts = () => [
     ['name', true],
+    ['ppm', true],
     ['location', true],
   ];
 
@@ -103,7 +104,7 @@ function PaymentPointSearcher({
 
   const itemFormatters = () => [
     (paymentPoint) => paymentPoint.name,
-    ({ ppm }) => `${ppm?.loginName} ${ppm?.lastName} ${ppm?.otherNames}`,
+    ({ ppm }) => `${ppm?.username} ${ppm?.iUser?.lastName} ${ppm?.iUser?.otherNames}`,
     ({ location }) => `${location?.code} ${location?.name}`,
     (paymentPoint) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
