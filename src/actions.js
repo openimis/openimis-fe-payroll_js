@@ -11,12 +11,73 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 
-const PAYMENT_POINT_PROJECTION = (modulesManager) => [
+export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
   'name',
   'isDeleted',
   `location ${modulesManager.getProjection('location.Location.FlatProjection')}`,
   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
+];
+
+const BILL_FULL_PROJECTION = () => [
+  'id',
+  'isDeleted',
+  'jsonExt',
+  'dateCreated',
+  'dateUpdated',
+  'dateValidFrom',
+  'dateValidTo',
+  'replacementUuid',
+  'thirdpartyType',
+  'thirdpartyTypeName',
+  'thirdpartyId',
+  'thirdparty',
+  'codeTp',
+  'code',
+  'codeExt',
+  'dateDue',
+  'datePayed',
+  'amountDiscount',
+  'amountNet',
+  'amountTotal',
+  'taxAnalysis',
+  'status',
+  'currencyTpCode',
+  'currencyCode',
+  'note',
+  'terms',
+  'paymentReference',
+  'subjectType',
+  'subjectTypeName',
+  'subjectId',
+  'subject',
+  'dateBill',
+];
+
+const BENEFIT_PLAN_FULL_PROJECTION = () => [
+  'id',
+  'isDeleted',
+  'dateCreated',
+  'dateUpdated',
+  'version',
+  'dateValidFrom',
+  'dateValidTo',
+  'description',
+  'replacementUuid',
+  'code',
+  'name',
+  'type',
+  'maxBeneficiaries',
+  'ceilingPerBeneficiary',
+  'jsonExt',
+];
+
+const PAYROLL_PROJECTION = (modulesManager) => [
+  'id',
+  'name',
+  `benefitPlan { ${BENEFIT_PLAN_FULL_PROJECTION().join(' ')} }`,
+  `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
+  `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
@@ -27,6 +88,16 @@ const formatPaymentPointGQL = (paymentPoint) => {
   ${paymentPoint?.ppm ? `ppmId: "${decodeId(paymentPoint.ppm.id)}"` : ''}
   `;
   return paymentPointGQL;
+};
+
+const formatPayrollGQL = (payroll) => {
+  const payrollGQL = `
+  ${payroll?.id ? `id: "${payroll.id}"` : ''}
+  ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
+  ${payroll?.benefitPlan ? `benefitPlan: ${payroll.benefitPlan}` : ''}
+  ${payroll?.paymentPlan ? `paymentPlan: ${payroll.paymentPlan}` : ''}
+  `;
+  return payrollGQL;
 };
 
 const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLabel) => {
@@ -87,3 +158,38 @@ export function updatePaymentPoint(paymentPoint, clientMutationLabel) {
     clientMutationLabel,
   );
 }
+
+export function fetchPayrolls(modulesManager, params) {
+  const payload = formatPageQueryWithCount('payroll', params, PAYROLL_PROJECTION(modulesManager));
+  return graphql(payload, ACTION_TYPE.SEARCH_PAYROLLS);
+}
+
+export function deletePayrolls(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${decodeId(payroll?.id)}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.DELETE,
+    payrollUuids,
+    ACTION_TYPE.DELETE_PAYROLL,
+    clientMutationLabel,
+  );
+}
+
+export function createPayroll(payroll, clientMutationLabel) {
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.CREATE,
+    formatPayrollGQL(payroll),
+    ACTION_TYPE.CREATE_PAYROLL,
+    clientMutationLabel,
+  );
+}
+
+export function fetchPayrollBills(params) {
+  const payload = formatPageQueryWithCount('bill', params, BILL_FULL_PROJECTION);
+  return graphql(payload, ACTION_TYPE.GET_PAYROLL_BILLS);
+}
+
+export const clearPayrollBills = () => (dispatch) => {
+  dispatch({
+    type: CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS),
+  });
+};
