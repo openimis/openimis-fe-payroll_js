@@ -128,7 +128,7 @@ function reducer(
         fetchingPayrolls: false,
         fetchedPayrolls: true,
         errorPayrolls: formatGraphQLError(action.payload),
-        payrollsPageInfo: pageInfo(action.payload.data.payrolls),
+        payrollsPageInfo: pageInfo(action.payload.data.payroll),
         payrollsTotalCount: action.payload.data.payroll?.totalCount ?? 0,
       };
     case ERROR(ACTION_TYPE.SEARCH_PAYROLLS):
@@ -150,7 +150,7 @@ function reducer(
         ...state,
         fetchingPaymentPoint: false,
         fetchedPaymentPoint: true,
-        paymentPoint: parseData(action.payload.data.paymentPoints)?.map((paymentPoint) => ({
+        paymentPoint: parseData(action.payload.data.paymentPoint)?.map((paymentPoint) => ({
           ...paymentPoint,
           id: decodeId(paymentPoint.id),
         }))?.[0],

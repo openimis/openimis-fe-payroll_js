@@ -81,11 +81,13 @@ const BILL_FULL_PROJECTION = () => [
     'jsonExt',
   ];
 
+
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
-  ${paymentPoint?.code ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
-  ${paymentPoint?.location ? `location: ${paymentPoint.location}` : ''}
+  ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
+  ${paymentPoint?.location ? `locationId: ${decodeId(paymentPoint.location.id)}` : ''}
+  ${paymentPoint?.ppm ? `ppmId: "${decodeId(paymentPoint.ppm.id)}"` : ''}
   `;
   return paymentPointGQL;
 };
@@ -116,7 +118,7 @@ const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLab
 };
 
 export function fetchPaymentPoints(modulesManager, params) {
-  const payload = formatPageQueryWithCount('paymentPoint', params, (PAYMENT_POINT_PROJECTION(modulesManager)));
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_POINTS);
 }
 
@@ -132,7 +134,7 @@ export const clearPaymentPoint = () => (dispatch) => {
 };
 
 export function deletePaymentPoint(paymentPoint, clientMutationLabel) {
-  const paymentPointUuids = `ids: ["${decodeId(paymentPoint?.id)}"]`;
+  const paymentPointUuids = `ids: ["${paymentPoint?.id}"]`;
   return PERFORM_MUTATION(
     MUTATION_SERVICE.PAYMENT_POINT.DELETE,
     paymentPointUuids,

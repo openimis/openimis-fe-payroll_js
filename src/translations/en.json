@@ -1,15 +1,20 @@
 {
     "payroll.paymentPoint.page.title": "Payment Points",
+    "payroll.PaymentPointPage.title": "Payment Point {name}",
     "payroll.paymentPoint.route": "Payment Points",
     "payroll.paymentPoint.name": "Name",
+    "payroll.paymentPoint.ppm": "Payment Point Manager",
     "payroll.paymentPoint.location": "Location",
     "payroll.paymentPoint.mutation.createLabel": "Create Payment Point {id}",
     "payroll.paymentPoint.mutation.deleteLabel": "Delete Payment Point {id}",
     "payroll.paymentPoint.mutation.updateLabel": "Update Payment Point {id}",
     "payroll.tooltip.viewDetails": "View details",
     "payroll.tooltip.createButton": "Create",
-    "payroll.tooltip.isDeleted": "Is Deleted",
+    "payroll.tooltip.isDeleted": "Show Deleted",
     "payroll.PaymentPointSearcher.results": "{totalCount} Payment Points Found",
+    "payroll.paymentPoint.delete.confirm.title": "Delete Payment Point {name}",
+    "payroll.paymentPoint.delete.confirm.message": "Are you sure you want to delete the Payment Point? This will result in permanent, irreversible changes.",
+
     "payroll.payroll.page.title": "Payrolls",
     "payroll.payroll.route": "Payrolls",
     "payroll.payroll.name": "Name",
@@ -17,9 +22,7 @@
     "payroll.payroll.benefitPlan": "Benefit Plan",
     "payroll.payroll.customFilter": "Custom Filter",
     "payroll.payrollSearcher.results": "{totalCount} Payrolls Found",
-    "payroll.paymentPoint.delete.confirm.title": "Delete Payment Point {name}",
-    "payroll.paymentPoint.delete.confirm.message": "Are you sure you want to delete the Payment Point? This will result in permanent, irreversible changes.",
-     
+    
     "payroll.payroll.paymentPoint": "Payment Point",
     "payroll.paymentPoint.label": "Payment Point",
     "payroll.payroll.delete.confirm.title": "Delete Payroll {name}",
@@ -44,5 +47,7 @@
     "payroll.bills.status.PAYED": "Payed",
     "payroll.bills.status.CANCELLED": "Cancelled",
     "payroll.bills.status.DELETED": "Deleted",
-    "payroll.bills.status.SUSPENDED": "Suspended"
+    "payroll.bills.status.SUSPENDED": "Suspended",
+    "payroll.tooltip.save": "Save",
+    "payroll.tooltip.delete": "Delete"
 }

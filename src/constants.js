@@ -1,16 +1,14 @@
 // TODO: Change to proper rights after BE implementation
-export const RIGHT_PAYMENT_POINT_SEARCH = 156101;
-export const RIGHT_PAYMENT_POINT_CREATE = 156102;
-export const RIGHT_PAYMENT_POINT_UPDATE = 156103;
-export const RIGHT_PAYMENT_POINT_DELETE = 156104;
-
-// TODO: Change to proper rights after BE implementation
-export const RIGHT_PAYROLL_SEARCH = 156101;
-export const RIGHT_PAYROLL_CREATE = 156102;
-export const RIGHT_PAYROLL_DELETE = 156104;
+export const RIGHT_PAYROLL_SEARCH = 202001;
+export const RIGHT_PAYROLL_CREATE = 202002;
+export const RIGHT_PAYROLL_DELETE = 202004;
 
 export const PAYROLL_PAYMENT_POINT_ROUTE = 'payroll.route.paymentPoint';
 export const PAYROLL_PAYROLL_ROUTE = 'payroll.route.payroll';
+export const RIGHT_PAYMENT_POINT_SEARCH = 201001;
+export const RIGHT_PAYMENT_POINT_CREATE = 201002;
+export const RIGHT_PAYMENT_POINT_UPDATE = 201003;
+export const RIGHT_PAYMENT_POINT_DELETE = 201004;
 
 export const DEFAULT_DEBOUNCE_TIME = 500;
 export const DEFAULT_PAGE_SIZE = 10;

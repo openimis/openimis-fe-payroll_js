@@ -22,7 +22,7 @@ const styles = (theme) => ({
 
 class PaymentPointHeadPanel extends FormPanel {
   render() {
-    const { edited, classes } = this.props;
+    const { edited, classes, readOnly } = this.props;
     const paymentPoint = { ...edited };
     return (
       <Grid container className={classes.item}>
@@ -31,9 +31,21 @@ class PaymentPointHeadPanel extends FormPanel {
             pubRef="location.DetailedLocation"
             withNull
             required
+            readOnly={readOnly}
             filterLabels={false}
-            value={paymentPoint?.locations}
-            onChange={(locations) => this.updateAttribute('locations', locations)}
+            value={paymentPoint?.location}
+            onChange={(locations) => this.updateAttribute('location', locations)}
+          />
+        </Grid>
+        <Grid xs={3} className={classes.item}>
+          <PublishedComponent
+            pubRef="admin.PaymentPointManagerPicker"
+            required
+            withPlaceholder
+            withLabel
+            readOnly={readOnly}
+            value={paymentPoint?.ppm}
+            onChange={(ppm) => this.updateAttribute('ppm', ppm)}
           />
         </Grid>
         <Grid xs={3} className={classes.item}>
@@ -41,6 +53,7 @@ class PaymentPointHeadPanel extends FormPanel {
             module="payroll"
             label="paymentPoint.name"
             required
+            readOnly={readOnly}
             inputProps={{ maxLength: MAX_LENGTH.NAME }}
             value={paymentPoint?.name}
             onChange={(name) => this.updateAttribute('name', name)}

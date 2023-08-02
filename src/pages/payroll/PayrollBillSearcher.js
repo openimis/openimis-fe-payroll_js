@@ -121,7 +121,6 @@ function PayrollBillSearcher({
       <Searcher
         module="payroll"
         FilterPane={PayrollBillFilter}
-        fetch={fetch}
         items={bills}
         itemsPageInfo={billsPageInfo}
         fetchingItems={fetchingBills}

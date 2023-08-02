@@ -10,6 +10,7 @@ import {
   useModulesManager,
   useTranslations,
   PublishedComponent,
+  decodeId,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -36,6 +37,8 @@ function PaymentPointFilter({
   const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
 
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFAULT_DEBOUNCE_TIME);
+
+  const filterValue = (filterName) => filters?.[filterName]?.value ?? null;
 
   const filterTextFieldValue = (filterName) => filters?.[filterName]?.value ?? EMPTY_STRING;
 
@@ -65,7 +68,7 @@ function PaymentPointFilter({
         module="payroll"
         id="PaymentPointFilter.location"
         field={(
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <PublishedComponent
               pubRef="location.DetailedLocationFilter"
               withNull
@@ -76,7 +79,28 @@ function PaymentPointFilter({
           </Grid>
           )}
       />
-      <Grid item xs={3} className={classes.item}>
+      <ControlledField
+        module="payroll"
+        id="admin.PaymentPointManagerPicker"
+        field={(
+          <Grid className={classes.item} xs={3}>
+            <PublishedComponent
+              pubRef="admin.PaymentPointManagerPicker"
+              value={filterValue('ppm_Id')}
+              withPlaceholder
+              withLabel
+              onChange={(ppm) => onChangeFilters([
+                {
+                  id: 'ppm_Id',
+                  value: ppm,
+                  filter: `ppm_Id: "${ppm?.id && decodeId(ppm?.id)}"`,
+                },
+              ])}
+            />
+          </Grid>
+          )}
+      />
+      <Grid xs={3} className={classes.item}>
         <TextInput
           module="payroll"
           label={formatMessage('paymentPoint.name')}
@@ -86,24 +110,24 @@ function PaymentPointFilter({
       </Grid>
       <ControlledField
         module="payroll"
-        id="paymentPointFilter.showHistory"
+        id="paymentPointFilter.isDeleted"
         field={(
-          <Grid item xs={12} className={classes.item}>
+          <Grid xs={12} className={classes.item}>
             <FormControlLabel
               control={(
                 <Checkbox
                   color="primary"
-                  checked={filters?.showHistory?.value}
+                  checked={filters?.isDeleted?.value}
                   onChange={() => onChangeFilters([
                     {
-                      id: 'showHistory',
-                      value: !filters?.showHistory?.value,
-                      filter: `showHistory: ${!filters?.showHistory?.value}`,
+                      id: 'isDeleted',
+                      value: !filters?.isDeleted?.value,
+                      filter: `isDeleted: ${!filters?.isDeleted?.value}`,
                     },
                   ])}
                 />
                 )}
-              label={formatMessage('tooltip.showHistory')}
+              label={formatMessage('tooltip.isDeleted')}
             />
           </Grid>
           )}

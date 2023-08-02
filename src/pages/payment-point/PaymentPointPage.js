@@ -15,9 +15,10 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import {
-  // clearPaymentPoint,
+  clearPaymentPoint,
   createPaymentPoint,
   deletePaymentPoint,
+  fetchPaymentPoint,
   updatePaymentPoint,
 } from '../../actions';
 import {
@@ -30,15 +31,23 @@ import PaymentPointHeadPanel from './PaymentPointHeadPanel';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
+  lockedPage: theme.page.locked,
 }));
 
 function PaymentPointPage({
+  clearPaymentPoint,
+  createPaymentPoint,
+  deletePaymentPoint,
+  updatePaymentPoint,
   paymentPointUuid,
+  fetchPaymentPoint,
   rights,
   confirmed,
   submittingMutation,
   mutation,
   paymentPoint,
+  coreConfirm,
+  clearConfirm,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -48,13 +57,13 @@ function PaymentPointPage({
   const [editedPaymentPoint, setEditedPaymentPoint] = useState({});
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
+  const pageLocked = editedPaymentPoint?.isDeleted;
 
   const back = () => history.goBack();
 
   useEffect(() => {
     if (paymentPointUuid) {
-      // TODO: To be changed after BE implementation
-      // fetchPaymentPoint(modulesManager, [`id: "${paymentPointUuid}"`]);
+      fetchPaymentPoint(modulesManager, [`id: "${paymentPointUuid}"`]);
     }
   }, [paymentPointUuid]);
 
@@ -78,18 +87,19 @@ function PaymentPointPage({
 
   useEffect(() => setEditedPaymentPoint(paymentPoint), [paymentPoint]);
 
-  // TODO: To be finished after BE
-  // useEffect(() => () => clearPaymentPoint(), []);
+  useEffect(() => () => clearPaymentPoint(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPaymentPoint?.name) return false;
-    if (editedPaymentPoint?.locations) return false;
+    if (
+      editedPaymentPoint?.name
+      && editedPaymentPoint?.location
+      && editedPaymentPoint?.ppm
+      && !editedPaymentPoint?.isDeleted) return false;
     return true;
   };
 
   const canSave = () => !mandatoryFieldsEmpty();
 
-  // TODO: Implement when mutation will be ready
   const handleSave = () => {
     if (paymentPoint?.id) {
       updatePaymentPoint(
@@ -99,12 +109,12 @@ function PaymentPointPage({
     } else {
       createPaymentPoint(
         editedPaymentPoint,
-        formatMessageWithValues('paymentPoint.mutation.create', mutationLabel(paymentPoint)),
+        formatMessageWithValues('paymentPoint.mutation.createLabel', mutationLabel(paymentPoint)),
       );
     }
+    back();
   };
 
-  // TODO: Implement when mutation will be ready
   const deletePaymentPointCallback = () => deletePaymentPoint(
     paymentPoint,
     formatMessageWithValues('paymentPoint.mutation.deleteLabel', mutationLabel(paymentPoint)),
@@ -119,7 +129,7 @@ function PaymentPointPage({
   };
 
   const actions = [
-    !!paymentPoint && {
+    !!paymentPointUuid && !pageLocked && {
       doIt: openDeletePaymentPointConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -128,31 +138,39 @@ function PaymentPointPage({
 
   return (
     rights.includes(RIGHT_PAYMENT_POINT_UPDATE) && (
-    <div className={classes.page}>
-      <Form
-        module="payroll"
-        title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
-        titleParams={pageTitle(paymentPoint)}
-        openDirty
-        benefitPlan={editedPaymentPoint}
-        edited={editedPaymentPoint}
-        onEditedChanged={setEditedPaymentPoint}
-        back={back}
-        mandatoryFieldsEmpty={mandatoryFieldsEmpty}
-        canSave={canSave}
-        save={handleSave}
-        HeadPanel={PaymentPointHeadPanel}
-        rights={rights}
-        actions={actions}
-        setConfirmedAction={setConfirmedAction}
-        saveTooltip={formatMessage('tooltip.save')}
-      />
+    <div className={pageLocked ? classes.lockedPage : null}>
+      <div className={classes.page}>
+        <Form
+          module="payroll"
+          title={formatMessageWithValues('PaymentPointPage.title', pageTitle(paymentPoint))}
+          titleParams={pageTitle(paymentPoint)}
+          openDirty
+          edited={editedPaymentPoint}
+          onEditedChanged={setEditedPaymentPoint}
+          back={back}
+          mandatoryFieldsEmpty={mandatoryFieldsEmpty}
+          canSave={canSave}
+          save={handleSave}
+          HeadPanel={PaymentPointHeadPanel}
+          readOnly={pageLocked}
+          rights={rights}
+          actions={actions}
+          setConfirmedAction={setConfirmedAction}
+          saveTooltip={formatMessage('tooltip.save')}
+        />
+      </div>
+
     </div>
     )
   );
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  clearPaymentPoint,
+  createPaymentPoint,
+  deletePaymentPoint,
+  updatePaymentPoint,
+  fetchPaymentPoint,
   coreConfirm,
   clearConfirm,
   journalize,
