@@ -1,64 +1,72 @@
-import React, { Component } from "react";
-import { FormattedMessage, withModulesManager, SelectInput } from "@openimis/fe-core";
-import { fetchPaymentPoints } from "../../actions";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { useState } from "react";
 
-class PaymentPointPicker extends Component {
-    componentDidMount() {
-        this.props.fetchPaymentPoints(this.props.modulesManager, this.queryParams());
-    }
+import { TextField } from "@material-ui/core";
 
-    queryParams = () => {
-        const { withDeleted = false } = this.props;
-        let params = [];
-        params.push(`isDeleted: ${withDeleted}`);
-        return params;
-    }
+import { useGraphqlQuery, useTranslations, Autocomplete, useModulesManager } from "@openimis/fe-core";
+import { PAYMENT_POINT_PROJECTION } from "../../actions";
 
-    render() {
-        const { modulesManager, paymentPoints, value, onChange, required = false,
-            withNull = false, nullLabel = null, withLabel = true, readOnly = false } = this.props;
-        let options = [
-            ...paymentPoints.map(v => ({
-                value: v,
-                label: `${v.code} - ${v.name}`
-            }))
-        ];
-        if (withNull) {
-            options.unshift({
-                value: null,
-                label: nullLabel || <FormattedMessage module="payroll" id="emptyLabel" />
-            })
+function PaymentPointPicker({
+  readOnly,
+  value,
+  onChange,
+  required,
+  withLabel,
+  withPlaceholder,
+  filterOptions,
+  filterSelectedOptions,
+}) {
+  const [searchString, setSearchString] = useState();
+  const { formatMessage } = useTranslations("payroll");
+
+  const modulesManager = useModulesManager();
+
+  const formatSuggestion = (paymentPoint) =>
+    [paymentPoint?.name].filter(Boolean).join(" ");
+
+  const { isLoading, data, error } = useGraphqlQuery(
+    `
+    query paymentPoint {
+        paymentPoint {
+          edges {
+            node {
+              ${PAYMENT_POINT_PROJECTION(modulesManager).join(" ")}
+            }
+          }
         }
-        let paymentPointPickerValue = null;
-        const paymentPointPickerProjection = modulesManager.getRef("payroll.PaymentPointPicker.projection");
-        if (!!value && !!paymentPointPickerProjection) {
-            paymentPointPickerValue = {};
-            paymentPointPickerProjection.forEach(key => {
-                paymentPointPickerValue[key] = value[key]
-            });
-        }
-        return (
-            <SelectInput
-                module="payroll"
-                label={withLabel ? "paymentPoint.label" : null}
-                required={required}
-                options={options}
-                value={paymentPointPickerValue}
-                onChange={onChange}
-                readOnly={readOnly}
-            />
-        )
-    }
+      }
+    `,
+    {}
+  );
+
+  const paymentPoints = data?.paymentPoint?.edges.map((edge) => edge.node) ?? [];
+
+  return (
+    <Autocomplete
+      withLabel={withLabel}
+      withPlaceholder={withPlaceholder}
+      readOnly={readOnly}
+      value={value}
+      placeholder={formatMessage("paymentPointPicker.placeholder")}
+      label={formatMessage("paymentPointPicker.label")}
+      isLoading={isLoading}
+      options={paymentPoints}
+      error={error}
+      getOptionLabel={(option) => formatSuggestion(option)}
+      onChange={(user) => onChange(user)}
+      filterOptions={filterOptions}
+      filterSelectedOptions={filterSelectedOptions}
+      onInputChange={() => setSearchString(searchString)}
+      renderInput={(inputProps) => (
+        <TextField
+          {...inputProps}
+          variant="standard"
+          required={required}
+          label={withLabel && formatMessage("paymentPointPicker.label")}
+          placeholder={withPlaceholder && formatMessage("paymentPointPicker.placeholder")}
+        />
+      )}
+    />
+  );
 }
 
-const mapStateToProps = state => ({
-    paymentPoints: state.payroll.paymentPoints
-});
-
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators({ fetchPaymentPoints }, dispatch);
-};
-
-export default withModulesManager(connect(mapStateToProps, mapDispatchToProps)(PaymentPointPicker));
+export default PaymentPointPicker;

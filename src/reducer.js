@@ -92,15 +92,15 @@ function reducer(
     case SUCCESS(ACTION_TYPE.SEARCH_PAYMENT_POINTS):
       return {
         ...state,
-        paymentPoints: parseData(action.payload.data.paymentPoints)?.map((paymentPoint) => ({
+        paymentPoints: parseData(action.payload.data.paymentPoint)?.map((paymentPoint) => ({
           ...paymentPoint,
           id: decodeId(paymentPoint.id),
         })),
         fetchingPaymentPoints: false,
         fetchedPaymentPoints: true,
         errorPaymentPoints: formatGraphQLError(action.payload),
-        paymentPointsPageInfo: pageInfo(action.payload.data.paymentPoints),
-        paymentPointsTotalCount: action.payload.data.paymentPoints?.totalCount ?? 0,
+        paymentPointsPageInfo: pageInfo(action.payload.data.paymentPoint),
+        paymentPointsTotalCount: action.payload.data.paymentPoint?.totalCount ?? 0,
       };
     case ERROR(ACTION_TYPE.SEARCH_PAYMENT_POINTS):
       return {
@@ -121,7 +121,7 @@ function reducer(
     case SUCCESS(ACTION_TYPE.SEARCH_PAYROLLS):
       return {
         ...state,
-        payrolls: parseData(action.payload.data.payrolls)?.map((payroll) => ({
+        payrolls: parseData(action.payload.data.payroll)?.map((payroll) => ({
           ...payroll,
           id: decodeId(payroll.id),
         })),
@@ -129,7 +129,7 @@ function reducer(
         fetchedPayrolls: true,
         errorPayrolls: formatGraphQLError(action.payload),
         payrollsPageInfo: pageInfo(action.payload.data.payrolls),
-        payrollsTotalCount: action.payload.data.payrolls?.totalCount ?? 0,
+        payrollsTotalCount: action.payload.data.payroll?.totalCount ?? 0,
       };
     case ERROR(ACTION_TYPE.SEARCH_PAYROLLS):
       return {

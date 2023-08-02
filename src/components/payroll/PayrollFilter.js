@@ -10,6 +10,7 @@ import {
   useModulesManager,
   useTranslations,
   PublishedComponent,
+  decodeId,
 } from '@openimis/fe-core';
 import {
   CONTAINS_LOOKUP,
@@ -38,6 +39,8 @@ function PayrollFilter({
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFAULT_DEBOUNCE_TIME);
 
   const filterTextFieldValue = (filterName) => filters?.[filterName]?.value ?? EMPTY_STRING;
+
+  const filterValue = (filterName) => filters?.[filterName]?.value ?? null;
 
   const onChangeStringFilter = (filterName, lookup = null) => (value) => {
     if (lookup) {
@@ -78,8 +81,14 @@ function PayrollFilter({
               pubRef="socialProtection.BenefitPlanPicker"
               withNull
               filters={filters}
-              onChange={onChangeStringFilter('benefitPlan')}
-              value={filterTextFieldValue('benefitPlan')}
+              value={filterValue('benefitPlan_Id')}
+              onChange={(benefitPlan) => onChangeFilters([
+                {
+                  id: 'benefitPlan_Id',
+                  value: benefitPlan,
+                  filter: `benefitPlan_Id: "${benefitPlan?.id && decodeId(benefitPlan.id)}"`,
+                },
+              ])}  
             />
           </Grid>
           )}
@@ -91,10 +100,17 @@ function PayrollFilter({
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
               pubRef="payroll.PaymentPointPicker"
-              withNull
+              withLabel
+              withPlaceholder
               filters={filters}
-              onChange={onChangeStringFilter('paymentPoint')}
-              value={filterTextFieldValue('paymentPoint')}
+              value={filterValue('paymentPoint_Id')}
+              onChange={(paymentPoint) => onChangeFilters([
+                {
+                  id: 'paymentPoint_Id',
+                  value: paymentPoint,
+                  filter: `paymentPoint_Id: "${paymentPoint?.id && decodeId(paymentPoint.id)}"`,
+                },
+              ])}
             />
           </Grid>
           )}
@@ -108,17 +124,17 @@ function PayrollFilter({
               control={(
                 <Checkbox
                   color="primary"
-                  checked={filters?.showHistory?.value}
+                  checked={filters?.isDeleted?.value}
                   onChange={() => onChangeFilters([
                     {
-                      id: 'showHistory',
-                      value: !filters?.showHistory?.value,
-                      filter: `showHistory: ${!filters?.showHistory?.value}`,
+                      id: 'isDeleted',
+                      value: !filters?.isDeleted?.value,
+                      filter: `isDeleted: ${!filters?.isDeleted?.value}`,
                     },
                   ])}
                 />
                 )}
-              label={formatMessage('tooltip.showHistory')}
+              label={formatMessage('tooltip.isDeleted')}
             />
           </Grid>
           )}

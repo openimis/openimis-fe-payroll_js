@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { IconButton, Tooltip } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -14,6 +15,7 @@ import PayrollFilter from './PayrollFilter';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS,
 } from '../../constants';
+import { fetchPayrolls } from '../../actions';
 
 function PayrollSearcher({
   fetchingPayrolls,
@@ -22,6 +24,7 @@ function PayrollSearcher({
   payrolls,
   pageInfo,
   totalCount,
+  fetchPayrolls
 }) {
   const history = useHistory();
   const modulesManager = useModulesManager();
@@ -31,17 +34,26 @@ function PayrollSearcher({
   const headers = () => [
     'payroll.name',
     'payroll.benefitPlan',
-    'payroll.paymentPlan',
+    'payroll.paymentPoint',
     'emptyLabel',
   ];
-
+  
   const sorts = () => [
     ['name', true],
-    ['benefitPlan', true]
-    ['paymentPlan', true],
+    ['benefitPlan', true],
+    ['paymentPoint', true],
   ];
 
-  const fetch = () => {};
+  const defaultFilters = () => {
+    return {
+        isDeleted: {
+            value: false,
+            filter: "isDeleted: false"
+        },
+    };
+  }
+
+  const fetch = (params) => fetchPayrolls(modulesManager, params);
 
   const rowIdentifier = (payroll) => payroll.id;
 
@@ -51,8 +63,10 @@ function PayrollSearcher({
 
   const itemFormatters = () => [
     (payroll) => payroll.name,
-    (payroll) => payroll.benefitPlan,
-    (payroll) => payroll.paymentPlan,
+    (payroll) => !!payroll.paymentPoint
+                ? `${payroll.paymentPoint.name}`: "",
+    (payroll) => !!payroll.benefitPlan
+                ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : "",
     (payroll) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
         <IconButton
@@ -88,6 +102,7 @@ function PayrollSearcher({
       defaultPageSize={DEFAULT_PAGE_SIZE}
       rowIdentifier={rowIdentifier}
       onDoubleClick={onDoubleClick}
+      defaultFilters={defaultFilters()}
     />
   );
 }
@@ -101,4 +116,11 @@ const mapStateToProps = (state) => ({
   totalCount: state.payroll.payrollsTotalCount,
 });
 
-export default connect(mapStateToProps, null)(PayrollSearcher);
+const mapDispatchToProps = (dispatch) => bindActionCreators(
+  {
+    fetchPayrolls,
+  },
+  dispatch,
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(PayrollSearcher);

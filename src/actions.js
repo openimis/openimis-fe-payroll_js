@@ -12,20 +12,23 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 
-const PAYMENT_POINT_PROJECTION = [
+export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
   'name',
-  'location',
+  'isDeleted',
+  `location ${modulesManager.getProjection('location.Location.FlatProjection')}`,
+  `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
 ];
 
-const PAYROLL_PROJECTION = [
+const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
-  'benefitPlan',
-  'paymentPlan'
+  `benefitPlan` + `{${BENEFIT_PLAN_FULL_PROJECTION().join(" ")}}`,
+  `paymentPoint` + `{${PAYMENT_POINT_PROJECTION(modulesManager).join(" ")}}`,
+  `bill` + `{${BILL_FULL_PROJECTION().join(" ")}}`,
 ];
 
-const BILL_FULL_PROJECTION = [
+const BILL_FULL_PROJECTION = () => [
     'id',
     'isDeleted',
     'jsonExt',
@@ -58,6 +61,24 @@ const BILL_FULL_PROJECTION = [
     'subjectId',
     'subject',
     'dateBill',
+  ];
+
+  const BENEFIT_PLAN_FULL_PROJECTION = () => [
+    'id',
+    'isDeleted',
+    'dateCreated',
+    'dateUpdated',
+    'version',
+    'dateValidFrom',
+    'dateValidTo',
+    'description',
+    'replacementUuid',
+    'code',
+    'name',
+    'type',
+    'maxBeneficiaries',
+    'ceilingPerBeneficiary',
+    'jsonExt',
   ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
@@ -95,12 +116,12 @@ const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLab
 };
 
 export function fetchPaymentPoints(modulesManager, params) {
-  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
+  const payload = formatPageQueryWithCount('paymentPoint', params, (PAYMENT_POINT_PROJECTION(modulesManager)));
   return graphql(payload, ACTION_TYPE.SEARCH_PAYMENT_POINTS);
 }
 
 export function fetchPaymentPoint(modulesManager, params) {
-  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION);
+  const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
 }
 
@@ -139,7 +160,7 @@ export function updatePaymentPoint(paymentPoint, clientMutationLabel) {
 }
 
 export function fetchPayrolls(modulesManager, params) {
-  const payload = formatPageQueryWithCount('payrolls', params, PAYROLL_PROJECTION);
+  const payload = formatPageQueryWithCount('payroll', params, PAYROLL_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.SEARCH_PAYROLLS);
 }
 
