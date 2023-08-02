@@ -7,7 +7,6 @@ import {
 } from '@openimis/fe-core';
 
 import { ACTION_TYPE, MUTATION_SERVICE } from './reducer';
-import { ENUM_PREFIX_LENGTH } from './constants';
 import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
@@ -20,67 +19,66 @@ export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
 ];
 
+const BILL_FULL_PROJECTION = () => [
+  'id',
+  'isDeleted',
+  'jsonExt',
+  'dateCreated',
+  'dateUpdated',
+  'dateValidFrom',
+  'dateValidTo',
+  'replacementUuid',
+  'thirdpartyType',
+  'thirdpartyTypeName',
+  'thirdpartyId',
+  'thirdparty',
+  'codeTp',
+  'code',
+  'codeExt',
+  'dateDue',
+  'datePayed',
+  'amountDiscount',
+  'amountNet',
+  'amountTotal',
+  'taxAnalysis',
+  'status',
+  'currencyTpCode',
+  'currencyCode',
+  'note',
+  'terms',
+  'paymentReference',
+  'subjectType',
+  'subjectTypeName',
+  'subjectId',
+  'subject',
+  'dateBill',
+];
+
+const BENEFIT_PLAN_FULL_PROJECTION = () => [
+  'id',
+  'isDeleted',
+  'dateCreated',
+  'dateUpdated',
+  'version',
+  'dateValidFrom',
+  'dateValidTo',
+  'description',
+  'replacementUuid',
+  'code',
+  'name',
+  'type',
+  'maxBeneficiaries',
+  'ceilingPerBeneficiary',
+  'jsonExt',
+];
+
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
-  `benefitPlan` + `{${BENEFIT_PLAN_FULL_PROJECTION().join(" ")}}`,
-  `paymentPoint` + `{${PAYMENT_POINT_PROJECTION(modulesManager).join(" ")}}`,
-  `bill` + `{${BILL_FULL_PROJECTION().join(" ")}}`,
+  `benefitPlan {${BENEFIT_PLAN_FULL_PROJECTION().join(' ')}}`,
+  `paymentPoint {${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')}}`,
+  `{bill ${BILL_FULL_PROJECTION().join(' ')}}`,
 ];
-
-const BILL_FULL_PROJECTION = () => [
-    'id',
-    'isDeleted',
-    'jsonExt',
-    'dateCreated',
-    'dateUpdated',
-    'dateValidFrom',
-    'dateValidTo',
-    'replacementUuid',
-    'thirdpartyType',
-    'thirdpartyTypeName',
-    'thirdpartyId',
-    'thirdparty',
-    'codeTp',
-    'code',
-    'codeExt',
-    'dateDue',
-    'datePayed',
-    'amountDiscount',
-    'amountNet',
-    'amountTotal',
-    'taxAnalysis',
-    'status',
-    'currencyTpCode',
-    'currencyCode',
-    'note',
-    'terms',
-    'paymentReference',
-    'subjectType',
-    'subjectTypeName',
-    'subjectId',
-    'subject',
-    'dateBill',
-  ];
-
-  const BENEFIT_PLAN_FULL_PROJECTION = () => [
-    'id',
-    'isDeleted',
-    'dateCreated',
-    'dateUpdated',
-    'version',
-    'dateValidFrom',
-    'dateValidTo',
-    'description',
-    'replacementUuid',
-    'code',
-    'name',
-    'type',
-    'maxBeneficiaries',
-    'ceilingPerBeneficiary',
-    'jsonExt',
-  ];
-
 
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
