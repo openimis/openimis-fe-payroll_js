@@ -166,6 +166,11 @@ export function fetchPayrolls(modulesManager, params) {
   return graphql(payload, ACTION_TYPE.SEARCH_PAYROLLS);
 }
 
+export function fetchPayroll(modulesManager, params) {
+  const payload = formatPageQueryWithCount('payroll', params, PAYMENT_POINT_PROJECTION(modulesManager));
+  return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
+}
+
 export function deletePayrolls(payroll, clientMutationLabel) {
   const payrollUuids = `ids: ["${decodeId(payroll?.id)}"]`;
   return PERFORM_MUTATION(

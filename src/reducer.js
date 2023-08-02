@@ -24,7 +24,7 @@ export const ACTION_TYPE = {
   DELETE_PAYROLL: 'PAYROLL_MUTATION_DELETE_PAYROLL',
   SEARCH_PAYROLLS: 'PAYROLL_PAYROLLS',
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
-  GET_PAYROLL_BILLS: 'PAYROLL_PAYROLL_BILLS',
+  GET_PAYROLL: 'PAYROLL_PAYROLL',
 };
 
 export const MUTATION_SERVICE = {
@@ -62,11 +62,12 @@ const STORE_STATE = {
   fetchingPayroll: false,
   fetchedPayroll: false,
   payroll: null,
+  payrollBills: [],
+  payrollBillsTotalCount: 0,
   errorPayroll: null,
 
   fetchingPayrollBills: true,
   fetchedPayrollBills: false,
-  payrollBills: [],
   errorPayrollBills: null,
   payrollBillsPageInfo: {},
   payrollBillsTotalCount: 0,
@@ -170,6 +171,40 @@ function reducer(
         paymentPoint: {},
         errorPaymentPoint: null,
       };
+    case REQUEST(ACTION_TYPE.GET_PAYROLL):
+      return {
+        ...state,
+        fetchingPayroll: true,
+        fetchedPayroll: false,
+        payroll: [],
+        payrollBills: [],
+        errorPayroll: null,
+        fetchingPayrollBills: true,
+        fetchedPayrollBills: false,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYROLL):
+      return {
+        ...state,
+        fetchingPayroll: false,
+        fetchedPayroll: true,
+        fetchingPayrollBills: false,
+        fetchedPayrollBills: true,
+        payroll: parseData(action.payload.data.payroll)?.map((payroll) => ({
+          ...payroll,
+          id: decodeId(payroll.id),
+        }))?.[0],
+        payrollBills: parseData(action.payload.data.payroll)?.map((payroll) => ({
+          ...payroll.bill,
+        }))?.[0],
+        errorPayroll: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_PAYROLL):
+      return {
+        ...state,
+        fetchingPayroll: false,
+        fetchingPayrollBills: false,
+        errorPayroll: formatServerError(action.payload),
+      };
     case CLEAR(ACTION_TYPE.GET_PAYROLL):
       return {
         ...state,
@@ -177,42 +212,6 @@ function reducer(
         fetchedPayroll: false,
         payroll: null,
         errorPayroll: null,
-      };
-    case REQUEST(ACTION_TYPE.GET_PAYROLL_BILLS):
-      return {
-        ...state,
-        fetchingPayrollBills: true,
-        fetchedPayrollBills: false,
-        payrollBills: [],
-        errorPayrollBills: null,
-      };
-    case SUCCESS(ACTION_TYPE.GET_PAYROLL_BILLS):
-      return {
-        ...state,
-        fetchingPayrollBills: false,
-        fetchedPayrollBills: true,
-        payrollBills: parseData(action.payload.data.bill)?.map((bill) => ({
-          ...bill,
-          id: decodeId(bill.id),
-          status: getEnumValue(bill?.status),
-        })),
-        errorPayrollBills: formatGraphQLError(action.payload),
-        payrollBillsPageInfo: pageInfo(action.payload.data.bill),
-        payrollBillsTotalCount: action.payload.data.bill?.totalCount ?? 0,
-      };
-    case ERROR(ACTION_TYPE.GET_PAYROLL_BILLS):
-      return {
-        ...state,
-        fetchingPayrollBills: false,
-        errorPayrollBills: formatServerError(action.payload),
-    };
-    case CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS):
-      return {
-        ...state,
-        fetchingPayrollBills: true,
-        fetchedPayrollBills: false,
-        payrollBills: [],
-        errorPayrollBills: null,
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

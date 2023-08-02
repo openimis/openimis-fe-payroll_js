@@ -12,7 +12,7 @@ import {
   useTranslations,
   PublishedComponent,
 } from '@openimis/fe-core';
-import { fetchPayrollBills } from '../../actions';
+import { fetchPayroll } from '../../actions';
 import {
   DEFAULT_PAGE_SIZE,
   GET_SUBJECT_AND_THIRDPARTY_TYPE_PICKER_REF,
@@ -26,7 +26,7 @@ import PayrollBillFilter from './PayrollBillFilter';
 function PayrollBillSearcher({
   rights,
   payrollUuid,
-  fetchPayrollBills,
+  fetchPayroll,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -44,7 +44,7 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  const fetch = (params) => fetchPayrollBills(params);
+  const fetch = () => fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
 
   const headers = () => {
     const headers = [
@@ -121,6 +121,7 @@ function PayrollBillSearcher({
       <Searcher
         module="payroll"
         FilterPane={PayrollBillFilter}
+        fetch={fetch}
         items={bills}
         itemsPageInfo={billsPageInfo}
         fetchingItems={fetchingBills}
@@ -150,7 +151,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(
-  { fetchPayrollBills },
+  { fetchPayroll },
   dispatch,
 );
 
