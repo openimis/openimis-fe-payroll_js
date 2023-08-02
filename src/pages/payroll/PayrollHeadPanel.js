@@ -27,46 +27,46 @@ class PayrollHeadPanel extends FormPanel {
     return (
       <Grid container className={classes.item}>
         <Grid item xs={3} className={classes.item}>
-        <TextInput
+          <TextInput
+            module="payroll"
+            label="paymentPoint.name"
+            value={payroll?.name}
+            required
+            onChange={(name) => this.updateAttribute('name', name)}
+          />
+        </Grid>
+        <ControlledField
           module="payroll"
-          label="paymentPoint.name"
-          value={payroll?.name}
-          required
-          onChange={(name) => this.updateAttribute('name', name)}
+          id="PayrollFilter.benefitPlan"
+          field={(
+            <Grid item xs={3} className={classes.item}>
+              <PublishedComponent
+                pubRef="socialProtection.BenefitPlanPicker"
+                withNull
+                required
+                filterLabels={false}
+                onChange={(benefitPlan) => this.updateAttribute('benefitPlan', benefitPlan)}
+                value={payroll?.benefitPlan}
+              />
+            </Grid>
+          )}
         />
-      </Grid>
-      <ControlledField
-        module="payroll"
-        id="PayrollFilter.benefitPlan"
-        field={(
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef="socialProtection.BenefitPlanPicker"
-              withNull
-              required
-              filterLabels={false}
-              onChange={(benefitPlan) => this.updateAttribute('benefitPlan', benefitPlan)}
-              value={payroll?.benefitPlan}
-            />
-          </Grid>
+        <ControlledField
+          module="payroll"
+          id="PayrollFilter.paymentPoint"
+          field={(
+            <Grid item xs={3} className={classes.item}>
+              <PublishedComponent
+                pubRef="payroll.PaymentPointPicker"
+                withNull
+                required
+                filterLabels={false}
+                onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
+                value={payroll?.paymentPoint}
+              />
+            </Grid>
           )}
-      />
-      <ControlledField
-        module="payroll"
-        id="PayrollFilter.paymentPoint"
-        field={(
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef="payroll.PaymentPointPicker"
-              withNull
-              required
-              filterLabels={false}
-              onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
-              value={payroll?.paymentPoint}
-            />
-          </Grid>
-          )}
-      />
+        />
       </Grid>
     );
   }

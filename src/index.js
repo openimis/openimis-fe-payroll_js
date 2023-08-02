@@ -29,8 +29,8 @@ const DEFAULT_CONFIG = {
     { key: 'payroll.route.paymentPoint', ref: ROUTE_PAYMENT_POINT },
     { key: 'payroll.route.payrolls', ref: ROUTE_PAYROLLS },
     { key: 'payroll.route.payroll', ref: ROUTE_PAYROLL },
-    { key: "payroll.PaymentPointPicker", ref: PaymentPointPicker },
-    { key: "payroll.PaymentPointPicker.projection", ref: ["id", "name", "location"] },
+    { key: 'payroll.PaymentPointPicker', ref: PaymentPointPicker },
+    { key: 'payroll.PaymentPointPicker.projection', ref: ['id', 'name', 'location'] },
   ],
   'core.Router': [
     { path: ROUTE_PAYMENT_POINTS, component: PaymentPointsPage },

@@ -17,7 +17,7 @@ import {
 import {
   // clearPayroll,
   createPayroll,
-  deletePayrolls
+  deletePayrolls,
 } from '../../actions';
 import {
   MODULE_NAME,

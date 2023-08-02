@@ -88,7 +88,7 @@ function PayrollFilter({
                   value: benefitPlan,
                   filter: `benefitPlan_Id: "${benefitPlan?.id && decodeId(benefitPlan.id)}"`,
                 },
-              ])}  
+              ])}
             />
           </Grid>
           )}

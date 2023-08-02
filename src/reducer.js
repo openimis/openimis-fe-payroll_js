@@ -10,6 +10,7 @@ import {
   parseData,
   decodeId,
 } from '@openimis/fe-core';
+import { ENUM_PREFIX_LENGTH } from './constants';
 import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
@@ -136,7 +137,7 @@ function reducer(
         ...state,
         fetchingPayrolls: false,
         errorPayrolls: formatServerError(action.payload),
-      };  
+      };
     case REQUEST(ACTION_TYPE.GET_PAYMENT_POINT):
       return {
         ...state,
@@ -205,7 +206,7 @@ function reducer(
         ...state,
         fetchingPayrollBills: false,
         errorPayrollBills: formatServerError(action.payload),
-    };
+      };
     case CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS):
       return {
         ...state,
