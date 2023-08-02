@@ -1,4 +1,3 @@
-// TODO: Change to proper rights after BE implementation
 export const RIGHT_PAYMENT_POINT_SEARCH = 201001;
 export const RIGHT_PAYMENT_POINT_CREATE = 201002;
 export const RIGHT_PAYMENT_POINT_UPDATE = 201003;
