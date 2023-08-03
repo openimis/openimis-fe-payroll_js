@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -25,8 +25,7 @@ import PayrollBillFilter from './PayrollBillFilter';
 
 function PayrollBillSearcher({
   rights,
-  payrollUuid,
-  // fetchPayrollBills,
+  fetchPayroll,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -44,7 +43,23 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  // const fetch = (params) => fetchPayrollBills(params);
+  const fetch = () => {
+    if (payrollUuid) {
+      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+    }
+  }
+
+  const [payrollUuid, setPayrollUuid] = useState('');
+
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const pathSegments = currentPath.split('/');
+    const payrollIndex = pathSegments.indexOf('payroll');
+    if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
+      const uuid = pathSegments[payrollIndex + 1];
+      setPayrollUuid(uuid);
+    }
+  }, []);
 
   const headers = () => {
     const headers = [
@@ -110,17 +125,13 @@ function PayrollBillSearcher({
       value: false,
       filter: 'isDeleted: false',
     },
-    thirdpartyId: {
-      value: payrollUuid,
-      filter: `thirdpartyId: "${payrollUuid}"`,
-    },
   });
 
   return (
     <div>
       <Searcher
         module="payroll"
-        FilterPane={PayrollBillFilter}
+        FilterPane={null}
         fetch={fetch}
         items={bills}
         itemsPageInfo={billsPageInfo}
@@ -145,7 +156,9 @@ const mapStateToProps = (state) => ({
   fetchingBills: state.payroll.fetchingPayrollBills,
   fetchedBills: state.payroll.fetchedPayrollBills,
   errorBills: state.payroll.errorPayrollBills,
-  bills: state.payroll.payrollBills,
+  bills: state.payroll.payrollBills.flatMap((payrollBill) =>
+    Object.values(payrollBill)
+  ),
   billsPageInfo: state.payroll.payrollBillsPageInfo,
   billsTotalCount: state.payroll.payrollBillsTotalCount,
 });

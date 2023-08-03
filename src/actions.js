@@ -78,7 +78,15 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   `benefitPlan { ${BENEFIT_PLAN_FULL_PROJECTION().join(' ')} }`,
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
+  'jsonExt',
+  "dateValidFrom",
+  "dateValidTo",
+  "isDeleted",
 ];
+
+function dateTimeToDate(date) {
+  return date.split("T")[0];
+}
 
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
@@ -94,8 +102,25 @@ const formatPayrollGQL = (payroll) => {
   const payrollGQL = `
   ${payroll?.id ? `id: "${payroll.id}"` : ''}
   ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
-  ${payroll?.benefitPlan ? `benefitPlan: ${payroll.benefitPlan}` : ''}
-  ${payroll?.paymentPlan ? `paymentPlan: ${payroll.paymentPlan}` : ''}
+  ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
+  ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
+  ${
+    !!payroll.jsonExt
+      ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
+      : ""
+  }
+  ${
+    !!payroll.dateValidFrom
+      ? `dateValidFrom: "${dateTimeToDate(
+        payroll.dateValidFrom
+        )}"`
+      : ""
+  }
+  ${
+    !!payroll.dateValidTo
+      ? `dateValidTo: "${dateTimeToDate(payroll.dateValidTo)}"`
+      : ""
+  }
   `;
   return payrollGQL;
 };
@@ -165,8 +190,8 @@ export function fetchPayrolls(modulesManager, params) {
 }
 
 export function fetchPayroll(modulesManager, params) {
-  const payload = formatPageQueryWithCount('payroll', params, PAYMENT_POINT_PROJECTION(modulesManager));
-  return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
+  const payload = formatPageQueryWithCount('payroll', params, PAYROLL_PROJECTION(modulesManager));
+  return graphql(payload, ACTION_TYPE.GET_PAYROLL);
 }
 
 export function deletePayrolls(payroll, clientMutationLabel) {
@@ -188,13 +213,14 @@ export function createPayroll(payroll, clientMutationLabel) {
   );
 }
 
-export function fetchPayrollBills(params) {
-  const payload = formatPageQueryWithCount('bill', params, BILL_FULL_PROJECTION);
-  return graphql(payload, ACTION_TYPE.GET_PAYROLL_BILLS);
-}
-
 export const clearPayrollBills = () => (dispatch) => {
   dispatch({
     type: CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS),
+  });
+};
+
+export const clearPayroll = () => (dispatch) => {
+  dispatch({
+    type: CLEAR(ACTION_TYPE.GET_PAYROLL),
   });
 };

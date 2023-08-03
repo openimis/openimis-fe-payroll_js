@@ -57,7 +57,7 @@ function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
         rights={rights}
         value={activeTab}
         setConfirmedAction={setConfirmedAction}
-        paymentCycleUuid={payrollUuid}
+        payrollUuid={payrollUuid}
       />
     </Paper>
   );

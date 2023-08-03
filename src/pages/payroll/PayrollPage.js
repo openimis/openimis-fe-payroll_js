@@ -15,7 +15,7 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import {
-  // clearPayroll,
+  clearPayroll,
   createPayroll,
   deletePayrolls,
 } from '../../actions';
@@ -39,6 +39,9 @@ function PayrollPage({
   submittingMutation,
   mutation,
   payroll,
+  createPayroll,
+  clearPayroll,
+  deletePayrolls,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -53,8 +56,7 @@ function PayrollPage({
 
   useEffect(() => {
     if (payrollUuid) {
-      // TODO: To be changed after BE implementation
-      // fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
     }
   }, [payrollUuid]);
 
@@ -78,26 +80,27 @@ function PayrollPage({
 
   useEffect(() => setEditedPayroll(payroll), [payroll]);
 
-  // TODO: To be finished after BE
-  // useEffect(() => () => clearPayroll(), []);
+  useEffect(() => () => clearPayroll(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPayroll?.name) return false;
-    if (editedPayroll?.locations) return false;
+    if (
+      editedPayroll?.name
+      && editedPayroll?.benefitPlan
+      && editedPayroll?.paymentPoint
+      && !editedPayroll?.isDeleted) return false;
     return true;
   };
 
   const canSave = () => !mandatoryFieldsEmpty();
 
-  // TODO: Implement when mutation will be ready
   const handleSave = () => {
     createPayroll(
       editedPayroll,
       formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
     );
+    back();
   };
 
-  // TODO: Implement when mutation will be ready
   const deletePayrollCallback = () => deletePayrolls(
     payroll,
     formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payroll)),
@@ -147,6 +150,9 @@ function PayrollPage({
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  createPayroll,
+  clearPayroll,
+  deletePayrolls,
   coreConfirm,
   clearConfirm,
   journalize,

@@ -61,10 +61,10 @@ function PayrollSearcher({
 
   const itemFormatters = () => [
     (payroll) => payroll.name,
-    (payroll) => (payroll.paymentPoint
-      ? `${payroll.paymentPoint.name}` : ''),
     (payroll) => (payroll.benefitPlan
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
+    (payroll) => (payroll.paymentPoint
+      ? `${payroll.paymentPoint.name}` : ''),
     (payroll) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
         <IconButton

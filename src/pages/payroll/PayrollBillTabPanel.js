@@ -20,6 +20,15 @@ function PayrollBillsTabLabel({
 }
 
 function PayrollBillsTabPanel({ value, rights, payrollUuid }) {
+  let uuidPayroll = null;
+  const currentPath = window.location.pathname;
+  const pathSegments = currentPath.split('/');
+  const payrollIndex = pathSegments.indexOf('payroll');
+  if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
+    const uuid = pathSegments[payrollIndex + 1];
+    uuidPayroll = uuid;
+  }
+  
   return (
     <PublishedComponent
       pubRef="policyHolder.TabPanel"
@@ -28,7 +37,7 @@ function PayrollBillsTabPanel({ value, rights, payrollUuid }) {
       value={value}
     >
       {
-      rights.includes(RIGHT_BILL_SEARCH) && (
+      rights.includes(RIGHT_BILL_SEARCH) && uuidPayroll && (
       <PayrollBillSearcher rights={rights} payrollUuid={payrollUuid} />
       )
       }

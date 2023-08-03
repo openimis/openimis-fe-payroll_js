@@ -196,7 +196,7 @@ function reducer(
         }))?.[0],
         payrollBills: parseData(action.payload.data.payroll)?.map((payroll) => ({
           ...payroll.bill,
-        }))?.[0],
+        })),
         errorPayroll: formatGraphQLError(action.payload),
       };
     case ERROR(ACTION_TYPE.GET_PAYROLL):
@@ -213,6 +213,7 @@ function reducer(
         fetchedPayroll: false,
         payroll: null,
         errorPayroll: null,
+        payrollBills: []
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
