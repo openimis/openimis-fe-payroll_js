@@ -28,7 +28,6 @@ function PayrollBillsTabPanel({ value, rights, payrollUuid }) {
     const uuid = pathSegments[payrollIndex + 1];
     uuidPayroll = uuid;
   }
-  
   return (
     <PublishedComponent
       pubRef="policyHolder.TabPanel"
@@ -37,8 +36,8 @@ function PayrollBillsTabPanel({ value, rights, payrollUuid }) {
       value={value}
     >
       {
-      rights.includes(RIGHT_BILL_SEARCH) && uuidPayroll && (
-      <PayrollBillSearcher rights={rights} payrollUuid={payrollUuid} />
+        rights.includes(RIGHT_BILL_SEARCH) && uuidPayroll && (
+        <PayrollBillSearcher rights={rights} payrollUuid={payrollUuid} />
       )
       }
     </PublishedComponent>

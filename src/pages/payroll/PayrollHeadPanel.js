@@ -153,6 +153,7 @@ class PayrollHeadPanel extends FormPanel {
                 pubRef="core.DatePicker"
                 module="payroll"
                 label="dateValidTo"
+                required
                 value={!!payroll.dateValidTo ? payroll.dateValidTo : null}
                 onChange={(v) => this.updateAttribute("dateValidTo", v)}
                 readOnly={readOnly}

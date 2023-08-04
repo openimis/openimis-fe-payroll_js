@@ -10,6 +10,7 @@ import { ACTION_TYPE, MUTATION_SERVICE } from './reducer';
 import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
+import { isBase64Encoded } from './utils/advanced-filters-utils';
 
 export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
@@ -195,7 +196,8 @@ export function fetchPayroll(modulesManager, params) {
 }
 
 export function deletePayrolls(payroll, clientMutationLabel) {
-  const payrollUuids = `ids: ["${decodeId(payroll?.id)}"]`;
+  const uuid = isBase64Encoded(payroll.id) ? decodeId(payroll?.id) : payroll?.id;
+  const payrollUuids = `ids: ["${uuid}"]`;
   return PERFORM_MUTATION(
     MUTATION_SERVICE.PAYROLL.DELETE,
     payrollUuids,
