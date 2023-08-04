@@ -12,7 +12,7 @@ import {
   useTranslations,
   PublishedComponent,
 } from '@openimis/fe-core';
-import { fetchPayroll } from '../../actions';
+import { fetchPayrollBills } from '../../actions';
 import {
   DEFAULT_PAGE_SIZE,
   GET_SUBJECT_AND_THIRDPARTY_TYPE_PICKER_REF,
@@ -25,7 +25,7 @@ import PayrollBillFilter from './PayrollBillFilter';
 
 function PayrollBillSearcher({
   rights,
-  fetchPayroll,
+  fetchPayrollBills,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -43,23 +43,21 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  const fetch = () => {
-    if (payrollUuid) {
-      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
-    }
-  }
-
   const [payrollUuid, setPayrollUuid] = useState('');
 
-  useEffect(() => {
+  const fetch = (params) => {
     const currentPath = window.location.pathname;
     const pathSegments = currentPath.split('/');
     const payrollIndex = pathSegments.indexOf('payroll');
     if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
       const uuid = pathSegments[payrollIndex + 1];
-      setPayrollUuid(uuid);
+      const index = params.findIndex((element) => element.startsWith("payrollUuid:"));
+      if (index !== -1) {
+        params[index] = `payrollUuid: "${uuid}"`;
+      }
+      fetchPayrollBills(modulesManager, params);
     }
-  }, []);
+  }
 
   const headers = () => {
     const headers = [
@@ -120,18 +118,24 @@ function PayrollBillSearcher({
     ['status', true],
   ];
 
-  const defaultFilters = () => ({
-    isDeleted: {
-      value: false,
-      filter: 'isDeleted: false',
+  const defaultFilters = () => {
+    return ({
+      isDeleted: {
+        value: false,
+        filter: 'isDeleted: false',
+      },
+      payrollUuid: {
+        value: payrollUuid,
+        filter: `payrollUuid: "${payrollUuid}"`,
     },
   });
+  }
 
   return (
     <div>
       <Searcher
         module="payroll"
-        FilterPane={null}
+        FilterPane={PayrollBillFilter}
         fetch={fetch}
         items={bills}
         itemsPageInfo={billsPageInfo}
@@ -156,15 +160,13 @@ const mapStateToProps = (state) => ({
   fetchingBills: state.payroll.fetchingPayrollBills,
   fetchedBills: state.payroll.fetchedPayrollBills,
   errorBills: state.payroll.errorPayrollBills,
-  bills: state.payroll.payrollBills.flatMap((payrollBill) =>
-    Object.values(payrollBill)
-  ),
+  bills: state.payroll.payrollBills,
   billsPageInfo: state.payroll.payrollBillsPageInfo,
   billsTotalCount: state.payroll.payrollBillsTotalCount,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(
-  { fetchPayroll },
+  { fetchPayrollBills },
   dispatch,
 );
 

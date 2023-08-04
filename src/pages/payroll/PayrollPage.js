@@ -15,6 +15,7 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import {
+  fetchPayroll,
   clearPayroll,
   createPayroll,
   deletePayrolls,
@@ -39,6 +40,7 @@ function PayrollPage({
   submittingMutation,
   mutation,
   payroll,
+  fetchPayroll,
   createPayroll,
   clearPayroll,
   deletePayrolls,
@@ -51,6 +53,7 @@ function PayrollPage({
   const [editedPayroll, setEditedPayroll] = useState({});
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
+  const readOnly = Boolean(payroll?.id);
 
   const back = () => history.goBack();
 
@@ -91,7 +94,7 @@ function PayrollPage({
     return true;
   };
 
-  const canSave = () => !mandatoryFieldsEmpty();
+  const canSave = () => !mandatoryFieldsEmpty() && !readOnly;
 
   const handleSave = () => {
     createPayroll(
@@ -101,10 +104,11 @@ function PayrollPage({
     back();
   };
 
-  const deletePayrollCallback = () => deletePayrolls(
+  const deletePayrollCallback = () => {
+    deletePayrolls(
     payroll,
     formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payroll)),
-  );
+  )};
 
   const openDeletePayrollConfirmDialog = () => {
     setConfirmedAction(() => deletePayrollCallback);
@@ -115,7 +119,7 @@ function PayrollPage({
   };
 
   const actions = [
-    !!payroll && {
+    !!payroll && readOnly && {
       doIt: openDeletePayrollConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -150,6 +154,7 @@ function PayrollPage({
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchPayroll,
   createPayroll,
   clearPayroll,
   deletePayrolls,
@@ -159,7 +164,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
-  payrollUuid: props.match.params.payrollUuid,
+  payrollUuid: props.match.params.payroll_uuid,
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,

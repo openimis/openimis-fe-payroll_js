@@ -213,6 +213,11 @@ export function createPayroll(payroll, clientMutationLabel) {
   );
 }
 
+export function fetchPayrollBills(modulesManager, params) {
+  const payload = formatPageQueryWithCount('billByPayroll', params, BILL_FULL_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_PAYROLL_BILLS);
+}
+
 export const clearPayrollBills = () => (dispatch) => {
   dispatch({
     type: CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS),

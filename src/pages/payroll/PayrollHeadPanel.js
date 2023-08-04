@@ -40,7 +40,7 @@ class PayrollHeadPanel extends FormPanel {
   };
   
   getDefaultAppliedCustomFilters = () => {
-    const { jsonExt } = this.props.edited;
+    const { jsonExt } = this.props?.edited ?? {};
     try {
       const jsonData = JSON.parse(jsonExt);
       const advancedCriteria = jsonData.advanced_criteria || [];
@@ -76,7 +76,7 @@ class PayrollHeadPanel extends FormPanel {
     const readOnly = Boolean(payroll?.id);
     return (
       <>
-        {payroll?.benefitPlan && ( 
+        {payroll !== undefined && ( 
           <AdvancedFiltersDialog
             object={payroll.benefitPlan}
             objectToSave={payroll}
