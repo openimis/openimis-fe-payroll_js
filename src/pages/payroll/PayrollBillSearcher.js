@@ -37,9 +37,13 @@ function PayrollBillSearcher({
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
-  const openBill = (bill) => rights.includes(RIGHT_BILL_SEARCH) && history.push(
-    `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.uuid}`,
-  );
+  const openBill = (bill) => {
+    console.log('RES', bill);
+    console.log(modulesManager.getRef(INVOICE_BILL_ROUTE));
+    rights.includes(RIGHT_BILL_SEARCH) && history.push(
+      `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.id}`,
+    );
+  }
 
   const onDoubleClick = (bill) => openBill(bill);
 
@@ -97,7 +101,7 @@ function PayrollBillSearcher({
       formatters.push((bill) => (
         <Tooltip title={formatMessage('tooltip.edit')}>
           <IconButton
-            onClick={(e) => e.stopPropagation() && openBill(bill)}
+            onClick={() => openBill(bill)}
           >
             <EditIcon />
           </IconButton>

@@ -60,5 +60,6 @@
     "payroll.advancedFilters.button.addFilters": "Add filter",
     "payroll.advancedFilters.button.clearAllFilters": "Clear All Filters",
     "payroll.advancedFilters.button.cancel": "Cancel",
-    "payroll.advancedFilters.button.filter": "Filter"
+    "payroll.advancedFilters.button.filter": "Filter",
+    "payroll.tooltip.edit": "Edit"
 }
