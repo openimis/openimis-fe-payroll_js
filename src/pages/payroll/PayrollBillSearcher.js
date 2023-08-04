@@ -37,13 +37,9 @@ function PayrollBillSearcher({
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
-  const openBill = (bill) => {
-    console.log('RES', bill);
-    console.log(modulesManager.getRef(INVOICE_BILL_ROUTE));
-    rights.includes(RIGHT_BILL_SEARCH) && history.push(
-      `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.id}`,
-    );
-  }
+  const openBill = (bill) => rights.includes(RIGHT_BILL_SEARCH) && history.push(
+    `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.id}`,
+  );
 
   const onDoubleClick = (bill) => openBill(bill);
 
