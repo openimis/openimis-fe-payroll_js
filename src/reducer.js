@@ -73,7 +73,6 @@ const STORE_STATE = {
   fetchedPayrollBills: false,
   errorPayrollBills: null,
   payrollBillsPageInfo: {},
-  payrollBillsTotalCount: 0,
 };
 
 const getEnumValue = (enumElement) => enumElement?.substring(ENUM_PREFIX_LENGTH);
@@ -228,8 +227,8 @@ function reducer(
           id: decodeId(bill.id),
           status: getEnumValue(bill?.status),
         })),
-        payrollBillsPageInfo: pageInfo(action.payload.data.payroll),
-        payrollBillsTotalCount: action.payload.data.payroll?.totalCount ?? 0,
+        payrollBillsPageInfo: pageInfo(action.payload.data.billByPayroll),
+        payrollBillsTotalCount: action.payload.data.billByPayroll?.totalCount ?? 0,
         errorPayrollBills: formatGraphQLError(action.payload),
       };
     case ERROR(ACTION_TYPE.GET_PAYROLL_BILLS):
