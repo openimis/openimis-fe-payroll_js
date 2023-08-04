@@ -38,7 +38,7 @@ function PayrollBillsTabPanel({ value, rights, payrollUuid }) {
       {
         rights.includes(RIGHT_BILL_SEARCH) && uuidPayroll && (
         <PayrollBillSearcher rights={rights} payrollUuid={payrollUuid} />
-      )
+        )
       }
     </PublishedComponent>
   );

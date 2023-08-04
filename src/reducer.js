@@ -61,7 +61,7 @@ const STORE_STATE = {
   payrolls: [],
   payrollsPageInfo: {},
   payrollsTotalCount: 0,
-  
+
   fetchingPayroll: false,
   fetchedPayroll: false,
   payroll: {},
@@ -205,7 +205,7 @@ function reducer(
         fetchedPayroll: false,
         payroll: null,
         errorPayroll: null,
-        payrollBills: []
+        payrollBills: [],
       };
     case REQUEST(ACTION_TYPE.GET_PAYROLL_BILLS):
       return {
@@ -244,7 +244,7 @@ function reducer(
         fetchedPayrollBills: false,
         payrollBill: null,
         errorPayrollBill: null,
-        payrollBills: []
+        payrollBills: [],
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-param-reassign */
+import React, { useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -43,7 +44,7 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  const [payrollUuid, setPayrollUuid] = useState('');
+  const [payrollUuid] = useState('');
 
   const fetch = (params) => {
     const currentPath = window.location.pathname;
@@ -51,13 +52,13 @@ function PayrollBillSearcher({
     const payrollIndex = pathSegments.indexOf('payroll');
     if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
       const uuid = pathSegments[payrollIndex + 1];
-      const index = params.findIndex((element) => element.startsWith("payrollUuid:"));
+      const index = params.findIndex((element) => element.startsWith('payrollUuid:'));
       if (index !== -1) {
         params[index] = `payrollUuid: "${uuid}"`;
       }
       fetchPayrollBills(modulesManager, params);
     }
-  }
+  };
 
   const headers = () => {
     const headers = [
@@ -118,18 +119,16 @@ function PayrollBillSearcher({
     ['status', true],
   ];
 
-  const defaultFilters = () => {
-    return ({
-      isDeleted: {
-        value: false,
-        filter: 'isDeleted: false',
-      },
-      payrollUuid: {
-        value: payrollUuid,
-        filter: `payrollUuid: "${payrollUuid}"`,
+  const defaultFilters = () => ({
+    isDeleted: {
+      value: false,
+      filter: 'isDeleted: false',
+    },
+    payrollUuid: {
+      value: payrollUuid,
+      filter: `payrollUuid: "${payrollUuid}"`,
     },
   });
-  }
 
   return (
     <div>

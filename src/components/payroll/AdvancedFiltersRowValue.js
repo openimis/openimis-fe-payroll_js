@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { injectIntl } from "react-intl";
+/* eslint-disable react/jsx-no-useless-fragment */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/jsx-props-no-spreading */
+import React from 'react';
+import { injectIntl } from 'react-intl';
 import {
   PublishedComponent,
   TextInput,
   NumberInput,
   SelectInput,
   CustomFilterTypeStatusPicker,
-  CustomFilterFieldStatusPicker
-} from "@openimis/fe-core";
-import { Grid } from "@material-ui/core";
-import { withTheme, withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { 
+  CustomFilterFieldStatusPicker,
+} from '@openimis/fe-core';
+import { Grid } from '@material-ui/core';
+import { withTheme, withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import {
   BOOLEAN,
-  INTEGER, 
-  STRING, 
-  CLEARED_STATE_FILTER, 
-  DATE, 
-  BOOL_OPTIONS 
-} from "../../constants";
+  INTEGER,
+  STRING,
+  CLEARED_STATE_FILTER,
+  DATE,
+  BOOL_OPTIONS,
+} from '../../constants';
 
 const styles = (theme) => ({
   item: theme.paper.item,
 });
 
-const AdvancedFiltersRowValue = ({
-  intl,
+function AdvancedFiltersRowValue({
   classes,
   customFilters,
   currentFilter,
@@ -34,26 +37,25 @@ const AdvancedFiltersRowValue = ({
   filters,
   setFilters,
   readOnly,
-}) => {
-
+}) {
   const onAttributeChange = (attribute) => (value) => {
     let updatedFilter = { ...currentFilter };
-  
+
     if (attribute === 'field') {
       updatedFilter = {
         ...{ filter: '', value: '', type: value.type },
       };
     }
-  
+
     const attributeValue = attribute === 'field' ? value.field : value;
     updatedFilter = {
       ...updatedFilter,
       [attribute]: attributeValue,
       ...(attribute === 'filter' && { value: '' }),
     };
-  
+
     setCurrentFilter(updatedFilter);
-  
+
     setFilters((prevFilters) => {
       const updatedRows = [...prevFilters];
       updatedRows[index] = { ...updatedFilter };
@@ -69,12 +71,12 @@ const AdvancedFiltersRowValue = ({
 
   const renderInputBasedOnType = (type) => {
     const commonProps = {
-      module: "payroll",
-      label: "payroll.advancedFilters.value",
+      module: 'payroll',
+      label: 'payroll.advancedFilters.value',
       value: currentFilter.value,
-      onChange: onAttributeChange("value"),
+      onChange: onAttributeChange('value'),
     };
-  
+
     switch (type) {
       case BOOLEAN:
         return (
@@ -103,26 +105,28 @@ const AdvancedFiltersRowValue = ({
               {...commonProps}
             />
           );
-        } else {
-          return (
-            <TextInput
-              readOnly={readOnly}
-              {...commonProps}
-            />
-          );
         }
+        return (
+          <TextInput
+            readOnly={readOnly}
+            {...commonProps}
+          />
+        );
     }
   };
 
   return (
-    <Grid 
-      container 
-      direction="row" 
+    <Grid
+      container
+      direction="row"
       className={classes.item}
-      style={{ backgroundColor: "#DFEDEF" }}
+      style={{ backgroundColor: '#DFEDEF' }}
     >
       {filters.length > 0 && !readOnly ? (
-        <div style={{ backgroundColor: '#DFEDEF', width: '10px', height: '25px', marginTop: '25px' }}>
+        <div style={{
+          backgroundColor: '#DFEDEF', width: '10px', height: '25px', marginTop: '25px',
+        }}
+        >
           <span
             style={{
               transform: 'translate(-50%, -50%)',
@@ -133,39 +137,38 @@ const AdvancedFiltersRowValue = ({
           >
             &#x2716;
           </span>
-        </div> 
-      ) : (<></>)
-      }
+        </div>
+      ) : (<></>)}
       <Grid item xs={3} className={classes.item}>
         <CustomFilterFieldStatusPicker
           module="payroll"
           label="payroll.advancedFilters.field"
           value={{ field: currentFilter.field, type: currentFilter.type }}
-          onChange={onAttributeChange("field")}
+          onChange={onAttributeChange('field')}
           customFilters={customFilters}
           readOnly={readOnly}
         />
       </Grid>
-        {currentFilter.field !== "" ? (
-          <Grid item xs={3} className={classes.item}>
-            <CustomFilterTypeStatusPicker
-              module="payroll"
-              label="payroll.advancedFilters.filter"
-              value={currentFilter.filter}
-              onChange={onAttributeChange("filter")}
-              customFilters={customFilters}
-              customFilterField={currentFilter.field}
-              readOnly={readOnly}
-            />
-          </Grid>
-        ) : (<></>) }
-        {currentFilter.field !== "" && currentFilter.filter !== "" ? (
-          <Grid item xs={3} className={classes.item}>
-            {renderInputBasedOnType(currentFilter.type)}
-          </Grid>
-        ) : (<></>) }
+      {currentFilter.field !== '' ? (
+        <Grid item xs={3} className={classes.item}>
+          <CustomFilterTypeStatusPicker
+            module="payroll"
+            label="payroll.advancedFilters.filter"
+            value={currentFilter.filter}
+            onChange={onAttributeChange('filter')}
+            customFilters={customFilters}
+            customFilterField={currentFilter.field}
+            readOnly={readOnly}
+          />
+        </Grid>
+      ) : (<></>) }
+      {currentFilter.field !== '' && currentFilter.filter !== '' ? (
+        <Grid item xs={3} className={classes.item}>
+          {renderInputBasedOnType(currentFilter.type)}
+        </Grid>
+      ) : (<></>) }
     </Grid>
   );
-};
+}
 
 export default injectIntl(withTheme(withStyles(styles)(connect(null, null)(AdvancedFiltersRowValue))));

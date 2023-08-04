@@ -80,13 +80,13 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
   'jsonExt',
-  "dateValidFrom",
-  "dateValidTo",
-  "isDeleted",
+  'dateValidFrom',
+  'dateValidTo',
+  'isDeleted',
 ];
 
 function dateTimeToDate(date) {
-  return date.split("T")[0];
+  return date.split('T')[0];
 }
 
 const formatPaymentPointGQL = (paymentPoint) => {
@@ -106,22 +106,22 @@ const formatPayrollGQL = (payroll) => {
   ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
   ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
   ${
-    !!payroll.jsonExt
-      ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
-      : ""
-  }
+  payroll.jsonExt
+    ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
+    : ''
+}
   ${
-    !!payroll.dateValidFrom
-      ? `dateValidFrom: "${dateTimeToDate(
-        payroll.dateValidFrom
-        )}"`
-      : ""
-  }
+  payroll.dateValidFrom
+    ? `dateValidFrom: "${dateTimeToDate(
+      payroll.dateValidFrom,
+    )}"`
+    : ''
+}
   ${
-    !!payroll.dateValidTo
-      ? `dateValidTo: "${dateTimeToDate(payroll.dateValidTo)}"`
-      : ""
-  }
+  payroll.dateValidTo
+    ? `dateValidTo: "${dateTimeToDate(payroll.dateValidTo)}"`
+    : ''
+}
   `;
   return payrollGQL;
 };

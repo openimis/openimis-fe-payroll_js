@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
@@ -14,7 +15,6 @@ import {
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from '../../components/payroll/AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
-import { isEmptyObject } from '../../utils/advanced-filters-utils';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -35,10 +35,10 @@ class PayrollHeadPanel extends FormPanel {
 
   updateJsonExt = (value) => {
     this.updateAttributes({
-        "jsonExt": value
-    })
+      jsonExt: value,
+    });
   };
-  
+
   getDefaultAppliedCustomFilters = () => {
     const { jsonExt } = this.props?.edited ?? {};
     try {
@@ -52,7 +52,7 @@ class PayrollHeadPanel extends FormPanel {
           field,
           filter,
           type,
-          value
+          value,
         };
       });
       return parsedFilters;
@@ -62,13 +62,13 @@ class PayrollHeadPanel extends FormPanel {
   };
 
   setAppliedCustomFilters = (appliedCustomFilters) => {
-    this.setState({ appliedCustomFilters: appliedCustomFilters });
+    this.setState({ appliedCustomFilters });
   };
 
   setAppliedFiltersRowStructure = (appliedFiltersRowStructure) => {
-    this.setState({ appliedFiltersRowStructure: appliedFiltersRowStructure });
+    this.setState({ appliedFiltersRowStructure });
   };
-  
+
   render() {
     const { edited, classes, intl } = this.props;
     const payroll = { ...edited };
@@ -76,7 +76,7 @@ class PayrollHeadPanel extends FormPanel {
     const readOnly = Boolean(payroll?.id);
     return (
       <>
-        {payroll !== undefined && ( 
+        {payroll !== undefined && (
           <AdvancedFiltersDialog
             object={payroll.benefitPlan}
             objectToSave={payroll}
@@ -95,7 +95,7 @@ class PayrollHeadPanel extends FormPanel {
           <Grid item xs={3} className={classes.item}>
             <TextInput
               module="payroll"
-              label={formatMessage(intl, "payroll", "paymentPoint.name")}
+              label={formatMessage(intl, 'payroll', 'paymentPoint.name')}
               value={payroll?.name}
               required
               onChange={(name) => this.updateAttribute('name', name)}
@@ -143,21 +143,21 @@ class PayrollHeadPanel extends FormPanel {
               module="payroll"
               label="dateValidFrom"
               required
-              value={!!payroll.dateValidFrom ? payroll.dateValidFrom : null}
-              onChange={(v) => this.updateAttribute("dateValidFrom", v)}
+              value={payroll.dateValidFrom ? payroll.dateValidFrom : null}
+              onChange={(v) => this.updateAttribute('dateValidFrom', v)}
               readOnly={readOnly}
             />
-            </Grid>
-            <Grid item xs={3} className={classes.item}>
-              <PublishedComponent
-                pubRef="core.DatePicker"
-                module="payroll"
-                label="dateValidTo"
-                required
-                value={!!payroll.dateValidTo ? payroll.dateValidTo : null}
-                onChange={(v) => this.updateAttribute("dateValidTo", v)}
-                readOnly={readOnly}
-              />
+          </Grid>
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="core.DatePicker"
+              module="payroll"
+              label="dateValidTo"
+              required
+              value={payroll.dateValidTo ? payroll.dateValidTo : null}
+              onChange={(v) => this.updateAttribute('dateValidTo', v)}
+              readOnly={readOnly}
+            />
           </Grid>
         </Grid>
       </>
