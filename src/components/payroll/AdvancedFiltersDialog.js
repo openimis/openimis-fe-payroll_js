@@ -17,9 +17,10 @@ import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AddCircle from '@material-ui/icons/Add';
+import _ from 'lodash';
 import AdvancedFiltersRowValue from './AdvancedFiltersRowValue';
 import { BENEFIT_PLAN, CLEARED_STATE_FILTER } from '../../constants';
-import { isBase64Encoded, isEmptyObject } from '../../utils/advanced-filters-utils';
+import { isBase64Encoded } from '../../utils/advanced-filters-utils';
 
 const styles = (theme) => ({
   item: theme.paper.item,
@@ -105,7 +106,7 @@ function AdvancedFiltersDialog({
   };
 
   useEffect(() => {
-    if (object && isEmptyObject(object) === false) {
+    if (object && _.isEmpty(object) === false) {
       let paramsToFetchFilters = [];
       if (objectType === BENEFIT_PLAN) {
         paramsToFetchFilters = createParams(

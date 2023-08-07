@@ -85,10 +85,6 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'isDeleted',
 ];
 
-function dateTimeToDate(date) {
-  return date.split('T')[0];
-}
-
 const formatPaymentPointGQL = (paymentPoint) => {
   const paymentPointGQL = `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
@@ -112,14 +108,12 @@ const formatPayrollGQL = (payroll) => {
 }
   ${
   payroll.dateValidFrom
-    ? `dateValidFrom: "${dateTimeToDate(
-      payroll.dateValidFrom,
-    )}"`
+    ? `dateValidFrom: "${payroll.dateValidFrom}"`
     : ''
 }
   ${
   payroll.dateValidTo
-    ? `dateValidTo: "${dateTimeToDate(payroll.dateValidTo)}"`
+    ? `dateValidTo: "${payroll.dateValidTo}"`
     : ''
 }
   `;
