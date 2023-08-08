@@ -15,7 +15,8 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import {
-  // clearPayroll,
+  fetchPayroll,
+  clearPayroll,
   createPayroll,
   deletePayrolls,
 } from '../../actions';
@@ -39,6 +40,12 @@ function PayrollPage({
   submittingMutation,
   mutation,
   payroll,
+  fetchPayroll,
+  createPayroll,
+  clearPayroll,
+  deletePayrolls,
+  coreConfirm,
+  clearConfirm,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -48,13 +55,13 @@ function PayrollPage({
   const [editedPayroll, setEditedPayroll] = useState({});
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
+  const readOnly = Boolean(payroll?.id);
 
   const back = () => history.goBack();
 
   useEffect(() => {
     if (payrollUuid) {
-      // TODO: To be changed after BE implementation
-      // fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
     }
   }, [payrollUuid]);
 
@@ -78,26 +85,29 @@ function PayrollPage({
 
   useEffect(() => setEditedPayroll(payroll), [payroll]);
 
-  // TODO: To be finished after BE
-  // useEffect(() => () => clearPayroll(), []);
+  useEffect(() => () => clearPayroll(), []);
 
   const mandatoryFieldsEmpty = () => {
-    if (editedPayroll?.name) return false;
-    if (editedPayroll?.locations) return false;
+    if (
+      editedPayroll?.name
+      && editedPayroll?.benefitPlan
+      && editedPayroll?.paymentPoint
+      && editedPayroll?.dateValidFrom
+      && editedPayroll?.dateValidTo
+      && !editedPayroll?.isDeleted) return false;
     return true;
   };
 
-  const canSave = () => !mandatoryFieldsEmpty();
+  const canSave = () => !mandatoryFieldsEmpty() && !readOnly;
 
-  // TODO: Implement when mutation will be ready
   const handleSave = () => {
     createPayroll(
       editedPayroll,
       formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
     );
+    back();
   };
 
-  // TODO: Implement when mutation will be ready
   const deletePayrollCallback = () => deletePayrolls(
     payroll,
     formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payroll)),
@@ -112,7 +122,7 @@ function PayrollPage({
   };
 
   const actions = [
-    !!payroll && {
+    !!payroll && readOnly && {
       doIt: openDeletePayrollConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -147,13 +157,17 @@ function PayrollPage({
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchPayroll,
+  createPayroll,
+  clearPayroll,
+  deletePayrolls,
   coreConfirm,
   clearConfirm,
   journalize,
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
-  payrollUuid: props.match.params.payrollUuid,
+  payrollUuid: props.match.params.payroll_uuid,
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,

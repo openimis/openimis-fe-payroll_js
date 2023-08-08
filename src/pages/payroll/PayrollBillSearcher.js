@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-param-reassign */
+import React, { useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -25,8 +26,7 @@ import PayrollBillFilter from './PayrollBillFilter';
 
 function PayrollBillSearcher({
   rights,
-  payrollUuid,
-  // fetchPayrollBills,
+  fetchPayrollBills,
   fetchingBills,
   fetchedBills,
   errorBills,
@@ -39,12 +39,26 @@ function PayrollBillSearcher({
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
   const openBill = (bill) => rights.includes(RIGHT_BILL_SEARCH) && history.push(
-    `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.uuid}`,
+    `/${modulesManager.getRef(INVOICE_BILL_ROUTE)}/${bill?.id}`,
   );
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  // const fetch = (params) => fetchPayrollBills(params);
+  const [payrollUuid] = useState('');
+
+  const fetch = (params) => {
+    const currentPath = window.location.pathname;
+    const pathSegments = currentPath.split('/');
+    const payrollIndex = pathSegments.indexOf('payroll');
+    if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
+      const uuid = pathSegments[payrollIndex + 1];
+      const index = params.findIndex((element) => element.startsWith('payrollUuid:'));
+      if (index !== -1) {
+        params[index] = `payrollUuid: "${uuid}"`;
+      }
+      fetchPayrollBills(modulesManager, params);
+    }
+  };
 
   const headers = () => {
     const headers = [
@@ -84,7 +98,7 @@ function PayrollBillSearcher({
       formatters.push((bill) => (
         <Tooltip title={formatMessage('tooltip.edit')}>
           <IconButton
-            onClick={(e) => e.stopPropagation() && openBill(bill)}
+            onClick={() => openBill(bill)}
           >
             <EditIcon />
           </IconButton>
@@ -110,9 +124,9 @@ function PayrollBillSearcher({
       value: false,
       filter: 'isDeleted: false',
     },
-    thirdpartyId: {
+    payrollUuid: {
       value: payrollUuid,
-      filter: `thirdpartyId: "${payrollUuid}"`,
+      filter: `payrollUuid: "${payrollUuid}"`,
     },
   });
 
@@ -121,6 +135,7 @@ function PayrollBillSearcher({
       <Searcher
         module="payroll"
         FilterPane={PayrollBillFilter}
+        fetch={fetch}
         items={bills}
         itemsPageInfo={billsPageInfo}
         fetchingItems={fetchingBills}

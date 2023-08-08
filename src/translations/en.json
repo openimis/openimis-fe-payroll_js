@@ -49,5 +49,17 @@
     "payroll.bills.status.DELETED": "Deleted",
     "payroll.bills.status.SUSPENDED": "Suspended",
     "payroll.tooltip.save": "Save",
-    "payroll.tooltip.delete": "Delete"
+    "payroll.tooltip.delete": "Delete",
+
+    "payroll.advancedFilters": "Advanced Filters",
+    "payroll.advancedFilters.field": "Field",
+    "payroll.advancedFilters.filter": "Filter",
+    "payroll.advancedFilters.value": "Value",
+    "payroll.advancedFilters.amount": "Amount",
+    "payroll.advancedFilters.button.advancedFilters": "Advanced Filters",
+    "payroll.advancedFilters.button.addFilters": "Add filter",
+    "payroll.advancedFilters.button.clearAllFilters": "Clear All Filters",
+    "payroll.advancedFilters.button.cancel": "Cancel",
+    "payroll.advancedFilters.button.filter": "Filter",
+    "payroll.tooltip.edit": "Edit"
 }
