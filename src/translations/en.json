@@ -64,7 +64,7 @@
     "payroll.advancedFilters.button.filter": "Filter",
     "payroll.tooltip.edit": "Edit",
 
-    "payroll.payroll.payrollStatusPicker.label": "Status",
+    "payroll.payroll.payrollStatusPicker": "Status",
     "payroll.payroll.payrollStatusPicker.placeholder": "Status",
     "payroll.payroll.payrollStatusPicker.CREATED": "CREATED",
     "payroll.payroll.payrollStatusPicker.ONGOING": "ONGOING",

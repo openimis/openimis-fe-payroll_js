@@ -10,7 +10,7 @@ function PayrollStatusPicker(props) {
   return (
     <ConstantBasedPicker
       module="payroll"
-      label="payroll.payrollStatusPicker"
+      label="payroll.payroll.payrollStatusPicker"
       constants={PAYROLL_STATUS_LIST}
       required={required}
       withNull={withNull}

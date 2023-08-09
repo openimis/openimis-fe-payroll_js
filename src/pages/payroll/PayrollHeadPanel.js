@@ -141,7 +141,6 @@ class PayrollHeadPanel extends FormPanel {
           {readOnly && (
             <Grid item xs={3} className={classes.item}>
               <PayrollStatusPicker
-                label="payroll.payrollStatusPicker"
                 required
                 withNull={false}
                 readOnly={readOnly}

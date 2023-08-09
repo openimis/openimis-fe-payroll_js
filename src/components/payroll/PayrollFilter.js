@@ -118,7 +118,6 @@ function PayrollFilter({
       />
       <Grid item xs={2} className={classes.item}>
         <PayrollStatusPicker
-          label="beneficiary.beneficiaryPicker.label"
           withNull
           nullLabel={formatMessage('any')}
           value={filterValue('status')}
