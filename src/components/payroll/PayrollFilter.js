@@ -18,6 +18,7 @@ import {
   EMPTY_STRING,
   MODULE_NAME,
 } from '../../constants';
+import PayrollStatusPicker from './PayrollStatusPicker';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -115,6 +116,21 @@ function PayrollFilter({
           </Grid>
           )}
       />
+      <Grid item xs={2} className={classes.item}>
+        <PayrollStatusPicker
+          label="beneficiary.beneficiaryPicker.label"
+          withNull
+          nullLabel={formatMessage('any')}
+          value={filterValue('status')}
+          onChange={(value) => onChangeFilters([
+            {
+              id: 'status',
+              value,
+              filter: `status: "${value}"`,
+            },
+          ])}
+        />
+      </Grid>
       <ControlledField
         module="payroll"
         id="payrollFilter.showHistory"

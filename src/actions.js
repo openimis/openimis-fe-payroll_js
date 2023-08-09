@@ -11,6 +11,7 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 import { isBase64Encoded } from './utils/advanced-filters-utils';
+import { PAYROLL_STATUS } from './constants';
 
 export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
@@ -80,6 +81,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
   'jsonExt',
+  'status',
   'dateValidFrom',
   'dateValidTo',
   'isDeleted',
@@ -101,6 +103,7 @@ const formatPayrollGQL = (payroll) => {
   ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
   ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
   ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
+  ${`status: ${PAYROLL_STATUS.CREATED}`}
   ${
   payroll.jsonExt
     ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
