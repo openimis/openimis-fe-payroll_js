@@ -69,5 +69,6 @@
     "payroll.payroll.payrollStatusPicker.CREATED": "CREATED",
     "payroll.payroll.payrollStatusPicker.ONGOING": "ONGOING",
     "payroll.payroll.payrollStatusPicker.AWAITING_FOR_RECONCILIATION": "AWAITING_FOR_RECONCILIATION",
-    "payroll.payroll.payrollStatusPicker.RECONCILIATED": "RECONCILIATED"
+    "payroll.payroll.payrollStatusPicker.RECONCILIATED": "RECONCILIATED",
+    "payroll.paymentMethod": "Payment Method"
 }

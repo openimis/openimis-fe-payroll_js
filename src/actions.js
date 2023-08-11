@@ -1,5 +1,6 @@
 import {
   formatPageQueryWithCount,
+  formatQuery,
   formatGQLString,
   formatMutation,
   decodeId,
@@ -77,6 +78,7 @@ const BENEFIT_PLAN_FULL_PROJECTION = () => [
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
+  'paymentMethod',
   `benefitPlan { ${BENEFIT_PLAN_FULL_PROJECTION().join(' ')} }`,
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
@@ -85,6 +87,10 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'dateValidFrom',
   'dateValidTo',
   'isDeleted',
+];
+
+const PAYMENT_METHOD_PROJECTION = () => [
+  'paymentMethods {name}',
 ];
 
 const formatPaymentPointGQL = (paymentPoint) => {
@@ -103,6 +109,7 @@ const formatPayrollGQL = (payroll) => {
   ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
   ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
   ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
+  ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
   ${`status: ${PAYROLL_STATUS.CREATED}`}
   ${
   payroll.jsonExt
@@ -228,3 +235,8 @@ export const clearPayroll = () => (dispatch) => {
     type: CLEAR(ACTION_TYPE.GET_PAYROLL),
   });
 };
+
+export function fetchPaymentMethods(params) {
+  const payload = formatQuery('paymentMethods', params, PAYMENT_METHOD_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_PAYMENT_METHODS);
+}
