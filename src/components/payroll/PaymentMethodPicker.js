@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SelectInput } from '@openimis/fe-core';
-import { injectIntl } from 'react-intl';
 import { fetchPaymentMethods } from '../../actions';
 
 function PaymentMethodPicker({
@@ -65,4 +64,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPaymentMethods,
 }, dispatch);
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(PaymentMethodPicker));
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentMethodPicker);

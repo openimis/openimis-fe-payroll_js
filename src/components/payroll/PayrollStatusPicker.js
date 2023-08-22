@@ -3,10 +3,15 @@ import { ConstantBasedPicker } from '@openimis/fe-core';
 
 import { PAYROLL_STATUS_LIST } from '../../constants';
 
-function PayrollStatusPicker(props) {
-  const {
-    required, withNull, readOnly, onChange, value, nullLabel, withLabel,
-  } = props;
+function PayrollStatusPicker({
+  required,
+  withNull,
+  readOnly,
+  onChange,
+  value,
+  nullLabel,
+  withLabel,
+}) {
   return (
     <ConstantBasedPicker
       module="payroll"
