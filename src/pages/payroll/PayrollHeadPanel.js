@@ -15,6 +15,8 @@ import {
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from '../../components/payroll/AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
+import PayrollStatusPicker from '../../components/payroll/PayrollStatusPicker';
+import PaymentMethodPicker from '../../components/payroll/PaymentMethodPicker';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -137,6 +139,26 @@ class PayrollHeadPanel extends FormPanel {
               </Grid>
             )}
           />
+          {readOnly && (
+            <Grid item xs={3} className={classes.item}>
+              <PayrollStatusPicker
+                required
+                withNull={false}
+                readOnly={readOnly}
+                value={!!payroll?.status && payroll.status}
+              />
+            </Grid>
+          )}
+          <Grid item xs={3} className={classes.item}>
+            <PaymentMethodPicker
+              required
+              withNull={false}
+              readOnly={readOnly}
+              value={!!payroll?.paymentMethod && payroll.paymentMethod}
+              onChange={(paymentMethod) => this.updateAttribute('paymentMethod', paymentMethod)}
+              label={formatMessage(intl, 'payroll', 'paymentMethod')}
+            />
+          </Grid>
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
               pubRef="core.DatePicker"

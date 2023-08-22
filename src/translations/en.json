@@ -18,6 +18,7 @@
     "payroll.payroll.page.title": "Payrolls",
     "payroll.payroll.route": "Payrolls",
     "payroll.payroll.name": "Name",
+    "payroll.payroll.status": "Status",
     "payroll.payroll.paymentPlan": "Payment Plan",
     "payroll.payroll.benefitPlan": "Benefit Plan",
     "payroll.payroll.customFilter": "Custom Filter",
@@ -61,5 +62,13 @@
     "payroll.advancedFilters.button.clearAllFilters": "Clear All Filters",
     "payroll.advancedFilters.button.cancel": "Cancel",
     "payroll.advancedFilters.button.filter": "Filter",
-    "payroll.tooltip.edit": "Edit"
+    "payroll.tooltip.edit": "Edit",
+
+    "payroll.payroll.payrollStatusPicker": "Status",
+    "payroll.payroll.payrollStatusPicker.placeholder": "Status",
+    "payroll.payroll.payrollStatusPicker.CREATED": "CREATED",
+    "payroll.payroll.payrollStatusPicker.ONGOING": "ONGOING",
+    "payroll.payroll.payrollStatusPicker.AWAITING_FOR_RECONCILIATION": "AWAITING_FOR_RECONCILIATION",
+    "payroll.payroll.payrollStatusPicker.RECONCILIATED": "RECONCILIATED",
+    "payroll.paymentMethod": "Payment Method"
 }

@@ -83,6 +83,8 @@ function PayrollSearcher({
     'payroll.name',
     'payroll.benefitPlan',
     'payroll.paymentPoint',
+    'payroll.status',
+    'payroll.paymentMethod',
     'emptyLabel',
   ];
 
@@ -90,6 +92,8 @@ function PayrollSearcher({
     ['name', true],
     ['benefitPlan', true],
     ['paymentPoint', true],
+    ['status', true],
+    ['paymentMethod', true],
   ];
 
   const defaultFilters = () => ({
@@ -115,6 +119,10 @@ function PayrollSearcher({
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
     (payroll) => (payroll.paymentPoint
       ? `${payroll.paymentPoint.name}` : ''),
+    (payroll) => (payroll.status
+      ? `${payroll.status}` : ''),
+    (payroll) => (payroll.paymentMethod
+      ? `${payroll.paymentMethod}` : ''),
     (payroll) => (
       <Tooltip title={formatMessage('tooltip.viewDetails')}>
         <IconButton

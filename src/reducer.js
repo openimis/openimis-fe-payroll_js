@@ -27,6 +27,7 @@ export const ACTION_TYPE = {
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
   GET_PAYROLL_BILLS: 'PAYROLL_PAYROLL_BILLS',
+  GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
 };
 
 export const MUTATION_SERVICE = {
@@ -73,6 +74,11 @@ const STORE_STATE = {
   fetchedPayrollBills: false,
   errorPayrollBills: null,
   payrollBillsPageInfo: {},
+
+  fetchingPaymentMethods: true,
+  paymentMethods: [],
+  fetchedPaymentMethods: false,
+  errorPaymentMethods: null,
 };
 
 const getEnumValue = (enumElement) => enumElement?.substring(ENUM_PREFIX_LENGTH);
@@ -245,6 +251,28 @@ function reducer(
         payrollBill: null,
         errorPayrollBill: null,
         payrollBills: [],
+      };
+    case REQUEST(ACTION_TYPE.GET_PAYMENT_METHODS):
+      return {
+        ...state,
+        fetchingPaymentMethods: true,
+        fetchedPaymentMethods: false,
+        paymentMethods: [],
+        errorPaymentMethods: null,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYMENT_METHODS):
+      return {
+        ...state,
+        fetchingPaymentMethods: false,
+        fetchedPaymentMethods: true,
+        paymentMethods: action.payload.data.paymentMethods ? action.payload.data.paymentMethods.paymentMethods : [],
+        errorPaymentMethods: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_PAYMENT_METHODS):
+      return {
+        ...state,
+        fetchingPaymentMethods: false,
+        errorPaymentMethods: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

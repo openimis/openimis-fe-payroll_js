@@ -18,6 +18,8 @@ import {
   EMPTY_STRING,
   MODULE_NAME,
 } from '../../constants';
+import PayrollStatusPicker from './PayrollStatusPicker';
+import PaymentMethodPicker from './PaymentMethodPicker';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -115,6 +117,36 @@ function PayrollFilter({
           </Grid>
           )}
       />
+      <Grid item xs={2} className={classes.item}>
+        <PayrollStatusPicker
+          withNull
+          nullLabel={formatMessage('any')}
+          label={formatMessage('paymentMethod')}
+          value={filterValue('status')}
+          onChange={(value) => onChangeFilters([
+            {
+              id: 'status',
+              value,
+              filter: `status: "${value}"`,
+            },
+          ])}
+        />
+      </Grid>
+      <Grid item xs={2} className={classes.item}>
+        <PaymentMethodPicker
+          withNull
+          nullLabel={formatMessage('any')}
+          label={formatMessage('payroll.paymentMethod')}
+          value={filterValue('paymentMethod')}
+          onChange={(value) => onChangeFilters([
+            {
+              id: 'paymentMethod',
+              value,
+              filter: `paymentMethod: "${value}"`,
+            },
+          ])}
+        />
+      </Grid>
       <ControlledField
         module="payroll"
         id="payrollFilter.showHistory"
