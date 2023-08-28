@@ -15,6 +15,7 @@ import PayrollPage from './pages/payroll/PayrollPage';
 import PayrollsPage from './pages/payroll/PayrollsPage';
 import { PayrollBillsTabLabel, PayrollBillsTabPanel } from './pages/payroll/PayrollBillTabPanel';
 import PaymentPointPicker from './components/payment-point/PaymentPointPicker';
+import { PayrollTaskItemFormatters, PayrollTaskTableHeaders } from './components/tasks/PayrollTasks';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -54,6 +55,12 @@ const DEFAULT_CONFIG = {
   ],
   'payroll.TabPanel.label': [PayrollBillsTabLabel],
   'payroll.TabPanel.panel': [PayrollBillsTabPanel],
+  'tasksManagement.tasks': [{
+    text: <FormattedMessage module="payroll" id="payroll.tasks.update.title" />,
+    tableHeaders: PayrollTaskTableHeaders,
+    itemFormatters: PayrollTaskItemFormatters,
+    taskSource: ['payroll'],
+  }],
 };
 
 export const PayrollModule = (cfg) => ({ ...DEFAULT_CONFIG, ...cfg });
