@@ -111,7 +111,7 @@ const formatPayrollGQL = (payroll) => {
   ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
   ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
   ${payroll.includedUnpaid !== null && payroll.includedUnpaid !== undefined
-    ? `includedUnpaid: ${payroll.includedUnpaid}` : 'false'}
+    ? `includedUnpaid: ${payroll.includedUnpaid}` : 'includedUnpaid: false'}
   ${`status: ${PAYROLL_STATUS.CREATED}`}
   ${
   payroll.jsonExt
