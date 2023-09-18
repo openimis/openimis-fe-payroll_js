@@ -72,5 +72,6 @@
     "payroll.payroll.payrollStatusPicker.RECONCILIATED": "RECONCILIATED",
     "payroll.paymentMethod": "Payment Method",
     "payroll.tasks.update.title": "Approve Payroll Tasks",
-    "payroll.tasks.reconciliation.title": "Payroll Reconciliation Tasks"
+    "payroll.tasks.reconciliation.title": "Payroll Reconciliation Tasks",
+    "payroll.payroll.includedUnpaid": "Included unpaid"
 }
