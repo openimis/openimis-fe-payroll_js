@@ -110,7 +110,7 @@ const formatPayrollGQL = (payroll) => {
   ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
   ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
   ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
-  ${payroll?.includedUnpaid ? `includedUnpaid: "${payroll.includedUnpaid}"` : ''}
+  ${payroll.includedUnpaid !== null ? `includedUnpaid: ${payroll.includedUnpaid}` : ''}
   ${`status: ${PAYROLL_STATUS.CREATED}`}
   ${
   payroll.jsonExt
