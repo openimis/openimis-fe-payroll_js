@@ -188,7 +188,7 @@ class PayrollHeadPanel extends FormPanel {
                 <Checkbox
                   checked={!!payroll && !!payroll.includedUnpaid && edited.includedUnpaid}
                   onChange={(event) => this.updateAttribute('includedUnpaid', event.target.checked)}
-                  disabled
+                  disabled={!!isReadOnly}
                 />
               )}
             />
