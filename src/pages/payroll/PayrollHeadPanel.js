@@ -186,7 +186,7 @@ class PayrollHeadPanel extends FormPanel {
               label={formatMessage(intl, 'payroll', 'payroll.includedUnpaid')}
               control={(
                 <Checkbox
-                  checked={!!payroll && !!payroll.includedUnpaid && edited.includedUnpaid}
+                  checked={!!payroll && !!payroll.includedUnpaid && payroll.includedUnpaid}
                   onChange={(event) => this.updateAttribute('includedUnpaid', event.target.checked)}
                   disabled={!!readOnly}
                 />
