@@ -73,5 +73,9 @@
     "payroll.paymentMethod": "Payment Method",
     "payroll.tasks.update.title": "Approve Payroll Tasks",
     "payroll.tasks.reconciliation.title": "Payroll Reconciliation Tasks",
-    "payroll.payroll.includedUnpaid": "Included unpaid"
+    "payroll.payroll.includedUnpaid": "Included unpaid", 
+
+    "payroll.mutation.createLabel": "Create Payroll '{name}'",
+
+    "payroll.mutation.deleteLabel": "Delete Payroll '{name}'"
 }
