@@ -99,10 +99,7 @@ function PayrollPage({
     return true;
   };
 
-  const canSave = () => {
-    console.log(!mandatoryFieldsEmpty(), readOnly, !mandatoryFieldsEmpty() && !readOnly);
-    return !mandatoryFieldsEmpty() && !readOnly;
-  };
+  const canSave = () => !mandatoryFieldsEmpty() && !readOnly;
 
   const handleSave = () => {
     createPayroll(
