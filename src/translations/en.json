@@ -23,6 +23,8 @@
     "payroll.payroll.benefitPlan": "Benefit Plan",
     "payroll.payroll.customFilter": "Custom Filter",
     "payroll.payrollSearcher.results": "{totalCount} Payrolls Found",
+    "payroll.payroll.mutation.create": "Create Payroll {id}",
+    "payroll.payroll.mutation.deleteLabel": "Delete Payroll {id}",
     
     "payroll.payroll.paymentPoint": "Payment Point",
     "payroll.paymentPoint.label": "Payment Point",
