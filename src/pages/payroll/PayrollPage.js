@@ -46,6 +46,7 @@ function PayrollPage({
   deletePayrolls,
   coreConfirm,
   clearConfirm,
+  journalize,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -98,14 +99,16 @@ function PayrollPage({
     return true;
   };
 
-  const canSave = () => !mandatoryFieldsEmpty() && !readOnly;
+  const canSave = () => {
+    console.log(!mandatoryFieldsEmpty(), readOnly, !mandatoryFieldsEmpty() && !readOnly);
+    return !mandatoryFieldsEmpty() && !readOnly;
+  };
 
   const handleSave = () => {
     createPayroll(
       editedPayroll,
       formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
     );
-    back();
   };
 
   const deletePayrollCallback = () => deletePayrolls(
