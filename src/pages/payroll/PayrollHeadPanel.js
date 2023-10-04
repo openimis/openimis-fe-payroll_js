@@ -130,7 +130,6 @@ class PayrollHeadPanel extends FormPanel {
                   pubRef="payroll.PaymentPointPicker"
                   withLabel
                   withPlaceholder
-                  required
                   filterLabels={false}
                   onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
                   value={payroll?.paymentPoint}
