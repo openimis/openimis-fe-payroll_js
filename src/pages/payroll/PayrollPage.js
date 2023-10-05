@@ -92,7 +92,6 @@ function PayrollPage({
     if (
       editedPayroll?.name
       && editedPayroll?.benefitPlan
-      && editedPayroll?.paymentPoint
       && editedPayroll?.dateValidFrom
       && editedPayroll?.dateValidTo
       && !editedPayroll?.isDeleted) return false;
