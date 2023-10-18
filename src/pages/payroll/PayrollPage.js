@@ -46,6 +46,7 @@ function PayrollPage({
   deletePayrolls,
   coreConfirm,
   clearConfirm,
+  journalize,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -91,7 +92,6 @@ function PayrollPage({
     if (
       editedPayroll?.name
       && editedPayroll?.benefitPlan
-      && editedPayroll?.paymentPoint
       && editedPayroll?.dateValidFrom
       && editedPayroll?.dateValidTo
       && !editedPayroll?.isDeleted) return false;
@@ -105,7 +105,6 @@ function PayrollPage({
       editedPayroll,
       formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
     );
-    back();
   };
 
   const deletePayrollCallback = () => deletePayrolls(

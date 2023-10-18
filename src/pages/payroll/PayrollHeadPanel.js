@@ -2,7 +2,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid } from '@material-ui/core';
+import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
 import { withTheme, withStyles } from '@material-ui/core/styles';
 
 import {
@@ -130,7 +130,6 @@ class PayrollHeadPanel extends FormPanel {
                   pubRef="payroll.PaymentPointPicker"
                   withLabel
                   withPlaceholder
-                  required
                   filterLabels={false}
                   onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
                   value={payroll?.paymentPoint}
@@ -179,6 +178,18 @@ class PayrollHeadPanel extends FormPanel {
               value={payroll.dateValidTo ? payroll.dateValidTo : null}
               onChange={(v) => this.updateAttribute('dateValidTo', v)}
               readOnly={readOnly}
+            />
+          </Grid>
+          <Grid item className={classes.item}>
+            <FormControlLabel
+              label={formatMessage(intl, 'payroll', 'payroll.includedUnpaid')}
+              control={(
+                <Checkbox
+                  checked={!!payroll.includedUnpaid}
+                  onChange={(event) => this.updateAttribute('includedUnpaid', event.target.checked)}
+                  disabled={!!readOnly}
+                />
+              )}
             />
           </Grid>
         </Grid>
