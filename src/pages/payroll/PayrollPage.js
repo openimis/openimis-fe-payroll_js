@@ -103,7 +103,7 @@ function PayrollPage({
   const handleSave = () => {
     createPayroll(
       editedPayroll,
-      formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
+      formatMessageWithValues('payroll.mutation.createLabel', mutationLabel(editedPayroll)),
     );
   };
 

@@ -4,4 +4,5 @@ export const pageTitle = (item) => ({
 
 export const mutationLabel = (item) => ({
   id: item?.id,
+  name: item?.name,
 });
