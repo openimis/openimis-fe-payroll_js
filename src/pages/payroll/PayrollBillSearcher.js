@@ -33,6 +33,7 @@ function PayrollBillSearcher({
   bills,
   billsPageInfo,
   billsTotalCount,
+  payrollUuid,
 }) {
   const history = useHistory();
   const modulesManager = useModulesManager();
@@ -44,20 +45,8 @@ function PayrollBillSearcher({
 
   const onDoubleClick = (bill) => openBill(bill);
 
-  const [payrollUuid] = useState('');
-
   const fetch = (params) => {
-    const currentPath = window.location.pathname;
-    const pathSegments = currentPath.split('/');
-    const payrollIndex = pathSegments.indexOf('payroll');
-    if (payrollIndex !== -1 && payrollIndex < pathSegments.length - 1) {
-      const uuid = pathSegments[payrollIndex + 1];
-      const index = params.findIndex((element) => element.startsWith('payrollUuid:'));
-      if (index !== -1) {
-        params[index] = `payrollUuid: "${uuid}"`;
-      }
-      fetchPayrollBills(modulesManager, params);
-    }
+    fetchPayrollBills(modulesManager, params);
   };
 
   const headers = () => {
@@ -118,6 +107,8 @@ function PayrollBillSearcher({
     ['amountTotal', true],
     ['status', true],
   ];
+
+  console.log(payrollUuid);
 
   const defaultFilters = () => ({
     isDeleted: {

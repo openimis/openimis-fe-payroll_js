@@ -7,6 +7,7 @@ import {
   PAYROLL_TABS_LABEL_CONTRIBUTION_KEY,
   PAYROLL_TABS_PANEL_CONTRIBUTION_KEY,
 } from '../../constants';
+import PayrollPaymentDataUploadDialog from '../../components/payroll/PayrollPaymentDataUploadDialog';
 
 const useStyles = makeStyles((theme) => ({
   paper: theme.paper.paper,
@@ -43,14 +44,26 @@ function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
   return (
     <Paper className={classes.paper}>
       <Grid container className={`${classes.tableTitle} ${classes.tabs}`}>
-        <Contributions
-          contributionKey={PAYROLL_TABS_LABEL_CONTRIBUTION_KEY}
-          rights={rights}
-          value={activeTab}
-          onChange={handleChange}
-          isSelected={isSelected}
-          tabStyle={tabStyle}
-        />
+        <div style={{ width: '100%' }}>
+          <div style={{ float: 'left' }}>
+            <Contributions
+              contributionKey={PAYROLL_TABS_LABEL_CONTRIBUTION_KEY}
+              rights={rights}
+              value={activeTab}
+              onChange={handleChange}
+              isSelected={isSelected}
+              tabStyle={tabStyle}
+            />
+          </div>
+          <div style={{ float: 'right', paddingRight: '16px' }}>
+            {payrollUuid
+                && (
+                <PayrollPaymentDataUploadDialog
+                  payrollUuid={payrollUuid}
+                />
+                )}
+          </div>
+        </div>
       </Grid>
       <Contributions
         contributionKey={PAYROLL_TABS_PANEL_CONTRIBUTION_KEY}
