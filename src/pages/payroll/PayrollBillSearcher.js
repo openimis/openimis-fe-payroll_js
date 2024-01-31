@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useState } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -107,8 +107,6 @@ function PayrollBillSearcher({
     ['amountTotal', true],
     ['status', true],
   ];
-
-  console.log(payrollUuid);
 
   const defaultFilters = () => ({
     isDeleted: {
