@@ -1,22 +1,13 @@
 import React from 'react';
-import { FormattedMessage } from '@openimis/fe-core';
+import PayrollPage from '../../pages/payroll/PayrollPage';
+import { EMPTY_STRING } from '../../constants';
 
 const PayrollTaskTableHeaders = () => [
-  <FormattedMessage module="payroll" id="payroll.name" />,
-  <FormattedMessage module="payroll" id="payroll.benefitPlan" />,
-  <FormattedMessage module="payroll" id="payroll.status" />,
-  <FormattedMessage module="payroll" id="payroll.dateValidFrom" />,
-  <FormattedMessage module="payroll" id="payroll.dateValidTo" />,
-  <FormattedMessage module="payroll" id="payroll.paymentMethod" />,
+  EMPTY_STRING,
 ];
 
 const PayrollTaskItemFormatters = () => [
-  (payroll) => payroll?.name,
-  (payroll) => payroll?.benefitPlan,
-  (payroll) => payroll?.status,
-  (payroll) => payroll?.date_valid_from,
-  (payroll) => payroll?.date_valid_to,
-  (payroll) => payroll?.paymentMethod,
+  (payroll) => <PayrollPage taskPayrollUuid={payroll?.id} />,
 ];
 
 export { PayrollTaskTableHeaders, PayrollTaskItemFormatters };
