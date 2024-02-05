@@ -73,7 +73,7 @@ function PayrollPage({
   }, [payrollUuid]);
 
   useEffect(() => {
-    if (confirmed) confirmedAction();
+    if (confirmed && typeof confirmed === 'function') confirmedAction();
     return () => confirmed && clearConfirm(null);
   }, [confirmed]);
 
