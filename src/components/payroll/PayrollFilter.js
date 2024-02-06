@@ -74,49 +74,52 @@ function PayrollFilter({
           onChange={onChangeStringFilter('name', CONTAINS_LOOKUP)}
         />
       </Grid>
-      <ControlledField
-        module="payroll"
-        id="PayrollFilter.benefitPlan"
-        field={(
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef="socialProtection.BenefitPlanPicker"
-              withNull
-              filters={filters}
-              value={filterValue('benefitPlan_Id')}
-              onChange={(benefitPlan) => onChangeFilters([
-                {
-                  id: 'benefitPlan_Id',
-                  value: benefitPlan,
-                  filter: `benefitPlan_Id: "${benefitPlan?.id && decodeId(benefitPlan.id)}"`,
-                },
-              ])}
-            />
-          </Grid>
-          )}
-      />
-      <ControlledField
-        module="payroll"
-        id="PayrollFilter.paymentPoint"
-        field={(
-          <Grid item xs={3} className={classes.item}>
-            <PublishedComponent
-              pubRef="payroll.PaymentPointPicker"
-              withLabel
-              withPlaceholder
-              filters={filters}
-              value={filterValue('paymentPoint_Id')}
-              onChange={(paymentPoint) => onChangeFilters([
-                {
-                  id: 'paymentPoint_Id',
-                  value: paymentPoint,
-                  filter: `paymentPoint_Id: "${paymentPoint?.id && decodeId(paymentPoint.id)}"`,
-                },
-              ])}
-            />
-          </Grid>
-          )}
-      />
+      <Grid item xs={3} className={classes.item}>
+        <PublishedComponent
+          pubRef="contributionPlan.PaymentPlanPicker"
+          filters={filters}
+          value={filterValue('paymentPlan_Id')}
+          onChange={(paymentPlan) => onChangeFilters([
+            {
+              id: 'paymentPlan_Id',
+              value: paymentPlan,
+              filter: `paymentPlan_Id: "${paymentPlan?.id && decodeId(paymentPlan.id)}"`,
+            },
+          ])}
+        />
+      </Grid>
+      <Grid item xs={3} className={classes.item}>
+        <PublishedComponent
+          pubRef="payroll.PaymentPointPicker"
+          withLabel
+          withPlaceholder
+          filters={filters}
+          value={filterValue('paymentPoint_Id')}
+          onChange={(paymentPoint) => onChangeFilters([
+            {
+              id: 'paymentPoint_Id',
+              value: paymentPoint,
+              filter: `paymentPoint_Id: "${paymentPoint?.id && decodeId(paymentPoint.id)}"`,
+            },
+          ])}
+        />
+      </Grid>
+      <Grid item xs={3} className={classes.item}>
+        <PublishedComponent
+          pubRef="paymentCycle.PaymentCyclePicker"
+          withLabel
+          withPlaceholder
+          filters={filters}
+          value={filterValue('paymentCycle_Id')}
+          onChange={(paymentCycle) => onChangeFilters([
+            {
+              id: 'paymentCycle_Id',
+              value: paymentCycle,
+              filter: `paymentCycle_Id: "${paymentCycle?.id && decodeId(paymentCycle.id)}"`,
+            },
+          ])}
+        />
+      </Grid>
       <Grid item xs={2} className={classes.item}>
         <PayrollStatusPicker
           withNull

@@ -3,7 +3,7 @@ import { Paper, Grid } from '@material-ui/core';
 import { Contributions } from '@openimis/fe-core';
 import { makeStyles } from '@material-ui/styles';
 import {
-  PAYROLL_BILLS_LIST_TAB_VALUE,
+  BENEFIT_CONSUMPTION_LIST_TAB_VALUE,
   PAYROLL_TABS_LABEL_CONTRIBUTION_KEY,
   PAYROLL_TABS_PANEL_CONTRIBUTION_KEY,
 } from '../../constants';
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
   const classes = useStyles();
 
-  const [activeTab, setActiveTab] = useState(PAYROLL_BILLS_LIST_TAB_VALUE);
+  const [activeTab, setActiveTab] = useState(BENEFIT_CONSUMPTION_LIST_TAB_VALUE);
 
   const isSelected = (tab) => tab === activeTab;
 

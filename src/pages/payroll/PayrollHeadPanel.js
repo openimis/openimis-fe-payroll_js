@@ -2,16 +2,16 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
-import { withTheme, withStyles } from '@material-ui/core/styles';
+import { Checkbox, FormControlLabel, Grid } from '@material-ui/core';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 
 import {
-  TextInput,
-  FormPanel,
-  withModulesManager,
-  PublishedComponent,
   ControlledField,
   formatMessage,
+  FormPanel,
+  PublishedComponent,
+  TextInput,
+  withModulesManager,
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from '../../components/payroll/AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
@@ -46,7 +46,7 @@ class PayrollHeadPanel extends FormPanel {
     try {
       const jsonData = JSON.parse(jsonExt);
       const advancedCriteria = jsonData.advanced_criteria || [];
-      const parsedFilters = advancedCriteria.map(({ custom_filter_condition }) => {
+      return advancedCriteria.map(({ custom_filter_condition }) => {
         const [field, filter, typeValue] = custom_filter_condition.split('__');
         const [type, value] = typeValue.split('=');
         return {
@@ -57,7 +57,6 @@ class PayrollHeadPanel extends FormPanel {
           value,
         };
       });
-      return parsedFilters;
     } catch (error) {
       return [];
     }
@@ -76,23 +75,22 @@ class PayrollHeadPanel extends FormPanel {
     const payroll = { ...edited };
     const { appliedCustomFilters, appliedFiltersRowStructure } = this.state;
     const readOnly = Boolean(payroll?.id);
+    console.log(payroll)
     return (
       <>
-        {payroll !== undefined && (
-          <AdvancedFiltersDialog
-            object={payroll.benefitPlan}
-            objectToSave={payroll}
-            moduleName="social_protection"
-            objectType="BenefitPlan"
-            setAppliedCustomFilters={this.setAppliedCustomFilters}
-            appliedCustomFilters={appliedCustomFilters}
-            appliedFiltersRowStructure={appliedFiltersRowStructure}
-            setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
-            updateAttributes={this.updateJsonExt}
-            getDefaultAppliedCustomFilters={this.getDefaultAppliedCustomFilters}
-            readOnly={readOnly}
-          />
-        )}
+        <AdvancedFiltersDialog
+          object={payroll.benefitPlan}
+          objectToSave={payroll}
+          moduleName="social_protection"
+          objectType="BenefitPlan"
+          setAppliedCustomFilters={this.setAppliedCustomFilters}
+          appliedCustomFilters={appliedCustomFilters}
+          appliedFiltersRowStructure={appliedFiltersRowStructure}
+          setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
+          updateAttributes={this.updateJsonExt}
+          getDefaultAppliedCustomFilters={this.getDefaultAppliedCustomFilters}
+          readOnly={readOnly}
+        />
         <Grid container className={classes.item}>
           <Grid item xs={3} className={classes.item}>
             <TextInput
@@ -104,40 +102,40 @@ class PayrollHeadPanel extends FormPanel {
               readOnly={readOnly}
             />
           </Grid>
-          <ControlledField
-            module="payroll"
-            id="PayrollFilter.benefitPlan"
-            field={(
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="socialProtection.BenefitPlanPicker"
-                  withNull
-                  required
-                  filterLabels={false}
-                  onChange={(benefitPlan) => this.updateAttribute('benefitPlan', benefitPlan)}
-                  value={payroll?.benefitPlan}
-                  readOnly={readOnly}
-                />
-              </Grid>
-            )}
-          />
-          <ControlledField
-            module="payroll"
-            id="PayrollFilter.paymentPoint"
-            field={(
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="payroll.PaymentPointPicker"
-                  withLabel
-                  withPlaceholder
-                  filterLabels={false}
-                  onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
-                  value={payroll?.paymentPoint}
-                  readOnly={readOnly}
-                />
-              </Grid>
-            )}
-          />
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="contributionPlan.PaymentPlanPicker"
+              withNull
+              required
+              filterLabels={false}
+              onChange={(paymentPlan) => this.updateAttribute('paymentPlan', paymentPlan)}
+              value={payroll?.paymentPlan}
+              readOnly={readOnly}
+            />
+          </Grid>
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="payroll.PaymentPointPicker"
+              withLabel
+              withPlaceholder
+              filterLabels={false}
+              onChange={(paymentPoint) => this.updateAttribute('paymentPoint', paymentPoint)}
+              value={payroll?.paymentPoint}
+              readOnly={readOnly}
+            />
+          </Grid>
+          <Grid item xs={3} className={classes.item}>
+            <PublishedComponent
+              pubRef="paymentCycle.PaymentCyclePicker"
+              withLabel
+              required
+              withPlaceholder
+              filterLabels={false}
+              onChange={(paymentCycle) => this.updateAttribute('paymentCycle', paymentCycle)}
+              value={payroll?.paymentCycle}
+              readOnly={readOnly}
+            />
+          </Grid>
           {readOnly && (
             <Grid item xs={3} className={classes.item}>
               <PayrollStatusPicker
@@ -178,18 +176,6 @@ class PayrollHeadPanel extends FormPanel {
               value={payroll.dateValidTo ? payroll.dateValidTo : null}
               onChange={(v) => this.updateAttribute('dateValidTo', v)}
               readOnly={readOnly}
-            />
-          </Grid>
-          <Grid item className={classes.item}>
-            <FormControlLabel
-              label={formatMessage(intl, 'payroll', 'payroll.includedUnpaid')}
-              control={(
-                <Checkbox
-                  checked={!!payroll.includedUnpaid}
-                  onChange={(event) => this.updateAttribute('includedUnpaid', event.target.checked)}
-                  disabled={!!readOnly}
-                />
-              )}
             />
           </Grid>
         </Grid>

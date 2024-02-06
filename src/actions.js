@@ -1,9 +1,9 @@
 import {
-  formatPageQueryWithCount,
-  formatQuery,
+  decodeId,
   formatGQLString,
   formatMutation,
-  decodeId,
+  formatPageQueryWithCount,
+  formatQuery,
   graphql,
 } from '@openimis/fe-core';
 
@@ -22,7 +22,7 @@ export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   `ppm ${modulesManager.getProjection('admin.UserPicker.projection')}`,
 ];
 
-const BILL_FULL_PROJECTION = () => [
+const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'id',
   'isDeleted',
   'jsonExt',
@@ -30,58 +30,20 @@ const BILL_FULL_PROJECTION = () => [
   'dateUpdated',
   'dateValidFrom',
   'dateValidTo',
-  'replacementUuid',
-  'thirdpartyType',
-  'thirdpartyTypeName',
-  'thirdpartyId',
-  'thirdparty',
-  'codeTp',
-  'code',
-  'codeExt',
-  'dateDue',
-  'datePayed',
-  'amountDiscount',
-  'amountNet',
-  'amountTotal',
-  'taxAnalysis',
-  'status',
-  'currencyTpCode',
-  'currencyCode',
-  'note',
-  'terms',
-  'paymentReference',
-  'subjectType',
-  'subjectTypeName',
-  'subjectId',
-  'subject',
-  'dateBill',
-];
-
-const BENEFIT_PLAN_FULL_PROJECTION = () => [
   'id',
-  'isDeleted',
-  'dateCreated',
-  'dateUpdated',
-  'version',
-  'dateValidFrom',
-  'dateValidTo',
-  'description',
-  'replacementUuid',
   'code',
-  'name',
-  'type',
-  'maxBeneficiaries',
-  'ceilingPerBeneficiary',
-  'jsonExt',
+  'individual {firstName, lastName}',
+  'benefitAttachment {bill {id, code, terms}}',
 ];
 
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
   'paymentMethod',
-  `benefitPlan { ${BENEFIT_PLAN_FULL_PROJECTION().join(' ')} }`,
+  'paymentPlan { code }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
-  `bill { ${BILL_FULL_PROJECTION().join(' ')} } `,
+  'paymentCycle { runYear, runMonth }',
+  'benefitConsumption{id, code,individual {firstName, lastName}, benefitAttachment{bill{id, code, terms}}}',
   'jsonExt',
   'status',
   'dateValidFrom',
@@ -93,26 +55,21 @@ const PAYMENT_METHOD_PROJECTION = () => [
   'paymentMethods {name}',
 ];
 
-const formatPaymentPointGQL = (paymentPoint) => {
-  const paymentPointGQL = `
+const formatPaymentPointGQL = (paymentPoint) => `
   ${paymentPoint?.id ? `id: "${paymentPoint.id}"` : ''}
   ${paymentPoint?.name ? `name: "${formatGQLString(paymentPoint.name)}"` : ''}
   ${paymentPoint?.location ? `locationId: ${decodeId(paymentPoint.location.id)}` : ''}
   ${paymentPoint?.ppm ? `ppmId: "${decodeId(paymentPoint.ppm.id)}"` : ''}
   `;
-  return paymentPointGQL;
-};
 
-const formatPayrollGQL = (payroll) => {
-  const payrollGQL = `
+const formatPayrollGQL = (payroll) => `
   ${payroll?.id ? `id: "${payroll.id}"` : ''}
   ${payroll?.name ? `name: "${formatGQLString(payroll.name)}"` : ''}
   ${payroll?.paymentPoint ? `paymentPointId: "${decodeId(payroll.paymentPoint.id)}"` : ''}
-  ${payroll?.benefitPlan ? `benefitPlanId: "${decodeId(payroll.benefitPlan.id)}"` : ''}
+  ${payroll?.paymentPlan ? `paymentPlanId: "${decodeId(payroll.paymentPlan.id)}"` : ''}
+  ${payroll?.paymentCycle ? `paymentCycleId: "${decodeId(payroll.paymentCycle.id)}"` : ''}
   ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
-  ${payroll.includedUnpaid !== null && payroll.includedUnpaid !== undefined
-    ? `includedUnpaid: ${payroll.includedUnpaid}` : 'includedUnpaid: false'}
-  ${`status: ${PAYROLL_STATUS.CREATED}`}
+  ${`status: ${PAYROLL_STATUS.PENDING_APPROVAL}`}
   ${
   payroll.jsonExt
     ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
@@ -129,8 +86,6 @@ const formatPayrollGQL = (payroll) => {
     : ''
 }
   `;
-  return payrollGQL;
-};
 
 const PERFORM_MUTATION = (mutationType, mutationInput, ACTION, clientMutationLabel) => {
   const mutation = formatMutation(mutationType, mutationInput, clientMutationLabel);
@@ -221,14 +176,14 @@ export function createPayroll(payroll, clientMutationLabel) {
   );
 }
 
-export function fetchPayrollBills(modulesManager, params) {
-  const payload = formatPageQueryWithCount('billByPayroll', params, BILL_FULL_PROJECTION());
-  return graphql(payload, ACTION_TYPE.GET_PAYROLL_BILLS);
+export function fetchBenefitConsumptions(modulesManager, params) {
+  const payload = formatPageQueryWithCount('benefitConsumption', params, BENEFIT_CONSUMPTION_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_BENEFIT_CONSUMPTION);
 }
 
 export const clearPayrollBills = () => (dispatch) => {
   dispatch({
-    type: CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS),
+    type: CLEAR(ACTION_TYPE.GET_BENEFIT_CONSUMPTION),
   });
 };
 

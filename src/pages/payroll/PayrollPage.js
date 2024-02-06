@@ -91,9 +91,11 @@ function PayrollPage({
   const mandatoryFieldsEmpty = () => {
     if (
       editedPayroll?.name
-      && editedPayroll?.benefitPlan
+      && editedPayroll?.paymentPlan
+      && editedPayroll?.paymentCycle
       && editedPayroll?.dateValidFrom
       && editedPayroll?.dateValidTo
+      && editedPayroll?.paymentMethod
       && !editedPayroll?.isDeleted) return false;
     return true;
   };
@@ -149,6 +151,7 @@ function PayrollPage({
         actions={actions}
         setConfirmedAction={setConfirmedAction}
         saveTooltip={formatMessage('tooltip.save')}
+        payrollUuid={payrollUuid}
       />
     </div>
     )
