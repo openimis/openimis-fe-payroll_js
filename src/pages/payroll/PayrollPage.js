@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PayrollPage({
-  payrollUuid,
+  statePayrollUuid,
+  taskPayrollUuid,
   rights,
   confirmed,
   submittingMutation,
@@ -54,11 +55,16 @@ function PayrollPage({
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
 
   const [editedPayroll, setEditedPayroll] = useState({});
+  const [payrollUuid, setPayrollUuid] = useState(null);
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
   const readOnly = Boolean(payroll?.id);
 
   const back = () => history.goBack();
+
+  useEffect(() => {
+    setPayrollUuid(statePayrollUuid ?? taskPayrollUuid);
+  }, [taskPayrollUuid, statePayrollUuid]);
 
   useEffect(() => {
     if (payrollUuid) {
@@ -67,7 +73,7 @@ function PayrollPage({
   }, [payrollUuid]);
 
   useEffect(() => {
-    if (confirmed) confirmedAction();
+    if (confirmed && typeof confirmed === 'function') confirmedAction();
     return () => confirmed && clearConfirm(null);
   }, [confirmed]);
 
@@ -169,7 +175,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
-  payrollUuid: props.match.params.payroll_uuid,
+  statePayrollUuid: props?.match?.params.payroll_uuid,
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
