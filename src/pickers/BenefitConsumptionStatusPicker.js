@@ -9,8 +9,8 @@ function BenefitConsumptionStatusPicker(props) {
   } = props;
   return (
     <ConstantBasedPicker
-      module="socialProtection"
-      label="beneficiary.beneficiaryStatusPicker"
+      module="payroll"
+      label="payroll.benefitConsumptionStatusPicker"
       constants={BENEFIT_CONSUMPTION_STATUS_LIST}
       required={required}
       withNull={withNull}

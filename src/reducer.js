@@ -226,12 +226,12 @@ function reducer(
         ...state,
         fetchingBenefitConsumptions: false,
         fetchedBenefitConsumptions: true,
-        benefitConsumptions: parseData(action.payload.data.billByPayroll)?.map((benefitConsumption) => ({
+        benefitConsumptions: parseData(action.payload.data.benefitConsumptionByPayroll)?.map((benefitConsumption) => ({
           ...benefitConsumption,
           id: decodeId(benefitConsumption.id),
         })),
-        benefitConsumptionsPageInfo: pageInfo(action.payload.data.billByPayroll),
-        benefitConsumptionsTotalCount: action.payload.data.billByPayroll?.totalCount ?? 0,
+        benefitConsumptionsPageInfo: pageInfo(action.payload.data.benefitConsumptionByPayroll),
+        benefitConsumptionsTotalCount: action.payload.data.benefitConsumptionByPayroll?.totalCount ?? 0,
         errorBenefitConsumptions: formatGraphQLError(action.payload),
       };
     case ERROR(ACTION_TYPE.GET_BENEFIT_CONSUMPTION):

@@ -24,7 +24,6 @@ function BenefitConsumptionsTabLabel({
 }
 
 function BenefitConsumptionsTabPanel({ value, rights, payrollUuid }) {
-  console.log(payrollUuid, 'aaaaa')
   return (
     <PublishedComponent
       pubRef="policyHolder.TabPanel"

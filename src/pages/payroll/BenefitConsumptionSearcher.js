@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
-import React, { useState } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
-  Searcher, useHistory, useModulesManager, useTranslations,
+  Searcher, useModulesManager, useTranslations,
 } from '@openimis/fe-core';
 import { fetchBenefitConsumptions } from '../../actions';
 import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
@@ -20,14 +20,14 @@ function BenefitConsumptionSearcher({
   benefitConsumptionsTotalCount,
   payrollUuid,
 }) {
-  const history = useHistory();
   const modulesManager = useModulesManager();
-  const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
+  const { formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
   const fetch = (params) => fetchBenefitConsumptions(modulesManager, params);
 
   const headers = () => [
-    'benefitConsumption.individual',
+    'benefitConsumption.individual.firstName',
+    'benefitConsumption.individual.lastName',
     'benefitConsumption.photo',
     'benefitConsumption.code',
     'benefitConsumption.dateDue',
@@ -39,6 +39,7 @@ function BenefitConsumptionSearcher({
 
   const itemFormatters = () => [
     (benefitConsumption) => benefitConsumption?.individual?.firstName,
+    (benefitConsumption) => benefitConsumption?.individual?.lastName,
     (benefitConsumption) => benefitConsumption?.photo,
     (benefitConsumption) => benefitConsumption?.code,
     (benefitConsumption) => benefitConsumption?.dateDue,
@@ -51,7 +52,8 @@ function BenefitConsumptionSearcher({
   const rowIdentifier = (benefitConsumption) => benefitConsumption.id;
 
   const sorts = () => [
-    ['individual', true],
+    ['individual_FirstName', true],
+    ['individual_LastName', true],
     ['photo', true],
     ['code', true],
     ['dateDue', true],
@@ -66,24 +68,30 @@ function BenefitConsumptionSearcher({
       value: false,
       filter: 'isDeleted: false',
     },
-    // payrollUuid: {
-    //   value: payrollUuid,
-    //   filter: `payrollUuid: "${payrollUuid}"`,
-    // },
+    payrollUuid: {
+      value: payrollUuid,
+      filter: `payrollUuid: "${payrollUuid}"`,
+    },
   });
+
+  const benefitConsumptionFilter = ({ filters, onChangeFilters }) => (
+    <BenefitConsumptionFilter filters={filters} onChangeFilters={onChangeFilters} />
+  );
 
   return (
     <div>
       <Searcher
         module="payroll"
-        FilterPane={BenefitConsumptionFilter}
+        FilterPane={benefitConsumptionFilter}
         fetch={fetch}
         items={benefitConsumptions}
         itemsPageInfo={benefitConsumptionsPageInfo}
         fetchingItems={fetchingBenefitConsumptions}
         fetchedItems={fetchedBenefitConsumptions}
         errorItems={errorBenefitConsumptions}
-        tableTitle={formatMessageWithValues('bills.searcherResultsTitle', { benefitConsumptionsTotalCount })}
+        tableTitle={
+          formatMessageWithValues('benefitConsumption.searcherResultsTitle', { benefitConsumptionsTotalCount })
+        }
         headers={headers}
         itemFormatters={itemFormatters}
         sorts={sorts}
