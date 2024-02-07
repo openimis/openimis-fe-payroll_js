@@ -77,6 +77,9 @@ function PayrollPage({
       if (mutation?.actionType === ACTION_TYPE.DELETE_PAYROLL) {
         back();
       }
+      if (mutation?.clientMutationId && !payrollUuid) {
+        fetchPayroll(modulesManager, [`clientMutationId: "${mutation.clientMutationId}"`]);
+      }
     }
   }, [submittingMutation]);
 
@@ -84,7 +87,9 @@ function PayrollPage({
     prevSubmittingMutationRef.current = submittingMutation;
   });
 
-  useEffect(() => setEditedPayroll(payroll), [payroll]);
+  useEffect(() => {
+    if (payroll) setEditedPayroll(payroll);
+  }, [payroll]);
 
   useEffect(() => () => clearPayroll(), []);
 
