@@ -34,6 +34,12 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'code',
   'individual {firstName, lastName}',
   'benefitAttachment {bill {id, code, terms}}',
+  'receipt',
+  'photo',
+  'amount',
+  'type',
+  'status',
+  'dateDue',
 ];
 
 const PAYROLL_PROJECTION = (modulesManager) => [
@@ -177,7 +183,7 @@ export function createPayroll(payroll, clientMutationLabel) {
 }
 
 export function fetchBenefitConsumptions(modulesManager, params) {
-  const payload = formatPageQueryWithCount('benefitConsumption', params, BENEFIT_CONSUMPTION_PROJECTION());
+  const payload = formatPageQueryWithCount('benefitConsumptionByPayroll', params, BENEFIT_CONSUMPTION_PROJECTION());
   return graphql(payload, ACTION_TYPE.GET_BENEFIT_CONSUMPTION);
 }
 

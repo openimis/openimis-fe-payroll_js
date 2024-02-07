@@ -75,7 +75,6 @@ class PayrollHeadPanel extends FormPanel {
     const payroll = { ...edited };
     const { appliedCustomFilters, appliedFiltersRowStructure } = this.state;
     const readOnly = Boolean(payroll?.id);
-    console.log(payroll)
     return (
       <>
         <AdvancedFiltersDialog

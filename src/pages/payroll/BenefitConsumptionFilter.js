@@ -11,7 +11,7 @@ import {
   TextInput,
   NumberInput,
 } from '@openimis/fe-core';
-import { CONTAINS_LOOKUP, DEFAULT_DEBOUNCE_TIME } from '../../constants';
+import { CONTAINS_LOOKUP, DEFAULT_DEBOUNCE_TIME, EMPTY_STRING } from '../../constants';
 import BenefitConsumptionStatusPicker from '../../pickers/BenefitConsumptionStatusPicker';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,9 +30,9 @@ function BenefitConsumptionFilter({ filters, onChangeFilters }) {
 
   const debouncedOnChangeFilters = _debounce(onChangeFilters, DEFAULT_DEBOUNCE_TIME);
 
-  const filterValue = (filterName) => filters?.[filterName]?.value;
+  const filterTextFieldValue = (filterName) => filters?.[filterName]?.value ?? EMPTY_STRING;
 
-  const filterTextFieldValue = (filterName) => (filters[filterName] ? filters[filterName].value : '');
+  const filterValue = (filterName) => filters?.[filterName]?.value ?? null;
 
   const onChangeFilter = (filterName) => (value) => {
     debouncedOnChangeFilters([
@@ -53,15 +53,15 @@ function BenefitConsumptionFilter({ filters, onChangeFilters }) {
           filter: `${filterName}_${lookup}: "${value}"`,
         },
       ]);
+    } else {
+      debouncedOnChangeFilters([
+        {
+          id: filterName,
+          value,
+          filter: `${filterName}: "${value}"`,
+        },
+      ]);
     }
-
-    onChangeFilters([
-      {
-        id: filterName,
-        value,
-        filter: `${filterName}: "${value}"`,
-      },
-    ]);
   };
 
   return (
@@ -69,9 +69,17 @@ function BenefitConsumptionFilter({ filters, onChangeFilters }) {
       <Grid item xs={2} className={classes.item}>
         <TextInput
           module="payroll"
-          label="benefitConsumption.individual"
-          value={filterTextFieldValue('individual')}
-          onChange={onChangeStringFilter('individual', CONTAINS_LOOKUP)}
+          label="benefitConsumption.individual.firstName"
+          value={filterTextFieldValue('individual_FirstName')}
+          onChange={onChangeStringFilter('individual_FirstName', CONTAINS_LOOKUP)}
+        />
+      </Grid>
+      <Grid item xs={2} className={classes.item}>
+        <TextInput
+          module="payroll"
+          label="benefitConsumption.individual.lastName"
+          value={filterTextFieldValue('individual_LastName')}
+          onChange={onChangeStringFilter('individual_LastName', CONTAINS_LOOKUP)}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
@@ -132,7 +140,7 @@ function BenefitConsumptionFilter({ filters, onChangeFilters }) {
             {
               id: 'status',
               value,
-              filter: `status: "${value}"`,
+              filter: `status: ${value}`,
             },
           ])}
         />

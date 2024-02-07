@@ -131,7 +131,7 @@ function PayrollFilter({
             {
               id: 'status',
               value,
-              filter: `status: "${value}"`,
+              filter: `status: ${value}`,
             },
           ])}
         />
