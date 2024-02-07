@@ -10,7 +10,6 @@ import {
   parseData,
   decodeId,
 } from '@openimis/fe-core';
-import { ENUM_PREFIX_LENGTH } from './constants';
 import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
@@ -256,9 +255,7 @@ function reducer(
         errorBenefitConsumptions: null,
         benefitConsumptions: [],
       };
-
     case REQUEST(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
-      console.log('request');
       return {
         ...state,
         fetchingBenefitAttachments: true,
@@ -269,7 +266,6 @@ function reducer(
         benefitAttachmentsTotalCount: 0,
       };
     case SUCCESS(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
-      console.log('success');
       return {
         ...state,
         fetchingBenefitAttachments: false,

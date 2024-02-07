@@ -26,8 +26,8 @@ import {
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import PayrollHeadPanel from './PayrollHeadPanel';
-import PayrollTab from './PayrollTab';
+import PayrollHeadPanel from '../../components/payroll/PayrollHeadPanel';
+import PayrollTab from '../../components/payroll/PayrollTab';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
@@ -83,6 +83,9 @@ function PayrollPage({
       if (mutation?.actionType === ACTION_TYPE.DELETE_PAYROLL) {
         back();
       }
+      if (mutation?.clientMutationId && !payrollUuid) {
+        fetchPayroll(modulesManager, [`clientMutationId: "${mutation.clientMutationId}"`]);
+      }
     }
   }, [submittingMutation]);
 
@@ -90,7 +93,15 @@ function PayrollPage({
     prevSubmittingMutationRef.current = submittingMutation;
   });
 
-  useEffect(() => setEditedPayroll(payroll), [payroll]);
+  useEffect(() => {
+    if (payroll) {
+      setEditedPayroll(payroll);
+      if (!statePayrollUuid && payroll?.id) {
+        const payrollRouteRef = modulesManager.getRef('payroll.route.payroll');
+        history.replace(`/${payrollRouteRef}/${payroll.id}`);
+      }
+    }
+  }, [payroll]);
 
   useEffect(() => () => clearPayroll(), []);
 

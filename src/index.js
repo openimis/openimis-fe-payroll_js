@@ -23,7 +23,7 @@ import {
   PayrollReconciliationTaskItemFormatters,
   PayrollReconciliationTaskTableHeaders,
 } from './components/tasks/PayrollReconciliationTasks';
-import {BenefitConsumptionsTabLabel, BenefitConsumptionsTabPanel} from "./pages/payroll/BenefitConsumptionTabPanel";
+import {BenefitConsumptionsTabLabel, BenefitConsumptionsTabPanel} from "./components/payroll/BenefitConsumptionTabPanel";
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
