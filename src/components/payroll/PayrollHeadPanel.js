@@ -13,10 +13,10 @@ import {
   TextInput,
   withModulesManager,
 } from '@openimis/fe-core';
-import AdvancedFiltersDialog from '../../components/payroll/AdvancedFiltersDialog';
+import AdvancedFiltersDialog from './AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
-import PayrollStatusPicker from '../../components/payroll/PayrollStatusPicker';
-import PaymentMethodPicker from '../../components/payroll/PaymentMethodPicker';
+import PayrollStatusPicker from './PayrollStatusPicker';
+import PaymentMethodPicker from './PaymentMethodPicker';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,

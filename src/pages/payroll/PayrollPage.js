@@ -26,8 +26,8 @@ import {
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import PayrollHeadPanel from './PayrollHeadPanel';
-import PayrollTab from './PayrollTab';
+import PayrollHeadPanel from '../../components/payroll/PayrollHeadPanel';
+import PayrollTab from '../../components/payroll/PayrollTab';
 
 const useStyles = makeStyles((theme) => ({
   page: theme.page,
