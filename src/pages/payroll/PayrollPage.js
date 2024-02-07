@@ -94,7 +94,13 @@ function PayrollPage({
   });
 
   useEffect(() => {
-    if (payroll) setEditedPayroll(payroll);
+    if (payroll) {
+      setEditedPayroll(payroll);
+      if (!statePayrollUuid && payroll?.id) {
+        const payrollRouteRef = modulesManager.getRef('payroll.route.payroll');
+        history.replace(`/${payrollRouteRef}/${payroll.id}`);
+      }
+    }
   }, [payroll]);
 
   useEffect(() => () => clearPayroll(), []);
