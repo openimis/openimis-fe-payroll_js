@@ -75,5 +75,14 @@
     "payroll.paymentMethod": "Payment Method",
     "payroll.tasks.update.title": "Approve Payroll Tasks",
     "payroll.tasks.reconciliation.title": "Payroll Reconciliation Tasks",
-    "payroll.payroll.includedUnpaid": "Included unpaid"
+    "payroll.payroll.includedUnpaid": "Included unpaid",
+
+    "payroll.viewReconciliationFiles": "View Reconciliation Files",
+    "payroll.viewReconciliationSummary": "View Reconciliation Summary",
+    "payroll.reconciliationSummary": "View Reconciliation Summary: {payrollName}",
+    "payroll.summary.confirm": "Confirm",
+    "payroll.summary.name": "Name",
+    "payroll.summary.amount": "Amount",
+    "payroll.summary.receipt": "Receipt",
+    "payroll.summary.date": "Date"
 }

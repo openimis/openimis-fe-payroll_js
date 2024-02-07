@@ -6,10 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {
-  formatMessage,
   formatDateFromISO,
   ProgressOrError,
   withModulesManager,
+  useModulesManager,
+  useTranslations,
 } from '@openimis/fe-core';
 import {
   TableHead,
@@ -24,25 +25,19 @@ import {
 import { withTheme, withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import CollapsableErrorList from '../components/CollapsableErrorList';
-import { fetchUploadHistory } from '../actions';
-import downloadInvalidItems from '../util/export';
-import { UPLOAD_STATUS } from '../constants';
+import { MODULE_NAME } from '../../../constants';
+import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 
 const styles = (theme) => ({
   item: theme.paper.item,
 });
 
 function PaymentApproveForPaymentDialog({
-  modulesManager,
-  intl,
   classes,
-  fetchUploadHistory,
-  benefitPlan,
   history,
-  fetchedHistory,
-  fetchingHistory,
+  payroll,
 }) {
+  console.log(payroll);
   const [isOpen, setIsOpen] = useState(false);
   const [records, setRecords] = useState([]);
 
@@ -54,34 +49,33 @@ function PaymentApproveForPaymentDialog({
     setIsOpen(false);
   };
 
-  const downloadInvalidItemsFromUpload = (uploadId) => {
-    downloadInvalidItems(uploadId);
-  };
+  const modulesManager = useModulesManager();
+  const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
+
+  // const downloadInvalidItemsFromUpload = (uploadId) => {
+  //  downloadInvalidItems(uploadId);
+  // };
 
   useEffect(() => {
     if (isOpen) {
-      const params = [`benefitPlan_Id:"${benefitPlan.id}"`];
-      fetchUploadHistory(params);
+      // const params = [`benefitPlan_Id:"${benefitPlan.id}"`];
+      // fetchUploadHistory(params);
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    setRecords(history);
-  }, [fetchedHistory]);
+  // useEffect(() => {
+  //  setRecords(history);
+  // }, [fetchedHistory]);
 
   return (
     <>
       <Button
         onClick={handleOpen}
-        variant="outlined"
-        color="#DFEDEF"
+        variant="contained"
+        color="primary"
         className={classes.button}
-        style={{
-          border: '0px',
-          marginTop: '6px',
-        }}
       >
-        {formatMessage(intl, 'socialProtection', 'benefitPlan.benefitPlanBeneficiaries.uploadHistory')}
+        {formatMessage('payroll.viewReconciliationSummary')}
       </Button>
       <Dialog
         open={isOpen}
@@ -102,7 +96,7 @@ function PaymentApproveForPaymentDialog({
             marginTop: '10px',
           }}
         >
-          {formatMessage(intl, 'socialProtection', 'benefitPlan.benefitPlanBeneficiaries.upload.label')}
+          {formatMessageWithValues('payroll.reconciliationSummary', { payrollName: payroll.name })}
         </DialogTitle>
         <DialogContent>
           <div
@@ -113,91 +107,65 @@ function PaymentApproveForPaymentDialog({
               <Table size="small">
                 <TableHead className={classes.header}>
                   <TableRow className={classes.headerTitle}>
+                    <TableCell />
                     <TableCell>
                       {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.workflow',
+                        'payroll.summary.name',
                       )}
                     </TableCell>
                     <TableCell>
                       {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.dateCreated',
+                        'payroll.summary.amount',
                       )}
                     </TableCell>
                     <TableCell>
                       {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.sourceType',
+                        'payroll.summary.receipt',
                       )}
                     </TableCell>
                     <TableCell>
                       {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.sourceName',
+                        'payroll.summary.date',
                       )}
                     </TableCell>
-                    <TableCell>
-                      {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.status',
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {formatMessage(
-                        intl,
-                        'socialProtection',
-                        'benefitPlan.benefitPlanBeneficiaries.uploadHistoryTable.error',
-                      )}
-                    </TableCell>
+                    <TableCell />
                     <TableCell />
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <ProgressOrError progress={fetchingHistory} error={fetchedHistory} />
-                  {records.map((item) => (
-                    <TableRow key={item?.id}>
-                      <TableCell>
-                        { item.workflow }
-                      </TableCell>
-                      <TableCell>
-                        { formatDateFromISO(modulesManager, intl, item.dataUpload.dateCreated) }
-                      </TableCell>
-                      <TableCell>
-                        { item.dataUpload.sourceType}
-                      </TableCell>
-                      <TableCell>
-                        { item.dataUpload.sourceName}
-                      </TableCell>
-                      <TableCell>
-                        { item.dataUpload.status}
-                      </TableCell>
-                      <TableCell>
-                        <CollapsableErrorList errors={item.dataUpload.error} />
-                      </TableCell>
-                      <TableCell>
-                        {[
-                          UPLOAD_STATUS.WAITING_FOR_VERIFICATION,
-                          UPLOAD_STATUS.PARTIAL_SUCCESS].includes(item.dataUpload.status) && (
+                  {payroll.benefitConsumption.map((benefit) => (
+                    benefit.benefitAttachment.map((attachment) => (
+                      <TableRow key={attachment?.bill?.code}>
+                        <TableCell>
+                          {/* Conditionally render the default photo */}
+                          {benefit.receipt ? (
+                            <PhotoCameraOutlinedIcon fontSize="large" />
+                          ) : null}
+                        </TableCell>
+                        <TableCell>
+                          {`${benefit.individual.firstName} ${benefit.individual.lastName}`}
+                        </TableCell>
+                        <TableCell>
+                          {attachment.bill.amountTotal}
+                        </TableCell>
+                        <TableCell>
+                          {benefit?.receipt ?? ''}
+                        </TableCell>
+                        <TableCell>
+                          {benefit.dateDue}
+                        </TableCell>
+                        <TableCell>
                           <Button
-                            onClick={() => downloadInvalidItemsFromUpload(item.dataUpload.uuid)}
-                            variant="outlined"
-                            autoFocus
-                            style={{
-                              margin: '0 16px',
-                              marginBottom: '15px',
-                            }}
+                            onClick={() => {}}
+                            variant="contained"
+                            color="primary"
+                            disabled={benefit.receipt === null || typeof benefit.receipt === 'undefined'}
                           >
-                            Download Invalid Items
+                            {formatMessage('payroll.summary.confirm')}
                           </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
+                        </TableCell>
+                      </TableRow>
+                    ))
                   ))}
                 </TableBody>
                 <TableFooter />
@@ -243,13 +211,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  fetchUploadHistory,
 }, dispatch);
 
-export default injectIntl(
-  withModulesManager(withTheme(
-    withStyles(styles)(
-      connect(mapStateToProps, mapDispatchToProps)(PaymentApproveForPaymentDialog),
-    ),
-  )),
-);
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentApproveForPaymentDialog);
