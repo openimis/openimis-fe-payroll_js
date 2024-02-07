@@ -1,15 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { Fab } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import AddIcon from '@material-ui/icons/Add';
 
 import {
   Helmet,
   useModulesManager,
   useTranslations,
-  useHistory,
 } from '@openimis/fe-core';
 import {
   MODULE_NAME,
@@ -25,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 function ApprovedPayrollsPage() {
   const modulesManager = useModulesManager();
   const classes = useStyles();
-  const history = useHistory();
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
   const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
 

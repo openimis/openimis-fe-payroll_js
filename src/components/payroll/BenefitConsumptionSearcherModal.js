@@ -25,7 +25,6 @@ function BenefitConsumptionSearcherModal({
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
   const fetch = (params) => {
-    console.log(params);
     fetchBenefitAttachments(modulesManager, params);
   };
 
