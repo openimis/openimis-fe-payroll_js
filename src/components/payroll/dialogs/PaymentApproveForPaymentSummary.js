@@ -111,9 +111,7 @@ function PaymentApproveForPaymentDialog({
                   {formatMessage('payroll.summary.selectedBeneficiaries')}
                 </Typography>
                 <Typography variant="body1">
-                  {formatMessageWithValues(
-                    'payroll.summary.beneficiariesCount', { selectedBeneficiaries, totalBeneficiaries },
-                  )}
+                  {formatMessageWithValues('payroll.summary.beneficiariesCount', { selectedBeneficiaries, totalBeneficiaries })}
                 </Typography>
               </Paper>
             </Grid>
@@ -150,9 +148,10 @@ function PaymentApproveForPaymentDialog({
             paddingLeft: '10px',
             marginTop: '25px',
             marginBottom: '15px',
+            width: '100%',
           }}
         >
-          <div style={{ maxWidth: '1000px' }}>
+          <div style={{ maxWidth: '1800px' }}>
             <div style={{ float: 'left' }}>
               <Button
                 onClick={() => {}}
@@ -188,15 +187,16 @@ function PaymentApproveForPaymentDialog({
                 {formatMessage('payroll.summary.reject')}
               </Button>
             </div>
-            <div style={{ float: 'right' }}>
+            <div style={{
+              float: 'right',
+              paddingRight: '16px',
+            }}
+            >
               <Button
                 onClick={handleClose}
                 variant="outlined"
                 autoFocus
-                style={{
-                  margin: '0 16px',
-                  marginBottom: '15px',
-                }}
+                style={{ margin: '0 16px' }}
               >
                 {formatMessage('payroll.summary.close')}
               </Button>
