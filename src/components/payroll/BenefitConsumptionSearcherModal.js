@@ -35,7 +35,7 @@ function BenefitConsumptionSearcherModal({
     'benefitConsumption.amount',
     'benefitConsumption.receipt',
     'benefitConsumption.dateDue',
-    'benefitConsumption.confirm',
+    '',
   ];
 
   const itemFormatters = () => [
