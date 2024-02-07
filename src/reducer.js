@@ -27,6 +27,7 @@ export const ACTION_TYPE = {
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
   GET_BENEFIT_CONSUMPTION: 'PAYROLL_BENEFIT_CONSUMPTION',
+  GET_BENEFIT_ATTACHMENT: 'PAYROLL_BENEFIT_ATTACHMENT',
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
 };
 
@@ -74,6 +75,13 @@ const STORE_STATE = {
   fetchedBenefitConsumption: false,
   errorBenefitConsumption: null,
   benefitConsumptionsPageInfo: {},
+
+  fetchingBenefitAttachments: false,
+  benefitAttachments: [],
+  benefitAttachmentsTotalCount: 0,
+  fetchedBenefitAttachments: false,
+  errorBenefitAttachments: null,
+  benefitAttachmentsPageInfo: {},
 
   fetchingPaymentMethods: true,
   paymentMethods: [],
@@ -248,6 +256,46 @@ function reducer(
         errorBenefitConsumptions: null,
         benefitConsumptions: [],
       };
+
+    case REQUEST(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
+      console.log('request');
+      return {
+        ...state,
+        fetchingBenefitAttachments: true,
+        fetchedBenefitAttachments: false,
+        benefitAttachments: [],
+        errorBenefitAttachments: null,
+        benefitAttachmentsPageInfo: {},
+        benefitAttachmentsTotalCount: 0,
+      };
+    case SUCCESS(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
+      console.log('success');
+      return {
+        ...state,
+        fetchingBenefitAttachments: false,
+        fetchedBenefitAttachments: true,
+        benefitAttachments: parseData(action.payload.data.benefitAttachmentByPayroll)?.map((benefitAttachment) => ({
+          ...benefitAttachment,
+        })),
+        benefitAttachmentsPageInfo: pageInfo(action.payload.data.benefitAttachmentByPayroll),
+        benefitAttachmentsTotalCount: action.payload.data.benefitAttachmentByPayroll?.totalCount ?? 0,
+        errorBenefitAttachments: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
+      return {
+        ...state,
+        fetchingBenefitAttachments: false,
+        errorBenefitAttachments: formatServerError(action.payload),
+      };
+    case CLEAR(ACTION_TYPE.GET_BENEFIT_ATTACHMENT):
+      return {
+        ...state,
+        fetchingBenefitAttachments: false,
+        fetchedBenefitAttachments: false,
+        errorBenefitAttachments: null,
+        benefitAttachments: [],
+      };
+
     case REQUEST(ACTION_TYPE.GET_PAYMENT_METHODS):
       return {
         ...state,

@@ -42,6 +42,11 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'dateDue',
 ];
 
+const BENEFIT_ATTACHMENT_PROJECTION = () => [
+  'benefit{id, status, code, dateDue, receipt, individual {firstName, lastName}}',
+  'bill{id, code, terms, amountTotal}',
+];
+
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
@@ -49,7 +54,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'paymentPlan { code }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { runYear, runMonth }',
-  'benefitConsumption{id, code, dateDue, receipt, individual {firstName, lastName}, benefitAttachment{bill{id, code, terms, amountTotal}}}',
+  'benefitConsumption{id, status, code, dateDue, receipt, individual {firstName, lastName}, benefitAttachment{bill{id, code, terms, amountTotal}}}',
   'jsonExt',
   'status',
   'dateValidFrom',
@@ -185,6 +190,11 @@ export function createPayroll(payroll, clientMutationLabel) {
 export function fetchBenefitConsumptions(modulesManager, params) {
   const payload = formatPageQueryWithCount('benefitConsumptionByPayroll', params, BENEFIT_CONSUMPTION_PROJECTION());
   return graphql(payload, ACTION_TYPE.GET_BENEFIT_CONSUMPTION);
+}
+
+export function fetchBenefitAttachments(modulesManager, params) {
+  const payload = formatPageQueryWithCount('benefitAttachmentByPayroll', params, BENEFIT_ATTACHMENT_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_BENEFIT_ATTACHMENT);
 }
 
 export const clearPayrollBills = () => (dispatch) => {
