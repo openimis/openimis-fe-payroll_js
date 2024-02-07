@@ -26,7 +26,7 @@ export const ACTION_TYPE = {
   SEARCH_PAYROLLS: 'PAYROLL_PAYROLLS',
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
-  GET_PAYROLL_BILLS: 'PAYROLL_PAYROLL_BILLS',
+  GET_BENEFIT_CONSUMPTION: 'PAYROLL_BENEFIT_CONSUMPTION',
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
 };
 
@@ -68,20 +68,18 @@ const STORE_STATE = {
   payroll: {},
   errorPayroll: null,
 
-  fetchingPayrollBills: true,
-  payrollBills: [],
-  payrollBillsTotalCount: 0,
-  fetchedPayrollBills: false,
-  errorPayrollBills: null,
-  payrollBillsPageInfo: {},
+  fetchingBenefitConsumptions: true,
+  benefitConsumption: [],
+  benefitConsumptionTotalCount: 0,
+  fetchedBenefitConsumption: false,
+  errorBenefitConsumption: null,
+  benefitConsumptionsPageInfo: {},
 
   fetchingPaymentMethods: true,
   paymentMethods: [],
   fetchedPaymentMethods: false,
   errorPaymentMethods: null,
 };
-
-const getEnumValue = (enumElement) => enumElement?.substring(ENUM_PREFIX_LENGTH);
 
 function reducer(
   state = STORE_STATE,
@@ -213,44 +211,42 @@ function reducer(
         errorPayroll: null,
         payrollBills: [],
       };
-    case REQUEST(ACTION_TYPE.GET_PAYROLL_BILLS):
+    case REQUEST(ACTION_TYPE.GET_BENEFIT_CONSUMPTION):
       return {
         ...state,
-        fetchingPayrollBills: true,
-        fetchedPayrollBills: false,
-        payrollBills: [],
-        errorPayrollBills: null,
-        payrollBillsPageInfo: {},
-        payrollBillsTotalCount: 0,
+        fetchingBenefitConsumptions: true,
+        fetchedBenefitConsumptions: false,
+        benefitConsumptions: [],
+        errorBenefitConsumptions: null,
+        benefitConsumptionsPageInfo: {},
+        benefitConsumptionsTotalCount: 0,
       };
-    case SUCCESS(ACTION_TYPE.GET_PAYROLL_BILLS):
+    case SUCCESS(ACTION_TYPE.GET_BENEFIT_CONSUMPTION):
       return {
         ...state,
-        fetchingPayrollBills: false,
-        fetchedPayrollBills: true,
-        payrollBills: parseData(action.payload.data.billByPayroll)?.map((bill) => ({
-          ...bill,
-          id: decodeId(bill.id),
-          status: getEnumValue(bill?.status),
+        fetchingBenefitConsumptions: false,
+        fetchedBenefitConsumptions: true,
+        benefitConsumptions: parseData(action.payload.data.benefitConsumptionByPayroll)?.map((benefitConsumption) => ({
+          ...benefitConsumption,
+          id: decodeId(benefitConsumption.id),
         })),
-        payrollBillsPageInfo: pageInfo(action.payload.data.billByPayroll),
-        payrollBillsTotalCount: action.payload.data.billByPayroll?.totalCount ?? 0,
-        errorPayrollBills: formatGraphQLError(action.payload),
+        benefitConsumptionsPageInfo: pageInfo(action.payload.data.benefitConsumptionByPayroll),
+        benefitConsumptionsTotalCount: action.payload.data.benefitConsumptionByPayroll?.totalCount ?? 0,
+        errorBenefitConsumptions: formatGraphQLError(action.payload),
       };
-    case ERROR(ACTION_TYPE.GET_PAYROLL_BILLS):
+    case ERROR(ACTION_TYPE.GET_BENEFIT_CONSUMPTION):
       return {
         ...state,
-        fetchingPayrollBills: false,
+        fetchingBenefitConsumptions: false,
         errorPayroll: formatServerError(action.payload),
       };
-    case CLEAR(ACTION_TYPE.GET_PAYROLL_BILLS):
+    case CLEAR(ACTION_TYPE.GET_BENEFIT_CONSUMPTION):
       return {
         ...state,
-        fetchingPayrollBills: true,
-        fetchedPayrollBills: false,
-        payrollBill: null,
-        errorPayrollBill: null,
-        payrollBills: [],
+        fetchingBenefitConsumptions: false,
+        fetchedBenefitConsumptions: false,
+        errorBenefitConsumptions: null,
+        benefitConsumptions: [],
       };
     case REQUEST(ACTION_TYPE.GET_PAYMENT_METHODS):
       return {
