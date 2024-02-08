@@ -54,6 +54,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'paymentPlan { code }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { runYear, runMonth }',
+  // eslint-disable-next-line max-len
   'benefitConsumption{id, status, code, dateDue, receipt, individual {firstName, lastName}, benefitAttachment{bill{id, code, terms, amountTotal}}}',
   'jsonExt',
   'status',
@@ -212,4 +213,14 @@ export const clearPayroll = () => (dispatch) => {
 export function fetchPaymentMethods(params) {
   const payload = formatQuery('paymentMethods', params, PAYMENT_METHOD_PROJECTION());
   return graphql(payload, ACTION_TYPE.GET_PAYMENT_METHODS);
+}
+
+export function closePayroll(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${payroll?.id}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.CLOSE,
+    payrollUuids,
+    ACTION_TYPE.CLOSE_PAYROLL,
+    clientMutationLabel,
+  );
 }

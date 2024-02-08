@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,12 +17,15 @@ import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MODULE_NAME, BENEFIT_CONSUMPTION_STATUS } from '../../../constants';
+import { closePayroll } from '../../../actions';
+import { mutationLabel } from '../../../utils/string-utils';
 
 import BenefitConsumptionSearcherModal from '../BenefitConsumptionSearcherModal';
 
 function PaymentApproveForPaymentDialog({
   classes,
   payroll,
+  closePayroll,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [totalBeneficiaries, setTotalBeneficiaries] = useState(0);
@@ -71,6 +75,14 @@ function PaymentApproveForPaymentDialog({
       setTotalReconciledBillAmount(reconciledAmount);
     }
   }, [isOpen, payroll]);
+
+  const closePayrollCallback = () => {
+    handleClose();
+    closePayroll(
+      payroll,
+      formatMessageWithValues('payroll.mutation.closeLabel', mutationLabel(payroll)),
+    );
+  };
 
   return (
     <>
@@ -151,12 +163,13 @@ function PaymentApproveForPaymentDialog({
             width: '100%',
           }}
         >
-          <div style={{ maxWidth: '1800px' }}>
+          <div style={{ maxWidth: '3000px' }}>
             <div style={{ float: 'left' }}>
               <Button
-                onClick={() => {}}
+                onClick={() => closePayrollCallback(payroll)}
                 variant="contained"
                 color="primary"
+                disabled={selectedBeneficiaries === 0}
                 style={{
                   margin: '0 16px',
                   marginBottom: '15px',
@@ -211,12 +224,10 @@ function PaymentApproveForPaymentDialog({
 const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
   confirmed: state.core.confirmed,
-  history: state.socialProtection.beneficiaryDataUploadHistory,
-  fetchedHistory: state.socialProtection.fetchedBeneficiaryDataUploadHistory,
-  fetchingHistory: state.socialProtection.fetchingBeneficiaryDataUploadHistory,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
+  closePayroll,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentApproveForPaymentDialog);

@@ -17,9 +17,9 @@ import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { fetchPayrolls } from '../../actions';
-import PaymentApproveForPaymentSummary from './dialogs/PaymentApproveForPaymentSummary';
+import PaymentReconciliationSummaryDialog from './dialogs/PaymentReconciliationSummaryDialog';
 
-function PayrollSearcherApproved({
+function PayrollSearcherReconciled({
   fetchingPayrolls,
   fetchedPayrolls,
   errorPayrolls,
@@ -69,8 +69,8 @@ function PayrollSearcherApproved({
       filter: 'isDeleted: false',
     },
     status: {
-      value: PAYROLL_STATUS.APPROVE_FOR_PAYMENT,
-      filter: `status: "${PAYROLL_STATUS.APPROVE_FOR_PAYMENT}"`,
+      value: PAYROLL_STATUS.RECONCILED,
+      filter: `status: "${PAYROLL_STATUS.RECONCILED}"`,
     },
   });
 
@@ -104,7 +104,7 @@ function PayrollSearcherApproved({
       </Button>
     ),
     (payroll) => (
-      <PaymentApproveForPaymentSummary
+      <PaymentReconciliationSummaryDialog
         classes={classes}
         payroll={payroll}
       />
@@ -159,4 +159,4 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   coreConfirm,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(PayrollSearcherApproved);
+export default connect(mapStateToProps, mapDispatchToProps)(PayrollSearcherReconciled);

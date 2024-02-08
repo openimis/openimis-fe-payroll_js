@@ -93,6 +93,7 @@
     "payroll.summary.totalAmountForInvoice": "Total Amount for Invoice",
     "payroll.summary.deliveredReconciliation": "Total Delivered Per Reconciliation",
     "payroll.summary.approveAndClose": "Approve and Close",
+    "payroll.summary.createPaymentForFailedInvoice": "Create Payment For Failed Invoice",
     "payroll.summary.download": "Download",
     "payroll.summary.reject": "Reject",
     "payroll.summary.close": "Close",

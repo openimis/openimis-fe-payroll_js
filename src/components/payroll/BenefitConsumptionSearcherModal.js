@@ -20,6 +20,7 @@ function BenefitConsumptionSearcherModal({
   benefitAttachmentsPageInfo,
   benefitAttachmentsTotalCount,
   payrollUuid,
+  reconciledMode,
 }) {
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
@@ -72,16 +73,25 @@ function BenefitConsumptionSearcherModal({
     ['benefit_dateDue', true],
   ];
 
-  const defaultFilters = () => ({
-    isDeleted: {
-      value: false,
-      filter: 'isDeleted: false',
-    },
-    payrollUuid: {
-      value: payrollUuid,
-      filter: `payrollUuid: "${payrollUuid}"`,
-    },
-  });
+  const defaultFilters = () => {
+    const filters = {
+      isDeleted: {
+        value: false,
+        filter: 'isDeleted: false',
+      },
+      payrollUuid: {
+        value: payrollUuid,
+        filter: `payrollUuid: "${payrollUuid}"`,
+      },
+    };
+    if (reconciledMode) {
+      filters.benefit_Status = {
+        value: 'RECONCILED',
+        filter: 'benefit_Status: "RECONCILED"',
+      };
+    }
+    return filters;
+  };
 
   const benefitConsumptionFilterModal = ({ filters, onChangeFilters }) => (
     <BenefitConsumptionFilterModal filters={filters} onChangeFilters={onChangeFilters} />

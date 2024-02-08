@@ -14,6 +14,7 @@ import PaymentPointsPage from './pages/payment-point/PaymentPointsPage';
 import PayrollPage from './pages/payroll/PayrollPage';
 import PayrollsPage from './pages/payroll/PayrollsPage';
 import ApprovedPayrollsPage from './pages/payroll/ApprovedPayrollsPage';
+import ReconciledPayrollsPage from './pages/payroll/ReconciledPayrollsPage';
 import PaymentPointPicker from './components/payment-point/PaymentPointPicker';
 import {
   PayrollTaskItemFormatters,
@@ -23,12 +24,16 @@ import {
   PayrollReconciliationTaskItemFormatters,
   PayrollReconciliationTaskTableHeaders,
 } from './components/tasks/PayrollReconciliationTasks';
-import {BenefitConsumptionsTabLabel, BenefitConsumptionsTabPanel} from "./components/payroll/BenefitConsumptionTabPanel";
+import {
+  BenefitConsumptionsTabLabel,
+  BenefitConsumptionsTabPanel,
+} from './components/payroll/BenefitConsumptionTabPanel';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
 const ROUTE_PAYROLLS = 'payrolls';
 const ROUTE_PAYROLLS_APPROVED = 'payrollsApproved';
+const ROUTE_PAYROLLS_RECONCILED = 'payrollsReconciled';
 const ROUTE_PAYROLL = 'payrolls/payroll';
 
 const DEFAULT_CONFIG = {
@@ -39,6 +44,7 @@ const DEFAULT_CONFIG = {
     { key: 'payroll.route.paymentPoint', ref: ROUTE_PAYMENT_POINT },
     { key: 'payroll.route.payrolls', ref: ROUTE_PAYROLLS },
     { key: 'payroll.route.payrollsApproved', ref: ROUTE_PAYROLLS_APPROVED },
+    { key: 'payroll.route.payrollsReconciled', ref: ROUTE_PAYROLLS_RECONCILED },
     { key: 'payroll.route.payroll', ref: ROUTE_PAYROLL },
     { key: 'payroll.PaymentPointPicker', ref: PaymentPointPicker },
     { key: 'payroll.PaymentPointPicker.projection', ref: ['id', 'name', 'location'] },
@@ -48,6 +54,7 @@ const DEFAULT_CONFIG = {
     { path: `${ROUTE_PAYMENT_POINT}/:payment_point_uuid?`, component: PaymentPointPage },
     { path: ROUTE_PAYROLLS, component: PayrollsPage },
     { path: ROUTE_PAYROLLS_APPROVED, component: ApprovedPayrollsPage },
+    { path: ROUTE_PAYROLLS_RECONCILED, component: ReconciledPayrollsPage },
     { path: `${ROUTE_PAYROLL}/:payroll_uuid?`, component: PayrollPage },
   ],
   'invoice.MainMenu': [
@@ -67,6 +74,12 @@ const DEFAULT_CONFIG = {
       text: <FormattedMessage module="payroll" id="payroll.route.payrollsApproved" />,
       icon: <PinDrop />,
       route: `/${ROUTE_PAYROLLS_APPROVED}`,
+      filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
+    },
+    {
+      text: <FormattedMessage module="payroll" id="payroll.route.payrollsReconciled" />,
+      icon: <PinDrop />,
+      route: `/${ROUTE_PAYROLLS_RECONCILED}`,
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
   ],
