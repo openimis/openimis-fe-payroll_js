@@ -50,16 +50,18 @@ function PayrollSearcherApproved({
 
   const headers = () => [
     'payroll.name',
-    'payroll.benefitPlan',
+    'payroll.paymentPlan',
     'payroll.paymentPoint',
+    'payroll.paymentStrategy',
     'payroll.paymentMethod',
     'emptyLabel',
   ];
 
   const sorts = () => [
     ['name', true],
-    ['benefitPlan', true],
+    ['paymentPlan', true],
     ['paymentPoint', true],
+    ['paymentStrategy', true],
     ['paymentMethod', true],
   ];
 

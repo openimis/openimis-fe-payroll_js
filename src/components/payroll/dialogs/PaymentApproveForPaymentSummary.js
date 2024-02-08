@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MODULE_NAME, BENEFIT_CONSUMPTION_STATUS } from '../../../constants';
-import { closePayroll } from '../../../actions';
+import { closePayroll, rejectPayroll } from '../../../actions';
 import { mutationLabel } from '../../../utils/string-utils';
 
 import BenefitConsumptionSearcherModal from '../BenefitConsumptionSearcherModal';
@@ -26,6 +26,7 @@ function PaymentApproveForPaymentDialog({
   classes,
   payroll,
   closePayroll,
+  rejectPayroll,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [totalBeneficiaries, setTotalBeneficiaries] = useState(0);
@@ -79,6 +80,14 @@ function PaymentApproveForPaymentDialog({
   const closePayrollCallback = () => {
     handleClose();
     closePayroll(
+      payroll,
+      formatMessageWithValues('payroll.mutation.closeLabel', mutationLabel(payroll)),
+    );
+  };
+
+  const rejectPayrollCallback = () => {
+    handleClose();
+    rejectPayroll(
       payroll,
       formatMessageWithValues('payroll.mutation.closeLabel', mutationLabel(payroll)),
     );
@@ -189,7 +198,7 @@ function PaymentApproveForPaymentDialog({
                 {formatMessage('payroll.summary.download')}
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => rejectPayrollCallback(payroll)}
                 variant="contained"
                 color="primary"
                 style={{
@@ -228,6 +237,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   closePayroll,
+  rejectPayroll,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentApproveForPaymentDialog);

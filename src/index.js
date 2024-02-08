@@ -28,6 +28,7 @@ import {
   BenefitConsumptionsTabLabel,
   BenefitConsumptionsTabPanel,
 } from './components/payroll/BenefitConsumptionTabPanel';
+import { PayrollRejectedTaskItemFormatters, PayrollRejectedTaskTableHeaders } from './components/tasks/PayrollRejectedTasks';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -96,6 +97,12 @@ const DEFAULT_CONFIG = {
     tableHeaders: PayrollReconciliationTaskTableHeaders,
     itemFormatters: PayrollReconciliationTaskItemFormatters,
     taskSource: ['payroll_reconciliation'],
+  },
+  {
+    text: <FormattedMessage module="payroll" id="payroll.tasks.rejected.title" />,
+    tableHeaders: PayrollRejectedTaskTableHeaders,
+    itemFormatters: PayrollRejectedTaskItemFormatters,
+    taskSource: ['payroll_reject'],
   }],
 };
 

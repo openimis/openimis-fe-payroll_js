@@ -29,6 +29,7 @@ export const ACTION_TYPE = {
   GET_BENEFIT_ATTACHMENT: 'PAYROLL_BENEFIT_ATTACHMENT',
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
   CLOSE_PAYROLL: 'PAYROLL_MUTATION_CLOSE_PAYROLL',
+  REJECT_PAYROLL: 'PAYROLL_MUTATION_REJECT_PAYROLL',
 };
 
 export const MUTATION_SERVICE = {
@@ -41,6 +42,7 @@ export const MUTATION_SERVICE = {
     CREATE: 'createPayroll',
     DELETE: 'deletePayroll',
     CLOSE: 'closePayroll',
+    REJECT: 'rejectPayroll',
   },
 };
 

@@ -158,6 +158,7 @@ function PaymentReconcilationSummarytDialog({
                 onClick={() => {}}
                 variant="contained"
                 color="primary"
+                disabled={totalBeneficiaries === selectedBeneficiaries}
                 style={{
                   margin: '0 16px',
                   marginBottom: '15px',

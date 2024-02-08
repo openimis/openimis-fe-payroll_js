@@ -224,3 +224,13 @@ export function closePayroll(payroll, clientMutationLabel) {
     clientMutationLabel,
   );
 }
+
+export function rejectPayroll(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${payroll?.id}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.REJECT,
+    payrollUuids,
+    ACTION_TYPE.REJECT_PAYROLL,
+    clientMutationLabel,
+  );
+}
