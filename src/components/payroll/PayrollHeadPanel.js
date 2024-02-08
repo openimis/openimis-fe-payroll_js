@@ -78,7 +78,9 @@ class PayrollHeadPanel extends FormPanel {
     return (
       <>
         <AdvancedFiltersDialog
-          object={payroll.benefitPlan}
+          object={payroll?.paymentPlan?.benefitPlan
+            ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
+            : null}
           objectToSave={payroll}
           moduleName="social_protection"
           objectType="BenefitPlan"
