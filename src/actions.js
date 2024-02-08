@@ -46,7 +46,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
   'paymentMethod',
-  'paymentPlan { code }',
+  'paymentPlan { code, id, name }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { runYear, runMonth }',
   'benefitConsumption{id, code,individual {firstName, lastName}, benefitAttachment{bill{id, code, terms}}}',

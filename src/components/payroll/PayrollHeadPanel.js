@@ -2,16 +2,16 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Checkbox, FormControlLabel, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 
 import {
-  ControlledField,
   formatMessage,
   FormPanel,
   PublishedComponent,
   TextInput,
   withModulesManager,
+  decodeId,
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from './AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
@@ -104,7 +104,6 @@ class PayrollHeadPanel extends FormPanel {
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
               pubRef="contributionPlan.PaymentPlanPicker"
-              withNull
               required
               filterLabels={false}
               onChange={(paymentPlan) => this.updateAttribute('paymentPlan', paymentPlan)}

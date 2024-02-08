@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
+function PayrollTab({ rights, setConfirmedAction, payrollUuid, isInTask }) {
   const classes = useStyles();
 
   const [activeTab, setActiveTab] = useState(BENEFIT_CONSUMPTION_LIST_TAB_VALUE);
@@ -50,6 +50,8 @@ function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
           onChange={handleChange}
           isSelected={isSelected}
           tabStyle={tabStyle}
+          payrollUuid={payrollUuid}
+          isInTask={isInTask}
         />
       </Grid>
       <Contributions
@@ -58,6 +60,7 @@ function PayrollTab({ rights, setConfirmedAction, payrollUuid }) {
         value={activeTab}
         setConfirmedAction={setConfirmedAction}
         payrollUuid={payrollUuid}
+        isInTask={isInTask}
       />
     </Paper>
   );
