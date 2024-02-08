@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SelectInput } from '@openimis/fe-core';
-import { fetchPaymentMethods } from '../../actions';
+import { fetchPaymentMethods } from '../actions';
 
 function PaymentMethodPicker({
   value,

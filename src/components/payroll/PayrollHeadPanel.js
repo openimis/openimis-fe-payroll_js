@@ -16,7 +16,7 @@ import {
 import AdvancedFiltersDialog from './AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
 import PayrollStatusPicker from './PayrollStatusPicker';
-import PaymentMethodPicker from './PaymentMethodPicker';
+import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
