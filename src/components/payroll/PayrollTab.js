@@ -29,7 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PayrollTab({ rights, setConfirmedAction, payrollUuid, isInTask }) {
+function PayrollTab({
+  rights, setConfirmedAction, payrollUuid, isInTask,
+}) {
   const classes = useStyles();
 
   const [activeTab, setActiveTab] = useState(BENEFIT_CONSUMPTION_LIST_TAB_VALUE);

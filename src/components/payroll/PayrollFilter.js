@@ -13,11 +13,10 @@ import {
   decodeId,
 } from '@openimis/fe-core';
 import {
-    BENEFIT_PLAN_CONTENT_TYPE_ID,
-    CONTAINS_LOOKUP,
-    DEFAULT_DEBOUNCE_TIME,
-    EMPTY_STRING,
-    MODULE_NAME,
+  CONTAINS_LOOKUP,
+  DEFAULT_DEBOUNCE_TIME,
+  EMPTY_STRING,
+  MODULE_NAME,
 } from '../../constants';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
