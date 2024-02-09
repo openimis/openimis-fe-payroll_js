@@ -2,21 +2,21 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Checkbox, FormControlLabel, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 
 import {
-  ControlledField,
   formatMessage,
   FormPanel,
   PublishedComponent,
   TextInput,
   withModulesManager,
+  decodeId,
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from './AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
 import PayrollStatusPicker from './PayrollStatusPicker';
-import PaymentMethodPicker from './PaymentMethodPicker';
+import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -78,7 +78,9 @@ class PayrollHeadPanel extends FormPanel {
     return (
       <>
         <AdvancedFiltersDialog
-          object={payroll.benefitPlan}
+          object={payroll?.paymentPlan?.benefitPlan
+            ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
+            : null}
           objectToSave={payroll}
           moduleName="social_protection"
           objectType="BenefitPlan"
@@ -104,7 +106,6 @@ class PayrollHeadPanel extends FormPanel {
           <Grid item xs={3} className={classes.item}>
             <PublishedComponent
               pubRef="contributionPlan.PaymentPlanPicker"
-              withNull
               required
               filterLabels={false}
               onChange={(paymentPlan) => this.updateAttribute('paymentPlan', paymentPlan)}

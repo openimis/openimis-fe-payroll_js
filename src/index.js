@@ -22,7 +22,8 @@ import {
   PayrollReconciliationTaskItemFormatters,
   PayrollReconciliationTaskTableHeaders,
 } from './components/tasks/PayrollReconciliationTasks';
-import {BenefitConsumptionsTabLabel, BenefitConsumptionsTabPanel} from "./components/payroll/BenefitConsumptionTabPanel";
+import { BenefitConsumptionsTabLabel, BenefitConsumptionsTabPanel } from './components/payroll/BenefitConsumptionTabPanel';
+import { PayrollTaskTabLabel, PayrollTaskTabPanel } from './components/payroll/PayrollTaskTabPanel';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -60,8 +61,8 @@ const DEFAULT_CONFIG = {
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
   ],
-  'payroll.TabPanel.label': [BenefitConsumptionsTabLabel],
-  'payroll.TabPanel.panel': [BenefitConsumptionsTabPanel],
+  'payroll.TabPanel.label': [BenefitConsumptionsTabLabel, PayrollTaskTabLabel],
+  'payroll.TabPanel.panel': [BenefitConsumptionsTabPanel, PayrollTaskTabPanel],
   'tasksManagement.tasks': [{
     text: <FormattedMessage module="payroll" id="payroll.tasks.update.title" />,
     tableHeaders: PayrollTaskTableHeaders,

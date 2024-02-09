@@ -19,7 +19,7 @@ import {
   MODULE_NAME,
 } from '../../constants';
 import PayrollStatusPicker from './PayrollStatusPicker';
-import PaymentMethodPicker from './PaymentMethodPicker';
+import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -130,7 +130,7 @@ function PayrollFilter({
             {
               id: 'status',
               value,
-              filter: `status: ${value}`,
+              filter: value ? `status: ${value}` : EMPTY_STRING,
             },
           ])}
         />
