@@ -4,6 +4,7 @@
 import React from 'react';
 
 import { PinDrop } from '@material-ui/icons';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 import { FormattedMessage } from '@openimis/fe-core';
 import { RIGHT_PAYMENT_POINT_SEARCH, RIGHT_PAYROLL_SEARCH } from './constants';
@@ -74,19 +75,19 @@ const DEFAULT_CONFIG = {
     },
     {
       text: <FormattedMessage module="payroll" id="payroll.payroll.route" />,
-      icon: <PinDrop />,
+      icon: <MonetizationOnIcon />,
       route: `/${ROUTE_PAYROLLS}`,
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
     {
       text: <FormattedMessage module="payroll" id="payroll.route.payrollsApproved" />,
-      icon: <PinDrop />,
+      icon: <MonetizationOnIcon />,
       route: `/${ROUTE_PAYROLLS_APPROVED}`,
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
     {
       text: <FormattedMessage module="payroll" id="payroll.route.payrollsReconciled" />,
-      icon: <PinDrop />,
+      icon: <MonetizationOnIcon />,
       route: `/${ROUTE_PAYROLLS_RECONCILED}`,
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },

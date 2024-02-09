@@ -19,8 +19,8 @@ import { bindActionCreators } from 'redux';
 import { MODULE_NAME, BENEFIT_CONSUMPTION_STATUS } from '../../../constants';
 import { closePayroll, rejectPayroll } from '../../../actions';
 import { mutationLabel } from '../../../utils/string-utils';
-
 import BenefitConsumptionSearcherModal from '../BenefitConsumptionSearcherModal';
+import downloadPayroll from '../../../utils/export';
 
 function PaymentApproveForPaymentDialog({
   classes,
@@ -91,6 +91,10 @@ function PaymentApproveForPaymentDialog({
       payroll,
       formatMessageWithValues('payroll.mutation.closeLabel', mutationLabel(payroll)),
     );
+  };
+
+  const downloadPayrollData = (payrollUuid, payrollName) => {
+    downloadPayroll(payrollUuid, payrollName);
   };
 
   return (
@@ -187,7 +191,7 @@ function PaymentApproveForPaymentDialog({
                 {formatMessage('payroll.summary.approveAndClose')}
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => downloadPayrollData(payroll.id, payroll.name)}
                 variant="contained"
                 color="primary"
                 style={{

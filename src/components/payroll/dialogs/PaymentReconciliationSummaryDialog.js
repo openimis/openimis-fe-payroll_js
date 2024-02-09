@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { MODULE_NAME, BENEFIT_CONSUMPTION_STATUS } from '../../../constants';
+import downloadPayroll from '../../../utils/export';
 
 import BenefitConsumptionSearcherModal from '../BenefitConsumptionSearcherModal';
 
@@ -72,6 +73,10 @@ function PaymentReconcilationSummarytDialog({
       setTotalReconciledBillAmount(reconciledAmount);
     }
   }, [isOpen, payroll]);
+
+  const downloadPayrollData = (payrollUuid, payrollName) => {
+    downloadPayroll(payrollUuid, payrollName);
+  };
 
   return (
     <>
@@ -167,7 +172,7 @@ function PaymentReconcilationSummarytDialog({
                 {formatMessage('payroll.summary.createPaymentForFailedInvoice')}
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => downloadPayrollData(payroll.id, payroll.name)}
                 variant="contained"
                 color="primary"
                 style={{

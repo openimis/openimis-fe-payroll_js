@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { Paper, Grid } from '@material-ui/core';
-import { Contributions } from '@openimis/fe-core';
+import {
+  Contributions,
+  useModulesManager,
+  useTranslations,
+} from '@openimis/fe-core';
 import { makeStyles } from '@material-ui/styles';
+import Button from '@material-ui/core/Button';
 import {
   BENEFIT_CONSUMPTION_LIST_TAB_VALUE,
   PAYROLL_TABS_LABEL_CONTRIBUTION_KEY,
   PAYROLL_TABS_PANEL_CONTRIBUTION_KEY,
+  PAYROLL_STATUS,
+  MODULE_NAME,
 } from '../../constants';
+import PayrollPaymentDataUploadDialog from './dialogs/PayrollPaymentDataUploadDialog';
+import downloadPayroll from '../../utils/export';
 
 const useStyles = makeStyles((theme) => ({
   paper: theme.paper.paper,
@@ -30,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PayrollTab({
-  rights, setConfirmedAction, payrollUuid, isInTask,
+  rights, setConfirmedAction, payrollUuid, isInTask, payroll,
 }) {
   const classes = useStyles();
 
@@ -42,19 +51,52 @@ function PayrollTab({
 
   const handleChange = (_, tab) => setActiveTab(tab);
 
+  const modulesManager = useModulesManager();
+  const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
+
+  const downloadPayrollData = (payrollUuid, payrollName) => {
+    downloadPayroll(payrollUuid, payrollName);
+  };
+
   return (
     <Paper className={classes.paper}>
       <Grid container className={`${classes.tableTitle} ${classes.tabs}`}>
-        <Contributions
-          contributionKey={PAYROLL_TABS_LABEL_CONTRIBUTION_KEY}
-          rights={rights}
-          value={activeTab}
-          onChange={handleChange}
-          isSelected={isSelected}
-          tabStyle={tabStyle}
-          payrollUuid={payrollUuid}
-          isInTask={isInTask}
-        />
+        <div style={{ width: '100%' }}>
+          <div style={{ float: 'left' }}>
+            <Contributions
+              contributionKey={PAYROLL_TABS_LABEL_CONTRIBUTION_KEY}
+              rights={rights}
+              value={activeTab}
+              onChange={handleChange}
+              isSelected={isSelected}
+              tabStyle={tabStyle}
+              payrollUuid={payrollUuid}
+              isInTask={isInTask}
+            />
+          </div>
+          <div style={{ float: 'right', paddingRight: '16px' }}>
+            {payrollUuid && (
+            <Button
+              onClick={() => downloadPayrollData(payrollUuid, payroll.name)}
+              color="#DFEDEF"
+              className={classes.button}
+              style={{
+                border: '0px',
+                marginTop: '6px',
+                textTransform: 'uppercase',
+              }}
+            >
+              {formatMessage('payroll.summary.download')}
+            </Button>
+            )}
+            {payrollUuid && payroll?.status === PAYROLL_STATUS.APPROVE_FOR_PAYMENT
+                && (
+                <PayrollPaymentDataUploadDialog
+                  payrollUuid={payrollUuid}
+                />
+                )}
+          </div>
+        </div>
       </Grid>
       <Contributions
         contributionKey={PAYROLL_TABS_PANEL_CONTRIBUTION_KEY}

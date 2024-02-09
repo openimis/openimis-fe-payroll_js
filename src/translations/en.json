@@ -105,5 +105,9 @@
     "payroll.benefitConsumptionStatusPicker.APPROVE_FOR_PAYMENT": "APPROVE FOR PAYMENT",
     "payroll.benefitConsumptionStatusPicker.REJECTED": "REJECTED",
     "payroll.benefitConsumptionStatusPicker.DUPLICATE": "DUPLICATE",
-    "payroll.benefitConsumptionStatusPicker.RECONCILED": "RECONCILED"
+    "payroll.benefitConsumptionStatusPicker.RECONCILED": "RECONCILED",
+    "payroll.paymentData.upload.label": "Upload Payment Data",
+
+    "payroll.route.payrollsApproved": "Approved Payrolls",
+    "payroll.route.payrollsReconciled": "Reconciled Payrolls"
 }
