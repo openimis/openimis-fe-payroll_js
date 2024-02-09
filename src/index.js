@@ -30,7 +30,7 @@ import {
 } from './components/payroll/BenefitConsumptionTabPanel';
 import {
   PayrollRejectedTaskItemFormatters,
-  PayrollRejectedTaskTableHeaders
+  PayrollRejectedTaskTableHeaders,
 } from './components/tasks/PayrollRejectedTasks';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
