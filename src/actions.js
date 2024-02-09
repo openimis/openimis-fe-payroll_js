@@ -51,7 +51,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
   'paymentMethod',
-  'paymentPlan { code }',
+  'paymentPlan { code, id, name, benefitPlan }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { runYear, runMonth }',
   // eslint-disable-next-line max-len

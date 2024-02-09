@@ -75,7 +75,7 @@
     "payroll.payroll.payrollStatusPicker.PENDING_APPROVAL": "PENDING APPROVAL",
     "payroll.payroll.payrollStatusPicker.APPROVE_FOR_PAYMENT": "APPROVE FOR PAYMENT",
     "payroll.payroll.payrollStatusPicker.REJECTED": "REJECTED",
-    "payroll.payroll.payrollStatusPicker.RECONCILIATED": "RECONCILIATED",
+    "payroll.payroll.payrollStatusPicker.RECONCILED": "RECONCILED",
     "payroll.paymentMethod": "Payment Method",
     "payroll.tasks.update.title": "Approve Payroll Tasks",
     "payroll.tasks.reconciliation.title": "Payroll Reconciliation Tasks",

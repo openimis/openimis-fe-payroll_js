@@ -151,10 +151,11 @@ function PayrollPage({
     rights.includes(RIGHT_PAYROLL_CREATE) && (
     <div className={classes.page}>
       <Form
+        key={payrollUuid}
         module="payroll"
         title={formatMessageWithValues('payrollPage.title', pageTitle(payroll))}
         titleParams={pageTitle(payroll)}
-        openDirty
+        openDirty={!payrollUuid}
         benefitPlan={editedPayroll}
         edited={editedPayroll}
         onEditedChanged={setEditedPayroll}
@@ -169,6 +170,7 @@ function PayrollPage({
         setConfirmedAction={setConfirmedAction}
         saveTooltip={formatMessage('tooltip.save')}
         payrollUuid={payrollUuid}
+        isInTask={!!taskPayrollUuid}
       />
     </div>
     )
