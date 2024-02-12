@@ -72,7 +72,7 @@ function PayrollSearcherReconciled({
     },
     status: {
       value: PAYROLL_STATUS.RECONCILED,
-      filter: `status: "${PAYROLL_STATUS.RECONCILED}"`,
+      filter: `status: ${PAYROLL_STATUS.RECONCILED}`,
     },
   });
 
