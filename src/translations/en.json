@@ -111,5 +111,6 @@
 
     "payroll.route.payrollsApproved": "Approved Payrolls",
     "payroll.route.payrollsReconciled": "Reconciled Payrolls",
-    "payroll.tasks.rejected.title": "Rejected Payrolls"
+    "payroll.tasks.rejected.title": "Rejected Payrolls",
+    "payroll.PayrollTaskTab.label": "Tasks"
 }
