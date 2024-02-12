@@ -110,5 +110,6 @@
     "payroll.paymentData.upload.label": "Upload Payment Data",
 
     "payroll.route.payrollsApproved": "Approved Payrolls",
-    "payroll.route.payrollsReconciled": "Reconciled Payrolls"
+    "payroll.route.payrollsReconciled": "Reconciled Payrolls",
+    "payroll.tasks.rejected.title": "Rejected Payrolls"
 }

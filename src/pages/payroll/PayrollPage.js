@@ -56,6 +56,7 @@ function PayrollPage({
 
   const [editedPayroll, setEditedPayroll] = useState({});
   const [payrollUuid, setPayrollUuid] = useState(null);
+  const [isInTask, setIsInTask] = useState(false);
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
   const readOnly = Boolean(payroll?.id);
@@ -64,6 +65,7 @@ function PayrollPage({
 
   useEffect(() => {
     setPayrollUuid(statePayrollUuid ?? taskPayrollUuid);
+    setIsInTask(!!taskPayrollUuid);
   }, [taskPayrollUuid, statePayrollUuid]);
 
   useEffect(() => {
@@ -140,7 +142,7 @@ function PayrollPage({
   };
 
   const actions = [
-    !!payroll && readOnly && {
+    !!payroll && readOnly && !isInTask && {
       doIt: openDeletePayrollConfirmDialog,
       icon: <DeleteIcon />,
       tooltip: formatMessage('tooltip.delete'),
@@ -159,7 +161,7 @@ function PayrollPage({
         benefitPlan={editedPayroll}
         edited={editedPayroll}
         onEditedChanged={setEditedPayroll}
-        back={back}
+        back={!isInTask && back}
         mandatoryFieldsEmpty={mandatoryFieldsEmpty}
         canSave={canSave}
         save={handleSave}
