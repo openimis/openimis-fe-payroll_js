@@ -42,7 +42,7 @@ function BenefitConsumptionSearcherModal({
   const itemFormatters = () => [
     (benefitAttachment) => (
       benefitAttachment.benefit.receipt ? (
-        <PhotoCameraOutlinedIcon fontSize="large" />
+        <PhotoCameraOutlinedIcon style={{ fontSize: 150 }} />
       ) : null
     ),
     (benefitAttachment) => benefitAttachment?.benefit?.individual?.firstName,
