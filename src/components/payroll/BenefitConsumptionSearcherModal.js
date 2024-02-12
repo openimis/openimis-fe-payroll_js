@@ -8,7 +8,7 @@ import {
 } from '@openimis/fe-core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { fetchBenefitAttachments } from '../../actions';
-import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
+import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS } from '../../constants';
 import BenefitConsumptionFilterModal from './BenefitConsumptionFilterModal';
 
 function BenefitConsumptionSearcherModal({
@@ -87,7 +87,7 @@ function BenefitConsumptionSearcherModal({
     if (reconciledMode) {
       filters.benefit_Status = {
         value: 'RECONCILED',
-        filter: 'benefit_Status: "RECONCILED"',
+        filter: `status: ${PAYROLL_STATUS.RECONCILED}`,
       };
     }
     return filters;
