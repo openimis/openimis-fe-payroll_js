@@ -37,6 +37,7 @@ import {
   PayrollTaskTabLabel,
   PayrollTaskTabPanel,
 } from './components/payroll/PayrollTaskTabPanel';
+import { PayrollDeleteTaskItemFormatters, PayrollDeleteTaskTableHeaders } from './components/tasks/PayrollDeleteTasks';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -111,6 +112,12 @@ const DEFAULT_CONFIG = {
     tableHeaders: PayrollRejectedTaskTableHeaders,
     itemFormatters: PayrollRejectedTaskItemFormatters,
     taskSource: ['payroll_reject'],
+  },
+  {
+    text: <FormattedMessage module="payroll" id="payroll.tasks.delete.title" />,
+    tableHeaders: PayrollDeleteTaskTableHeaders,
+    itemFormatters: PayrollDeleteTaskItemFormatters,
+    taskSource: ['payroll_delete'],
   }],
 };
 
