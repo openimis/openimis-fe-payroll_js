@@ -87,7 +87,7 @@ function BenefitConsumptionSearcherModal({
     if (reconciledMode) {
       filters.benefit_Status = {
         value: 'RECONCILED',
-        filter: `status: ${PAYROLL_STATUS.RECONCILED}`,
+        filter: `benefit_Status: ${PAYROLL_STATUS.RECONCILED}`,
       };
     }
     return filters;
