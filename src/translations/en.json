@@ -22,6 +22,7 @@
     "payroll.payroll.paymentPlan": "Payment Plan",
     "payroll.payroll.benefitPlan": "Benefit Plan",
     "payroll.payroll.customFilter": "Custom Filter",
+    "payroll.payroll.paymentStrategy": "Payment Strategy",
     "payroll.payrollSearcher.results": "{totalCount} Payrolls Found",
     "payroll.payroll.mutation.create": "Create Payroll {id}",
     "payroll.payroll.mutation.deleteLabel": "Delete Payroll {id}",

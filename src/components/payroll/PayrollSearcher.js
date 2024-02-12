@@ -17,7 +17,8 @@ import {
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
 import {
-  DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS,
+  DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
+  RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
 import { fetchPayrolls, deletePayrolls } from '../../actions';
@@ -136,7 +137,7 @@ function PayrollSearcher({
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id)}
+          disabled={deletedPayrollUuids.includes(payroll.id) || payroll.status !== PAYROLL_STATUS.PENDING_APPROVAL}
         >
           <DeleteIcon />
         </IconButton>

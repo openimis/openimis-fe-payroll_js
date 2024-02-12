@@ -52,7 +52,7 @@ function PayrollSearcherApproved({
     'payroll.name',
     'payroll.paymentPlan',
     'payroll.paymentPoint',
-    'payroll.paymentStrategy',
+    'payroll.status',
     'payroll.paymentMethod',
     'emptyLabel',
   ];
@@ -61,7 +61,7 @@ function PayrollSearcherApproved({
     ['name', true],
     ['paymentPlan', true],
     ['paymentPoint', true],
-    ['paymentStrategy', true],
+    ['status', true],
     ['paymentMethod', true],
   ];
 
