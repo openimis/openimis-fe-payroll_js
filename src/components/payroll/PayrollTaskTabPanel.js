@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Tab } from '@material-ui/core';
-import { PublishedComponent, useTranslations, useModulesManager } from '@openimis/fe-core';
+import { PublishedComponent, useTranslations } from '@openimis/fe-core';
 import {
   MODULE_NAME, PAYROLL_TASK_TAB_VALUE,
 } from '../../constants';
@@ -25,14 +25,7 @@ function PayrollTaskTabLabel({
 }
 
 function PayrollTaskTabPanel({ value, payrollUuid, isInTask }) {
-  const modulesManager = useModulesManager();
-  const dispatch = useDispatch();
-  const fetchTask = modulesManager.getRef('tasksManagement.fetchTask');
-  const task = useSelector((state) => state.tasksManagement?.task);
-  useEffect(() => {
-    dispatch(fetchTask(modulesManager, ['entityType: "Payroll"', `entityId: "${payrollUuid}"`]));
-  }, [payrollUuid]);
-
+  const rights = useSelector((store) => store?.core?.user?.i_user?.rights ?? []);
   if (isInTask) return null;
 
   return (
@@ -45,10 +38,11 @@ function PayrollTaskTabPanel({ value, payrollUuid, isInTask }) {
       {
                 payrollUuid && (
                   <PublishedComponent
-                    pubRef="tasksManagement.taskDetailsPage"
+                    pubRef="tasksManagement.taskSearcher"
                     module="payroll"
-                    task={task}
-                    hideBody
+                    entityId={payrollUuid}
+                    rights={rights}
+                    showFilters={false}
                   />
                 )
             }
