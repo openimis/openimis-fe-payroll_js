@@ -72,7 +72,7 @@ function PayrollSearcherApproved({
     },
     status: {
       value: PAYROLL_STATUS.APPROVE_FOR_PAYMENT,
-      filter: `status: "${PAYROLL_STATUS.APPROVE_FOR_PAYMENT}"`,
+      filter: `status: ${PAYROLL_STATUS.APPROVE_FOR_PAYMENT}`,
     },
   });
 
