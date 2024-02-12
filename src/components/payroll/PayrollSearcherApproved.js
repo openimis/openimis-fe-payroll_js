@@ -1,10 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import { IconButton, Tooltip } from '@material-ui/core';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Button from '@material-ui/core/Button';
 
 import {
   Searcher,
@@ -17,14 +14,12 @@ import {
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
 import {
-  DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
-  RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
+  DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
-import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import { fetchPayrolls, deletePayrolls } from '../../actions';
+import { fetchPayrolls } from '../../actions';
+import PaymentApproveForPaymentSummary from './dialogs/PaymentApproveForPaymentSummary';
 
-function PayrollSearcher({
-  deletePayrolls,
+function PayrollSearcherApproved({
   fetchingPayrolls,
   fetchedPayrolls,
   errorPayrolls,
@@ -32,43 +27,16 @@ function PayrollSearcher({
   pageInfo,
   totalCount,
   fetchPayrolls,
-  coreConfirm,
-  clearConfirm,
-  confirmed,
   submittingMutation,
   mutation,
+  classes,
 }) {
   const history = useHistory();
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
-  const [payrollToDelete, setPayrollToDelete] = useState(null);
-  const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
-
-  const openDeletePayrollConfirmDialog = () => {
-    coreConfirm(
-      formatMessageWithValues('payroll.delete.confirm.title', pageTitle(payrollToDelete)),
-      formatMessage('payroll.delete.confirm.message'),
-    );
-  };
-
-  useEffect(() => payrollToDelete && openDeletePayrollConfirmDialog(), [payrollToDelete]);
-
-  useEffect(() => {
-    if (payrollToDelete && confirmed) {
-      deletePayrolls(
-        payrollToDelete,
-        formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payrollToDelete)),
-      );
-      setDeletedPayrollUuids([...deletedPayrollUuids, payrollToDelete.id]);
-    }
-    if (payrollToDelete && confirmed !== null) {
-      setPayrollToDelete(null);
-    }
-    return () => confirmed && clearConfirm(false);
-  }, [confirmed]);
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
@@ -82,7 +50,7 @@ function PayrollSearcher({
 
   const headers = () => [
     'payroll.name',
-    'payroll.benefitPlan',
+    'payroll.paymentPlan',
     'payroll.paymentPoint',
     'payroll.status',
     'payroll.paymentMethod',
@@ -91,7 +59,7 @@ function PayrollSearcher({
 
   const sorts = () => [
     ['name', true],
-    ['benefitPlan', true],
+    ['paymentPlan', true],
     ['paymentPoint', true],
     ['status', true],
     ['paymentMethod', true],
@@ -101,6 +69,10 @@ function PayrollSearcher({
     isDeleted: {
       value: false,
       filter: 'isDeleted: false',
+    },
+    status: {
+      value: PAYROLL_STATUS.APPROVE_FOR_PAYMENT,
+      filter: `status: "${PAYROLL_STATUS.APPROVE_FOR_PAYMENT}"`,
     },
   });
 
@@ -112,8 +84,6 @@ function PayrollSearcher({
     `/${modulesManager.getRef(PAYROLL_PAYROLL_ROUTE)}/${payroll?.id}`,
   );
 
-  const onDelete = (payroll) => setPayrollToDelete(payroll);
-
   const itemFormatters = () => [
     (payroll) => payroll.name,
     (payroll) => (payroll.benefitPlan
@@ -124,34 +94,30 @@ function PayrollSearcher({
       ? `${payroll.status}` : ''),
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
+    // eslint-disable-next-line no-unused-vars
     (payroll) => (
-      <Tooltip title={formatMessage('tooltip.viewDetails')}>
-        <IconButton
-          onClick={() => openPayroll(payroll)}
-        >
-          <VisibilityIcon />
-        </IconButton>
-      </Tooltip>
+      <Button
+        onClick={() => {}}
+        variant="contained"
+        color="primary"
+        className={classes.button}
+      >
+        {formatMessage('payroll.viewReconciliationFiles')}
+      </Button>
     ),
     (payroll) => (
-      <Tooltip title={formatMessage('tooltip.delete')}>
-        <IconButton
-          onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id) || payroll.status !== PAYROLL_STATUS.PENDING_APPROVAL}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+      <PaymentApproveForPaymentSummary
+        classes={classes}
+        payroll={payroll}
+      />
     ),
   ];
 
   const onDoubleClick = (payroll) => openPayroll(payroll);
 
   const payrollFilter = ({ filters, onChangeFilters }) => (
-    <PayrollFilter filters={filters} onChangeFilters={onChangeFilters} />
+    <PayrollFilter filters={filters} onChangeFilters={onChangeFilters} statusReadOnly />
   );
-
-  const isRowDisabled = (_, payroll) => deletedPayrollUuids.includes(payroll.id);
 
   return (
     <Searcher
@@ -172,8 +138,6 @@ function PayrollSearcher({
       rowIdentifier={rowIdentifier}
       onDoubleClick={onDoubleClick}
       defaultFilters={defaultFilters()}
-      rowDisabled={isRowDisabled}
-      rowLocked={isRowDisabled}
     />
   );
 }
@@ -192,10 +156,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
-  deletePayrolls,
   journalize,
   clearConfirm,
   coreConfirm,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(PayrollSearcher);
+export default connect(mapStateToProps, mapDispatchToProps)(PayrollSearcherApproved);

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import {
   Searcher, useModulesManager, useTranslations,
 } from '@openimis/fe-core';
-import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { fetchBenefitConsumptions } from '../../actions';
 import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
 import BenefitConsumptionFilter from './BenefitConsumptionFilter';
@@ -41,11 +40,7 @@ function BenefitConsumptionSearcher({
   const itemFormatters = () => [
     (benefitConsumption) => benefitConsumption?.individual?.firstName,
     (benefitConsumption) => benefitConsumption?.individual?.lastName,
-    (benefitConsumption) => (
-      benefitConsumption.receipt ? (
-        <PhotoCameraOutlinedIcon style={{ fontSize: 150 }} />
-      ) : null
-    ),
+    (benefitConsumption) => benefitConsumption?.photo,
     (benefitConsumption) => benefitConsumption?.code,
     (benefitConsumption) => benefitConsumption?.dateDue,
     (benefitConsumption) => benefitConsumption?.receipt,

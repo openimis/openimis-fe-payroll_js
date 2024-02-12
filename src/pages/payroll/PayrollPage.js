@@ -170,9 +170,10 @@ function PayrollPage({
         rights={rights}
         actions={actions}
         setConfirmedAction={setConfirmedAction}
-        saveTooltip={formatMessage('tooltip.save')}
         payrollUuid={payrollUuid}
-        isInTask={isInTask}
+        saveTooltip={formatMessage('tooltip.save')}
+        isInTask={!!taskPayrollUuid}
+        payroll={payroll}
       />
     </div>
     )

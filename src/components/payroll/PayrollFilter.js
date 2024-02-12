@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PayrollFilter({
-  filters, onChangeFilters,
+  filters, onChangeFilters, statusReadOnly = false,
 }) {
   const classes = useStyles();
   const modulesManager = useModulesManager();
@@ -126,6 +126,7 @@ function PayrollFilter({
           nullLabel={formatMessage('any')}
           label={formatMessage('paymentMethod')}
           value={filterValue('status')}
+          readOnly={statusReadOnly}
           onChange={(value) => onChangeFilters([
             {
               id: 'status',

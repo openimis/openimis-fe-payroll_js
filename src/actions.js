@@ -42,6 +42,11 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'dateDue',
 ];
 
+const BENEFIT_ATTACHMENT_PROJECTION = () => [
+  'benefit{id, status, code, dateDue, receipt, individual {firstName, lastName}}',
+  'bill{id, code, terms, amountTotal}',
+];
+
 const PAYROLL_PROJECTION = (modulesManager) => [
   'id',
   'name',
@@ -49,7 +54,8 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'paymentPlan { code, id, name, benefitPlan }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { runYear, runMonth }',
-  'benefitConsumption{id, code,individual {firstName, lastName}, benefitAttachment{bill{id, code, terms}}}',
+  // eslint-disable-next-line max-len
+  'benefitConsumption{id, status, code, dateDue, receipt, individual {firstName, lastName}, benefitAttachment{bill{id, code, terms, amountTotal}}}',
   'jsonExt',
   'status',
   'dateValidFrom',
@@ -187,6 +193,11 @@ export function fetchBenefitConsumptions(modulesManager, params) {
   return graphql(payload, ACTION_TYPE.GET_BENEFIT_CONSUMPTION);
 }
 
+export function fetchBenefitAttachments(modulesManager, params) {
+  const payload = formatPageQueryWithCount('benefitAttachmentByPayroll', params, BENEFIT_ATTACHMENT_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_BENEFIT_ATTACHMENT);
+}
+
 export const clearPayrollBills = () => (dispatch) => {
   dispatch({
     type: CLEAR(ACTION_TYPE.GET_BENEFIT_CONSUMPTION),
@@ -202,4 +213,24 @@ export const clearPayroll = () => (dispatch) => {
 export function fetchPaymentMethods(params) {
   const payload = formatQuery('paymentMethods', params, PAYMENT_METHOD_PROJECTION());
   return graphql(payload, ACTION_TYPE.GET_PAYMENT_METHODS);
+}
+
+export function closePayroll(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${payroll?.id}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.CLOSE,
+    payrollUuids,
+    ACTION_TYPE.CLOSE_PAYROLL,
+    clientMutationLabel,
+  );
+}
+
+export function rejectPayroll(payroll, clientMutationLabel) {
+  const payrollUuids = `ids: ["${payroll?.id}"]`;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.REJECT,
+    payrollUuids,
+    ACTION_TYPE.REJECT_PAYROLL,
+    clientMutationLabel,
+  );
 }
