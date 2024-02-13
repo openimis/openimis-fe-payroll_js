@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import {
   Form,
@@ -18,7 +17,6 @@ import {
   fetchPayroll,
   clearPayroll,
   createPayroll,
-  deletePayrolls,
 } from '../../actions';
 import {
   MODULE_NAME,
@@ -44,8 +42,6 @@ function PayrollPage({
   fetchPayroll,
   createPayroll,
   clearPayroll,
-  deletePayrolls,
-  coreConfirm,
   clearConfirm,
   journalize,
 }) {
@@ -128,26 +124,7 @@ function PayrollPage({
     );
   };
 
-  const deletePayrollCallback = () => deletePayrolls(
-    payroll,
-    formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payroll)),
-  );
-
-  const openDeletePayrollConfirmDialog = () => {
-    setConfirmedAction(() => deletePayrollCallback);
-    coreConfirm(
-      formatMessageWithValues('payroll.delete.confirm.title', pageTitle(payroll)),
-      formatMessage('payroll.delete.confirm.message'),
-    );
-  };
-
-  const actions = [
-    !!payroll && readOnly && !isInTask && {
-      doIt: openDeletePayrollConfirmDialog,
-      icon: <DeleteIcon />,
-      tooltip: formatMessage('tooltip.delete'),
-    },
-  ];
+  const actions = [];
 
   return (
     rights.includes(RIGHT_PAYROLL_CREATE) && (
