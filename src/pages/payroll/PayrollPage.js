@@ -161,7 +161,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayroll,
   createPayroll,
   clearPayroll,
-  deletePayrolls,
   coreConfirm,
   clearConfirm,
   journalize,
