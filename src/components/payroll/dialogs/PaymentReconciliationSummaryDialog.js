@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {
   useModulesManager,
   useTranslations,
+  useHistory,
 } from '@openimis/fe-core';
 import {
   Paper,
@@ -16,7 +17,12 @@ import {
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { MODULE_NAME, BENEFIT_CONSUMPTION_STATUS } from '../../../constants';
+import {
+  MODULE_NAME,
+  BENEFIT_CONSUMPTION_STATUS,
+  PAYROLL_PAYROLL_ROUTE,
+  PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
+} from '../../../constants';
 import downloadPayroll from '../../../utils/export';
 
 import BenefitConsumptionSearcherModal from '../BenefitConsumptionSearcherModal';
@@ -25,6 +31,9 @@ function PaymentReconcilationSummarytDialog({
   classes,
   payroll,
 }) {
+  const history = useHistory();
+  const modulesManager = useModulesManager();
+  const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const [isOpen, setIsOpen] = useState(false);
   const [totalBeneficiaries, setTotalBeneficiaries] = useState(0);
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState(0);
@@ -39,8 +48,11 @@ function PaymentReconcilationSummarytDialog({
     setIsOpen(false);
   };
 
-  const modulesManager = useModulesManager();
-  const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
+  const handleCreatePaymentForFailedInvoice = () => {
+    history.push(
+      `/${modulesManager.getRef(PAYROLL_PAYROLL_ROUTE)}/${payroll?.id}/${PAYROLL_FROM_FAILED_INVOICES_URL_PARAM}`,
+    );
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -160,7 +172,7 @@ function PaymentReconcilationSummarytDialog({
           <div style={{ maxWidth: '3000px' }}>
             <div style={{ float: 'left' }}>
               <Button
-                onClick={() => {}}
+                onClick={handleCreatePaymentForFailedInvoice}
                 variant="contained"
                 color="primary"
                 disabled={totalBeneficiaries === selectedBeneficiaries}

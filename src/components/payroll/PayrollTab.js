@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PayrollTab({
-  rights, setConfirmedAction, payrollUuid, isInTask, payroll,
+  rights, setConfirmedAction, payrollUuid, isInTask, payroll, isPayrollFromFailedInvoices,
 }) {
   const classes = useStyles();
 
@@ -72,10 +72,11 @@ function PayrollTab({
               tabStyle={tabStyle}
               payrollUuid={payrollUuid}
               isInTask={isInTask}
+              isPayrollFromFailedInvoices={isPayrollFromFailedInvoices}
             />
           </div>
           <div style={{ float: 'right', paddingRight: '16px' }}>
-            {payrollUuid && (
+            {payrollUuid && !isPayrollFromFailedInvoices && (
             <Button
               onClick={() => downloadPayrollData(payrollUuid, payroll.name)}
               color="#DFEDEF"
@@ -105,6 +106,7 @@ function PayrollTab({
         setConfirmedAction={setConfirmedAction}
         payrollUuid={payrollUuid}
         isInTask={isInTask}
+        isPayrollFromFailedInvoices={isPayrollFromFailedInvoices}
       />
     </Paper>
   );

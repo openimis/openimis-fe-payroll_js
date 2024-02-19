@@ -11,7 +11,6 @@ import {
   PublishedComponent,
   TextInput,
   withModulesManager,
-  decodeId,
 } from '@openimis/fe-core';
 import AdvancedFiltersDialog from './AdvancedFiltersDialog';
 import { CLEARED_STATE_FILTER } from '../../constants';
@@ -71,27 +70,31 @@ class PayrollHeadPanel extends FormPanel {
   };
 
   render() {
-    const { edited, classes, intl } = this.props;
+    const {
+      edited, classes, intl, readOnly, isPayrollFromFailedInvoices,
+    } = this.props;
     const payroll = { ...edited };
     const { appliedCustomFilters, appliedFiltersRowStructure } = this.state;
-    const readOnly = Boolean(payroll?.id);
     return (
       <>
-        <AdvancedFiltersDialog
-          object={payroll?.paymentPlan?.benefitPlan
-            ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
-            : null}
-          objectToSave={payroll}
-          moduleName="social_protection"
-          objectType="BenefitPlan"
-          setAppliedCustomFilters={this.setAppliedCustomFilters}
-          appliedCustomFilters={appliedCustomFilters}
-          appliedFiltersRowStructure={appliedFiltersRowStructure}
-          setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
-          updateAttributes={this.updateJsonExt}
-          getDefaultAppliedCustomFilters={this.getDefaultAppliedCustomFilters}
-          readOnly={readOnly}
-        />
+        {!isPayrollFromFailedInvoices
+            && (
+            <AdvancedFiltersDialog
+              object={payroll?.paymentPlan?.benefitPlan
+                ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
+                : null}
+              objectToSave={payroll}
+              moduleName="social_protection"
+              objectType="BenefitPlan"
+              setAppliedCustomFilters={this.setAppliedCustomFilters}
+              appliedCustomFilters={appliedCustomFilters}
+              appliedFiltersRowStructure={appliedFiltersRowStructure}
+              setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
+              updateAttributes={this.updateJsonExt}
+              getDefaultAppliedCustomFilters={this.getDefaultAppliedCustomFilters}
+              readOnly={readOnly}
+            />
+            )}
         <Grid container className={classes.item}>
           <Grid item xs={3} className={classes.item}>
             <TextInput
@@ -100,7 +103,7 @@ class PayrollHeadPanel extends FormPanel {
               value={payroll?.name}
               required
               onChange={(name) => this.updateAttribute('name', name)}
-              readOnly={readOnly}
+              readOnly={isPayrollFromFailedInvoices ? !isPayrollFromFailedInvoices : readOnly}
             />
           </Grid>
           <Grid item xs={3} className={classes.item}>
@@ -133,18 +136,18 @@ class PayrollHeadPanel extends FormPanel {
               filterLabels={false}
               onChange={(paymentCycle) => this.updateAttribute('paymentCycle', paymentCycle)}
               value={payroll?.paymentCycle}
-              readOnly={readOnly}
+              readOnly={isPayrollFromFailedInvoices ? !isPayrollFromFailedInvoices : readOnly}
             />
           </Grid>
-          {readOnly && (
-            <Grid item xs={3} className={classes.item}>
-              <PayrollStatusPicker
-                required
-                withNull={false}
-                readOnly={readOnly}
-                value={!!payroll?.status && payroll.status}
-              />
-            </Grid>
+          {readOnly && !isPayrollFromFailedInvoices && (
+          <Grid item xs={3} className={classes.item}>
+            <PayrollStatusPicker
+              required
+              withNull={false}
+              readOnly={readOnly}
+              value={!!payroll?.status && payroll.status}
+            />
+          </Grid>
           )}
           <Grid item xs={3} className={classes.item}>
             <PaymentMethodPicker

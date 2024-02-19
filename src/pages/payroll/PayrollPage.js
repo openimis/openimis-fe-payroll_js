@@ -19,7 +19,7 @@ import {
   createPayroll,
 } from '../../actions';
 import {
-  MODULE_NAME,
+  MODULE_NAME, PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
   RIGHT_PAYROLL_CREATE,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
@@ -43,6 +43,7 @@ function PayrollPage({
   createPayroll,
   clearPayroll,
   clearConfirm,
+  createPayrollFromFailedInvoices,
   journalize,
 }) {
   const modulesManager = useModulesManager();
@@ -53,11 +54,18 @@ function PayrollPage({
   const [editedPayroll, setEditedPayroll] = useState({});
   const [payrollUuid, setPayrollUuid] = useState(null);
   const [isInTask, setIsInTask] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
+  const [isPayrollFromFailedInvoices, setIsPayrollFromFailedInvoices] = useState(false);
   const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
-  const readOnly = Boolean(payroll?.id);
 
   const back = () => history.goBack();
+
+  useEffect(() => {
+    if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
+      setIsPayrollFromFailedInvoices(true);
+    }
+  }, [createPayrollFromFailedInvoices, payrollUuid]);
 
   useEffect(() => {
     setPayrollUuid(statePayrollUuid ?? taskPayrollUuid);
@@ -81,8 +89,9 @@ function PayrollPage({
       if (mutation?.actionType === ACTION_TYPE.DELETE_PAYROLL) {
         back();
       }
-      if (mutation?.clientMutationId && !payrollUuid) {
+      if (mutation?.clientMutationId && (!payrollUuid || isPayrollFromFailedInvoices)) {
         fetchPayroll(modulesManager, [`clientMutationId: "${mutation.clientMutationId}"`]);
+        setIsPayrollFromFailedInvoices(false);
       }
     }
   }, [submittingMutation]);
@@ -93,8 +102,15 @@ function PayrollPage({
 
   useEffect(() => {
     if (payroll) {
-      setEditedPayroll(payroll);
-      if (!payrollUuid && payroll?.id) {
+      setReadOnly(payroll?.id);
+      if (isPayrollFromFailedInvoices) {
+        setEditedPayroll({
+          ...payroll, id: null, name: null, paymentCycle: null, status: null, fromFailedInvoicesPayrollId: payroll?.id,
+        });
+      } else {
+        setEditedPayroll(payroll);
+      }
+      if (!payrollUuid && payroll?.id && !isPayrollFromFailedInvoices) {
         const payrollRouteRef = modulesManager.getRef('payroll.route.payroll');
         history.replace(`/${payrollRouteRef}/${payroll.id}`);
       }
@@ -115,7 +131,7 @@ function PayrollPage({
     return true;
   };
 
-  const canSave = () => !mandatoryFieldsEmpty() && !readOnly;
+  const canSave = () => !mandatoryFieldsEmpty() && (!readOnly || isPayrollFromFailedInvoices);
 
   const handleSave = () => {
     createPayroll(
@@ -134,7 +150,7 @@ function PayrollPage({
         module="payroll"
         title={formatMessageWithValues('payrollPage.title', pageTitle(payroll))}
         titleParams={pageTitle(payroll)}
-        openDirty={!payrollUuid}
+        openDirty={isPayrollFromFailedInvoices ? true : !payrollUuid}
         benefitPlan={editedPayroll}
         edited={editedPayroll}
         onEditedChanged={setEditedPayroll}
@@ -151,6 +167,8 @@ function PayrollPage({
         saveTooltip={formatMessage('tooltip.save')}
         isInTask={!!taskPayrollUuid}
         payroll={payroll}
+        readOnly={readOnly}
+        isPayrollFromFailedInvoices={isPayrollFromFailedInvoices}
       />
     </div>
     )
@@ -168,6 +186,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 
 const mapStateToProps = (state, props) => ({
   statePayrollUuid: props?.match?.params.payroll_uuid,
+  createPayrollFromFailedInvoices: props?.match?.params?.createPayrollFromFailedInvoices,
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,

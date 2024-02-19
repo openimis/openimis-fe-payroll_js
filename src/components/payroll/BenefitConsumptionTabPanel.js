@@ -23,7 +23,9 @@ function BenefitConsumptionsTabLabel({
   );
 }
 
-function BenefitConsumptionsTabPanel({ value, rights, payrollUuid }) {
+function BenefitConsumptionsTabPanel({
+  value, rights, payrollUuid, isPayrollFromFailedInvoices,
+}) {
   return (
     <PublishedComponent
       pubRef="policyHolder.TabPanel"
@@ -33,7 +35,11 @@ function BenefitConsumptionsTabPanel({ value, rights, payrollUuid }) {
     >
       {
         rights.includes(RIGHT_PAYROLL_SEARCH) && payrollUuid && (
-        <BenefitConsumptionSearcher rights={rights} payrollUuid={payrollUuid} />
+        <BenefitConsumptionSearcher
+          rights={rights}
+          payrollUuid={payrollUuid}
+          isPayrollFromFailedInvoices={isPayrollFromFailedInvoices}
+        />
         )
       }
     </PublishedComponent>

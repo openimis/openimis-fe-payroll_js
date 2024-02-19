@@ -7,10 +7,10 @@ import {
 } from '../../constants';
 
 function PayrollTaskTabLabel({
-  onChange, tabStyle, isSelected, modulesManager, payrollUuid, isInTask,
+  onChange, tabStyle, isSelected, modulesManager, payrollUuid, isInTask, isPayrollFromFailedInvoices,
 }) {
   const { formatMessage } = useTranslations(MODULE_NAME, modulesManager);
-  if (!payrollUuid || isInTask) {
+  if (!payrollUuid || isInTask || isPayrollFromFailedInvoices) {
     return null;
   }
   return (

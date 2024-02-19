@@ -8,7 +8,7 @@ import {
 } from '@openimis/fe-core';
 import PhotoCameraOutlinedIcon from '@material-ui/icons/PhotoCameraOutlined';
 import { fetchBenefitConsumptions } from '../../actions';
-import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
+import { BENEFIT_CONSUMPTION_STATUS, DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
 import BenefitConsumptionFilter from './BenefitConsumptionFilter';
 
 function BenefitConsumptionSearcher({
@@ -19,6 +19,7 @@ function BenefitConsumptionSearcher({
   benefitConsumptions,
   benefitConsumptionsPageInfo,
   benefitConsumptionsTotalCount,
+  isPayrollFromFailedInvoices,
   payrollUuid,
 }) {
   const modulesManager = useModulesManager();
@@ -51,7 +52,8 @@ function BenefitConsumptionSearcher({
     (benefitConsumption) => benefitConsumption?.receipt,
     (benefitConsumption) => benefitConsumption?.amount,
     (benefitConsumption) => benefitConsumption?.type,
-    (benefitConsumption) => benefitConsumption?.status,
+    (benefitConsumption) => (isPayrollFromFailedInvoices
+      ? BENEFIT_CONSUMPTION_STATUS.APPROVE_FOR_PAYMENT : benefitConsumption?.status),
   ];
 
   const rowIdentifier = (benefitConsumption) => benefitConsumption.id;
@@ -68,16 +70,28 @@ function BenefitConsumptionSearcher({
     ['status', true],
   ];
 
-  const defaultFilters = () => ({
-    isDeleted: {
-      value: false,
-      filter: 'isDeleted: false',
-    },
-    payrollUuid: {
-      value: payrollUuid,
-      filter: `payrollUuid: "${payrollUuid}"`,
-    },
-  });
+  const defaultFilters = () => {
+    const filters = {
+      isDeleted: {
+        value: false,
+        filter:
+        'isDeleted: false',
+      },
+      payrollUuid: {
+        value: payrollUuid,
+        filter:
+        `payrollUuid: "${payrollUuid}"`,
+      },
+    };
+    if (isPayrollFromFailedInvoices) {
+      filters.status = {
+        value: BENEFIT_CONSUMPTION_STATUS.ACCEPTED,
+        filter:
+              `status: ${BENEFIT_CONSUMPTION_STATUS.ACCEPTED}`,
+      };
+    }
+    return filters;
+  };
 
   const benefitConsumptionFilter = ({ filters, onChangeFilters }) => (
     <BenefitConsumptionFilter filters={filters} onChangeFilters={onChangeFilters} />
@@ -87,7 +101,7 @@ function BenefitConsumptionSearcher({
     <div>
       <Searcher
         module="payroll"
-        FilterPane={benefitConsumptionFilter}
+        FilterPane={!isPayrollFromFailedInvoices && benefitConsumptionFilter}
         fetch={fetch}
         items={benefitConsumptions}
         itemsPageInfo={benefitConsumptionsPageInfo}
