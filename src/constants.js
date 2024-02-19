@@ -91,3 +91,5 @@ export const BENEFIT_CONSUMPTION_STATUS_LIST = [
 ];
 
 export const BENEFIT_PLAN_CONTENT_TYPE_ID = 175;
+
+export const PAYROLL_FROM_FAILED_INVOICES_URL_PARAM = 'createPayrollFromFailedInvoices=true';

@@ -204,6 +204,8 @@ function reducer(
         payroll: parseData(action.payload.data.payroll)?.map((payroll) => ({
           ...payroll,
           id: decodeId(payroll.id),
+          dateValidTo: payroll?.dateValidTo ? payroll?.dateValidTo.split('T')[0] : null,
+          dateValidFrom: payroll?.dateValidFrom ? payroll?.dateValidFrom.split('T')[0] : null,
         }))?.[0],
         errorPayroll: formatGraphQLError(action.payload),
       };

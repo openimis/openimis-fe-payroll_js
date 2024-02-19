@@ -65,7 +65,7 @@ const DEFAULT_CONFIG = {
     { path: ROUTE_PAYROLLS, component: PayrollsPage },
     { path: ROUTE_PAYROLLS_APPROVED, component: ApprovedPayrollsPage },
     { path: ROUTE_PAYROLLS_RECONCILED, component: ReconciledPayrollsPage },
-    { path: `${ROUTE_PAYROLL}/:payroll_uuid?`, component: PayrollPage },
+    { path: `${ROUTE_PAYROLL}/:payroll_uuid?/:createPayrollFromFailedInvoices?`, component: PayrollPage },
   ],
   'invoice.MainMenu': [
     {

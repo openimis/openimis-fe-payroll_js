@@ -83,18 +83,23 @@ const formatPayrollGQL = (payroll) => `
   ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
   ${`status: ${PAYROLL_STATUS.PENDING_APPROVAL}`}
   ${
-  payroll.jsonExt
+  payroll?.jsonExt
     ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
     : ''
 }
   ${
-  payroll.dateValidFrom
+  payroll?.dateValidFrom
     ? `dateValidFrom: "${payroll.dateValidFrom}"`
     : ''
 }
   ${
-  payroll.dateValidTo
+  payroll?.dateValidTo
     ? `dateValidTo: "${payroll.dateValidTo}"`
+    : ''
+}
+  ${
+  payroll?.fromFailedInvoicesPayrollId
+    ? `fromFailedInvoicesPayrollId: "${payroll.fromFailedInvoicesPayrollId}"`
     : ''
 }
   `;
