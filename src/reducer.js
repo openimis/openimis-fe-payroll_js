@@ -30,6 +30,7 @@ export const ACTION_TYPE = {
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
   CLOSE_PAYROLL: 'PAYROLL_MUTATION_CLOSE_PAYROLL',
   REJECT_PAYROLL: 'PAYROLL_MUTATION_REJECT_PAYROLL',
+  GET_PAYROLL_PAYMENT_FILES: 'GET_PAYROLL_PAYMENT_FILES',
 };
 
 export const MUTATION_SERVICE = {
@@ -90,6 +91,13 @@ const STORE_STATE = {
   paymentMethods: [],
   fetchedPaymentMethods: false,
   errorPaymentMethods: null,
+
+  fetchingPayrollFiles: false,
+  fetchedPayrollFiles: false,
+  errorPayrollFiles: null,
+  payrollFiles: [],
+  payrollFilesPageInfo: {},
+  payrollFilesTotalCount: 0,
 };
 
 function reducer(
@@ -319,6 +327,44 @@ function reducer(
         ...state,
         fetchingPaymentMethods: false,
         errorPaymentMethods: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
+      return {
+        ...state,
+        fetchingPayrollFiles: true,
+        fetchedPayrollFiles: false,
+        errorPayrollFiles: null,
+        payrollFiles: [],
+        payrollFilesPageInfo: {},
+        payrollFilesTotalCount: 0,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
+      return {
+        ...state,
+        fetchingPayrollFiles: false,
+        fetchedPayrollFiles: true,
+        errorPayrollFiles: formatGraphQLError(action.payload),
+        payrollFiles: parseData(action.payload.data.csvReconciliationUpload)?.map((file) => ({
+          ...file,
+        })),
+        payrollFilesPageInfo: pageInfo(action.payload.data.csvReconciliationUpload),
+        payrollFilesTotalCount: action.payload.data.csvReconciliationUpload?.totalCount ?? 0,
+      };
+    case ERROR(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
+      return {
+        ...state,
+        fetchingPayrollFiles: false,
+        errorPayrollFiles: formatGraphQLError(action.payload),
+      };
+    case CLEAR(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
+      return {
+        ...state,
+        fetchingPayrollFiles: false,
+        fetchedPayrollFiles: false,
+        errorPayrollFiles: null,
+        payrollFiles: [],
+        payrollFilesPageInfo: {},
+        payrollFilesTotalCount: 0,
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

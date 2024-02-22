@@ -113,5 +113,11 @@
     "payroll.route.payrollsReconciled": "Reconciled Payrolls",
     "payroll.tasks.rejected.title": "Rejected Payrolls",
     "payroll.PayrollTaskTab.label": "Tasks",
-    "payroll.tasks.delete.title": "Delete Payroll Tasks"
+    "payroll.tasks.delete.title": "Delete Payroll Tasks",
+
+    "payroll.payrollPaymentFile.fileName": "Filename",
+    "payroll.payrollPaymentFile.status": "Status",
+    "payrollPaymentFile.download": "Download",
+    "payroll.payrollPaymentFilesSearcher.results": "{totalCount} Files Found",
+    "payroll.PayrollPaymentFilesTab.label": "Payment Files"
 }

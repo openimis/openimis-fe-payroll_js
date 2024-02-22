@@ -38,6 +38,7 @@ import {
   PayrollTaskTabPanel,
 } from './components/payroll/PayrollTaskTabPanel';
 import { PayrollDeleteTaskItemFormatters, PayrollDeleteTaskTableHeaders } from './components/tasks/PayrollDeleteTasks';
+import {PayrollPaymentFilesTabLabel, PayrollPaymentFilesTabPanel} from "./components/payroll/PayrollPaymentFilesTab";
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
@@ -93,8 +94,8 @@ const DEFAULT_CONFIG = {
       filter: (rights) => rights.includes(RIGHT_PAYROLL_SEARCH),
     },
   ],
-  'payroll.TabPanel.label': [BenefitConsumptionsTabLabel, PayrollTaskTabLabel],
-  'payroll.TabPanel.panel': [BenefitConsumptionsTabPanel, PayrollTaskTabPanel],
+  'payroll.TabPanel.label': [BenefitConsumptionsTabLabel, PayrollTaskTabLabel, PayrollPaymentFilesTabLabel],
+  'payroll.TabPanel.panel': [BenefitConsumptionsTabPanel, PayrollTaskTabPanel, PayrollPaymentFilesTabPanel],
   'tasksManagement.tasks': [{
     text: <FormattedMessage module="payroll" id="payroll.tasks.update.title" />,
     tableHeaders: PayrollTaskTableHeaders,
