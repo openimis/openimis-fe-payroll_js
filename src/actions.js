@@ -63,6 +63,11 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'isDeleted',
 ];
 
+const CSV_RECONCILIATION_PROJECTION = () => [
+  'fileName',
+  'status',
+];
+
 const PAYMENT_METHOD_PROJECTION = () => [
   'paymentMethods {name}',
 ];
@@ -127,6 +132,11 @@ export function fetchPaymentPoints(modulesManager, params) {
 export function fetchPaymentPoint(modulesManager, params) {
   const payload = formatPageQueryWithCount('paymentPoint', params, PAYMENT_POINT_PROJECTION(modulesManager));
   return graphql(payload, ACTION_TYPE.GET_PAYMENT_POINT);
+}
+
+export function fetchPayrollPaymentFiles(modulesManager, params) {
+  const payload = formatPageQueryWithCount('csvReconciliationUpload', params, CSV_RECONCILIATION_PROJECTION());
+  return graphql(payload, ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES);
 }
 
 export const clearPaymentPoint = () => (dispatch) => {
