@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Button from '@material-ui/core/Button';
 
 import {
   Searcher,
@@ -18,6 +17,7 @@ import {
 } from '../../constants';
 import { fetchPayrolls } from '../../actions';
 import PaymentReconciliationSummaryDialog from './dialogs/PaymentReconciliationSummaryDialog';
+import PayrollReconciliationFilesDialog from './dialogs/PayrollReconciliationFilesDialog';
 
 function PayrollSearcherReconciled({
   fetchingPayrolls,
@@ -33,7 +33,7 @@ function PayrollSearcherReconciled({
 }) {
   const history = useHistory();
   const modulesManager = useModulesManager();
-  const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
+  const { formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
   const prevSubmittingMutationRef = useRef();
@@ -94,16 +94,11 @@ function PayrollSearcherReconciled({
       ? `${payroll.status}` : ''),
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
-    // eslint-disable-next-line no-unused-vars
     (payroll) => (
-      <Button
-        onClick={() => {}}
-        variant="contained"
-        color="primary"
-        className={classes.button}
-      >
-        {formatMessage('payroll.viewReconciliationFiles')}
-      </Button>
+      <PayrollReconciliationFilesDialog
+        classes={classes}
+        payroll={payroll}
+      />
     ),
     (payroll) => (
       <PaymentReconciliationSummaryDialog
