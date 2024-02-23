@@ -18,6 +18,7 @@ import {
 } from '../../constants';
 import { fetchPayrolls } from '../../actions';
 import PaymentReconciliationSummaryDialog from './dialogs/PaymentReconciliationSummaryDialog';
+import PayrollReconciliationFilesDialog from './dialogs/PayrollReconciliationFilesDialog';
 
 function PayrollSearcherReconciled({
   fetchingPayrolls,
@@ -94,16 +95,11 @@ function PayrollSearcherReconciled({
       ? `${payroll.status}` : ''),
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
-    // eslint-disable-next-line no-unused-vars
     (payroll) => (
-      <Button
-        onClick={() => {}}
-        variant="contained"
-        color="primary"
-        className={classes.button}
-      >
-        {formatMessage('payroll.viewReconciliationFiles')}
-      </Button>
+      <PayrollReconciliationFilesDialog
+        classes={classes}
+        payroll={payroll}
+      />
     ),
     (payroll) => (
       <PaymentReconciliationSummaryDialog
