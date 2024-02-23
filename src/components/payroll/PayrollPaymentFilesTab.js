@@ -5,7 +5,7 @@ import { PublishedComponent, useTranslations } from '@openimis/fe-core';
 import {
   MODULE_NAME, PAYROLL_PAYMENT_FILES_TAB_VALUE,
 } from '../../constants';
-import PayrollPaymentFilesSearcher from "./PayrollPaymentFilesSearcher";
+import PayrollPaymentFilesSearcher from './PayrollPaymentFilesSearcher';
 
 function PayrollPaymentFilesTabLabel({
   onChange, tabStyle, isSelected, modulesManager, payrollUuid, isInTask, isPayrollFromFailedInvoices,

@@ -38,7 +38,7 @@ import {
   PayrollTaskTabPanel,
 } from './components/payroll/PayrollTaskTabPanel';
 import { PayrollDeleteTaskItemFormatters, PayrollDeleteTaskTableHeaders } from './components/tasks/PayrollDeleteTasks';
-import {PayrollPaymentFilesTabLabel, PayrollPaymentFilesTabPanel} from "./components/payroll/PayrollPaymentFilesTab";
+import { PayrollPaymentFilesTabLabel, PayrollPaymentFilesTabPanel } from './components/payroll/PayrollPaymentFilesTab';
 
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
