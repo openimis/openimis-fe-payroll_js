@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Button from '@material-ui/core/Button';
 
 import {
   Searcher,
@@ -34,7 +33,7 @@ function PayrollSearcherReconciled({
 }) {
   const history = useHistory();
   const modulesManager = useModulesManager();
-  const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
+  const { formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
   const prevSubmittingMutationRef = useRef();
