@@ -58,6 +58,7 @@
     "payroll.benefitConsumption.status.SUSPENDED": "Suspended",
     "payroll.tooltip.save": "Save",
     "payroll.tooltip.delete": "Delete",
+    "payroll.tooltip.download": "Download",
 
     "payroll.advancedFilters": "Advanced Filters",
     "payroll.advancedFilters.field": "Field",

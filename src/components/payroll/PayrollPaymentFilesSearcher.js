@@ -64,7 +64,7 @@ function PayrollPaymentFilesSearcher({
     (file) => file.fileName,
     (file) => file.status,
     (file) => (
-      <Tooltip title={formatMessage('tooltip.delete')}>
+      <Tooltip title={formatMessage('tooltip.download')}>
         <IconButton
           onClick={() => download(payrollUuid, file.fileName)}
           disabled={file.status !== PAYROLL_PAYMENT_FILE_STATUS.SUCCESS}

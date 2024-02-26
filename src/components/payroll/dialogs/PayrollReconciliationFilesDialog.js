@@ -42,7 +42,7 @@ function PayrollReconciliationFilesDialog({
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: 600,
+            width: 1000,
             maxWidth: 1000,
           },
         }}
