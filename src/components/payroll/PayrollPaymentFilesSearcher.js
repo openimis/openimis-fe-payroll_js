@@ -33,6 +33,7 @@ function PayrollPaymentFilesSearcher({
   const headers = () => [
     'payrollPaymentFile.fileName',
     'payrollPaymentFile.status',
+    'payrollPaymentFile.error',
     'payrollPaymentFile.download',
   ];
 
@@ -63,11 +64,13 @@ function PayrollPaymentFilesSearcher({
   const itemFormatters = () => [
     (file) => file.fileName,
     (file) => file.status,
+    (file) => file.error,
     (file) => (
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => download(payrollUuid, file.fileName)}
-          disabled={file.status !== PAYROLL_PAYMENT_FILE_STATUS.SUCCESS}
+          disabled={![PAYROLL_PAYMENT_FILE_STATUS.SUCCESS,
+            PAYROLL_PAYMENT_FILE_STATUS.PARTIAL_SUCCESS].includes(file.status)}
         >
           <DownloadIcon />
         </IconButton>

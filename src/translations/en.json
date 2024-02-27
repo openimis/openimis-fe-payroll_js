@@ -117,6 +117,7 @@
 
     "payroll.payrollPaymentFile.fileName": "Filename",
     "payroll.payrollPaymentFile.status": "Status",
+    "payroll.payrollPaymentFile.error": "Error",
     "payrollPaymentFile.download": "Download",
     "payroll.payrollPaymentFilesSearcher.results": "{totalCount} Files Found",
     "payroll.PayrollPaymentFilesTab.label": "Payment Files"

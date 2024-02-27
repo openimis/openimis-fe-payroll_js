@@ -66,6 +66,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
 const CSV_RECONCILIATION_PROJECTION = () => [
   'fileName',
   'status',
+  'error',
 ];
 
 const PAYMENT_METHOD_PROJECTION = () => [
