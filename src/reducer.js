@@ -26,6 +26,7 @@ export const ACTION_TYPE = {
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
   GET_BENEFIT_CONSUMPTION: 'PAYROLL_BENEFIT_CONSUMPTION',
+  GET_PAYROLL_BENEFIT_CONSUMPTION: 'PAYROLL_PAYROLL_BENEFIT_CONSUMPTION',
   GET_BENEFIT_ATTACHMENT: 'PAYROLL_BENEFIT_ATTACHMENT',
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
   CLOSE_PAYROLL: 'PAYROLL_MUTATION_CLOSE_PAYROLL',
@@ -98,6 +99,13 @@ const STORE_STATE = {
   payrollFiles: [],
   payrollFilesPageInfo: {},
   payrollFilesTotalCount: 0,
+
+  fetchingPayrollBenefitConsumptions: true,
+  payrollBenefitConsumption: [],
+  payrollBenefitConsumptionTotalCount: 0,
+  fetchedPayrollBenefitConsumption: false,
+  errorPayrollBenefitConsumption: null,
+  payrollBenefitConsumptionsPageInfo: {},
 };
 
 function reducer(
@@ -327,6 +335,36 @@ function reducer(
         ...state,
         fetchingPaymentMethods: false,
         errorPaymentMethods: formatServerError(action.payload),
+      };
+    case REQUEST(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: true,
+        fetchedPayrollBenefitConsumptions: false,
+        payrollBenefitConsumptions: [],
+        errorPayrollBenefitConsumptions: null,
+        payrollBenefitConsumptionsPageInfo: {},
+        payrollBenefitConsumptionsTotalCount: 0,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: false,
+        fetchedPayrollBenefitConsumptions: true,
+        // eslint-disable-next-line max-len
+        payrollBenefitConsumptions: parseData(action.payload.data.payrollBenefitConsumption)?.map((payrollBenefitConsumption) => ({
+          ...payrollBenefitConsumption,
+          id: decodeId(payrollBenefitConsumption.id),
+        })),
+        payrollBenefitConsumptionsPageInfo: pageInfo(action.payload.data.payrollBenefitConsumption),
+        payrollBenefitConsumptionsTotalCount: action.payload.data.payrollBenefitConsumption?.totalCount ?? 0,
+        errorPayrollBenefitConsumptions: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: false,
+        errorPayrollBenefitConsumptions: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
       return {
