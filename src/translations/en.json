@@ -106,6 +106,9 @@
     "payroll.summary.download": "Download",
     "payroll.summary.reject": "Reject",
     "payroll.summary.close": "Close",
+    "payroll.summary.totalAmountReceived": "Total Amount Received",
+    "payroll.summary.totalAmountDue": "Total Amount Due",
+    "payroll.summary.totalNumberOfBenefits": "Total Number Of Benefits",
 
     "payroll.benefitAttachment.searcherResultsTitle": "{benefitAttachmentsTotalCount} Benefits Found",
     "payroll.benefitConsumptionStatusPicker": "Status",

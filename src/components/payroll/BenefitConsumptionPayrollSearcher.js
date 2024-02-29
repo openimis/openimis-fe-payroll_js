@@ -1,12 +1,17 @@
 /* eslint-disable no-param-reassign */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import {
   Searcher, useModulesManager, useTranslations,
 } from '@openimis/fe-core';
-import { fetchPayrollBenefitConsumptions } from '../../actions';
+import {
+  Paper,
+  Grid,
+} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { fetchPayrollBenefitConsumptions, fetchBenefitsSummary } from '../../actions';
 import { DEFAULT_PAGE_SIZE, ROWS_PER_PAGE_OPTIONS } from '../../constants';
 import BenefitConsumptionPayrollFilter from './BenefitConsumptionPayrollFilter';
 
@@ -18,10 +23,13 @@ function BenefitConsumptionPayrollSearcher({
   payrollBenefitConsumptions,
   payrollBenefitConsumptionsPageInfo,
   payrollBenefitConsumptionsTotalCount,
+  fetchBenefitsSummary,
+  fetchedBenefitsSummary,
+  benefitsSummary,
   individualUuid,
 }) {
   const modulesManager = useModulesManager();
-  const { formatMessageWithValues } = useTranslations('payroll', modulesManager);
+  const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
 
   const fetch = (params) => fetchPayrollBenefitConsumptions(modulesManager, params);
 
@@ -84,12 +92,53 @@ function BenefitConsumptionPayrollSearcher({
     return filters;
   };
 
+  useEffect(() => {
+    const params = [
+      `individualId: "${individualUuid}"`,
+    ];
+    fetchBenefitsSummary(params);
+  }, []);
+
   const benefitConsumptionPayrollFilter = ({ filters, onChangeFilters }) => (
     <BenefitConsumptionPayrollFilter filters={filters} onChangeFilters={onChangeFilters} />
   );
 
   return (
     <div>
+      {fetchedBenefitsSummary && (
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h6" gutterBottom>
+              {formatMessage('payroll.summary.totalNumberOfBenefits')}
+            </Typography>
+            <Typography variant="body1">
+              {payrollBenefitConsumptionsTotalCount}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h6" gutterBottom>
+              {formatMessage('payroll.summary.totalAmountDue')}
+            </Typography>
+            <Typography variant="body1">
+              {benefitsSummary?.totalAmountDue ?? 0}
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h6" gutterBottom>
+              {formatMessage('payroll.summary.totalAmountReceived')}
+            </Typography>
+            <Typography variant="body1">
+              {benefitsSummary?.totalAmountReceived ?? 0}
+            </Typography>
+          </Paper>
+        </Grid>
+      </Grid>
+      )}
       <Searcher
         module="payroll"
         FilterPane={benefitConsumptionPayrollFilter}
@@ -122,10 +171,14 @@ const mapStateToProps = (state) => ({
   payrollBenefitConsumptions: state.payroll.payrollBenefitConsumptions,
   payrollBenefitConsumptionsPageInfo: state.payroll.payrollBenefitConsumptionsPageInfo,
   payrollBenefitConsumptionsTotalCount: state.payroll.payrollBenefitConsumptionsTotalCount,
+  fetchingBenefitsSummary: state.payroll.fetchingBenefitsSummary,
+  errorBenefitsSummary: state.payroll.errorBenefitsSummary,
+  fetchedBenefitsSummary: state.payroll.fetchedBenefitsSummary,
+  benefitsSummary: state.payroll.benefitsSummary,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators(
-  { fetchPayrollBenefitConsumptions },
+  { fetchPayrollBenefitConsumptions, fetchBenefitsSummary },
   dispatch,
 );
 

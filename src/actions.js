@@ -49,6 +49,10 @@ const PAYROLL_BENEFIT_CONSUMPTION_PROJECTION = () => [
   'payroll {id, name, status, paymentCycle {runMonth, runYear}, paymentMethod, benefitPlanNameCode}',
 ];
 
+const BENEFIT_CONSUMPTION_SUMMARY_PROJECTION = () => [
+  'totalAmountReceived', 'totalAmountDue',
+];
+
 const BENEFIT_ATTACHMENT_PROJECTION = () => [
   'benefit{id, status, code, dateDue, receipt, individual {firstName, lastName}}',
   'bill{id, code, terms, amountTotal}',
@@ -225,6 +229,15 @@ export function fetchPayrollBenefitConsumptions(modulesManager, params) {
   // eslint-disable-next-line max-len
   const payload = formatPageQueryWithCount('payrollBenefitConsumption', params, PAYROLL_BENEFIT_CONSUMPTION_PROJECTION());
   return graphql(payload, ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION);
+}
+
+export function fetchBenefitsSummary(params) {
+  const payload = formatQuery(
+    'benefitsSummary',
+    params,
+    BENEFIT_CONSUMPTION_SUMMARY_PROJECTION(),
+  );
+  return graphql(payload, ACTION_TYPE.BENEFITS_SUMMARY);
 }
 
 export const clearPayrollBills = () => (dispatch) => {

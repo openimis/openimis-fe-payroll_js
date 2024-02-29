@@ -32,6 +32,7 @@ export const ACTION_TYPE = {
   CLOSE_PAYROLL: 'PAYROLL_MUTATION_CLOSE_PAYROLL',
   REJECT_PAYROLL: 'PAYROLL_MUTATION_REJECT_PAYROLL',
   GET_PAYROLL_PAYMENT_FILES: 'GET_PAYROLL_PAYMENT_FILES',
+  BENEFITS_SUMMARY: 'PAYROLL_BENEFITS_SUMMARY',
 };
 
 export const MUTATION_SERVICE = {
@@ -106,6 +107,11 @@ const STORE_STATE = {
   fetchedPayrollBenefitConsumption: false,
   errorPayrollBenefitConsumption: null,
   payrollBenefitConsumptionsPageInfo: {},
+
+  benefitsSummary: [],
+  benefitsSummaryError: null,
+  fetchingBenefitsSummary: true,
+  fetchedBenefitsSummary: false,
 };
 
 function reducer(
@@ -403,6 +409,28 @@ function reducer(
         payrollFiles: [],
         payrollFilesPageInfo: {},
         payrollFilesTotalCount: 0,
+      };
+    case REQUEST(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: true,
+        fetchedBenefitsSummary: false,
+        benefitsSummary: {},
+        benefitsSummaryError: null,
+      };
+    case SUCCESS(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: false,
+        fetchedBenefitsSummary: true,
+        benefitsSummary: action.payload.data.benefitsSummary,
+        benefitsSummaryError: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: false,
+        benefitsSummaryError: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);
