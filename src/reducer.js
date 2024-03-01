@@ -26,11 +26,13 @@ export const ACTION_TYPE = {
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
   GET_BENEFIT_CONSUMPTION: 'PAYROLL_BENEFIT_CONSUMPTION',
+  GET_PAYROLL_BENEFIT_CONSUMPTION: 'PAYROLL_PAYROLL_BENEFIT_CONSUMPTION',
   GET_BENEFIT_ATTACHMENT: 'PAYROLL_BENEFIT_ATTACHMENT',
   GET_PAYMENT_METHODS: 'PAYROLL_PAYMENT_METHODS',
   CLOSE_PAYROLL: 'PAYROLL_MUTATION_CLOSE_PAYROLL',
   REJECT_PAYROLL: 'PAYROLL_MUTATION_REJECT_PAYROLL',
   GET_PAYROLL_PAYMENT_FILES: 'GET_PAYROLL_PAYMENT_FILES',
+  BENEFITS_SUMMARY: 'PAYROLL_BENEFITS_SUMMARY',
 };
 
 export const MUTATION_SERVICE = {
@@ -98,6 +100,18 @@ const STORE_STATE = {
   payrollFiles: [],
   payrollFilesPageInfo: {},
   payrollFilesTotalCount: 0,
+
+  fetchingPayrollBenefitConsumptions: true,
+  payrollBenefitConsumption: [],
+  payrollBenefitConsumptionTotalCount: 0,
+  fetchedPayrollBenefitConsumption: false,
+  errorPayrollBenefitConsumption: null,
+  payrollBenefitConsumptionsPageInfo: {},
+
+  benefitsSummary: [],
+  benefitsSummaryError: null,
+  fetchingBenefitsSummary: true,
+  fetchedBenefitsSummary: false,
 };
 
 function reducer(
@@ -328,6 +342,36 @@ function reducer(
         fetchingPaymentMethods: false,
         errorPaymentMethods: formatServerError(action.payload),
       };
+    case REQUEST(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: true,
+        fetchedPayrollBenefitConsumptions: false,
+        payrollBenefitConsumptions: [],
+        errorPayrollBenefitConsumptions: null,
+        payrollBenefitConsumptionsPageInfo: {},
+        payrollBenefitConsumptionsTotalCount: 0,
+      };
+    case SUCCESS(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: false,
+        fetchedPayrollBenefitConsumptions: true,
+        // eslint-disable-next-line max-len
+        payrollBenefitConsumptions: parseData(action.payload.data.payrollBenefitConsumption)?.map((payrollBenefitConsumption) => ({
+          ...payrollBenefitConsumption,
+          id: decodeId(payrollBenefitConsumption.id),
+        })),
+        payrollBenefitConsumptionsPageInfo: pageInfo(action.payload.data.payrollBenefitConsumption),
+        payrollBenefitConsumptionsTotalCount: action.payload.data.payrollBenefitConsumption?.totalCount ?? 0,
+        errorPayrollBenefitConsumptions: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_PAYROLL_BENEFIT_CONSUMPTION):
+      return {
+        ...state,
+        fetchingPayrollBenefitConsumptions: false,
+        errorPayrollBenefitConsumptions: formatServerError(action.payload),
+      };
     case REQUEST(ACTION_TYPE.GET_PAYROLL_PAYMENT_FILES):
       return {
         ...state,
@@ -365,6 +409,28 @@ function reducer(
         payrollFiles: [],
         payrollFilesPageInfo: {},
         payrollFilesTotalCount: 0,
+      };
+    case REQUEST(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: true,
+        fetchedBenefitsSummary: false,
+        benefitsSummary: {},
+        benefitsSummaryError: null,
+      };
+    case SUCCESS(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: false,
+        fetchedBenefitsSummary: true,
+        benefitsSummary: action.payload.data.benefitsSummary,
+        benefitsSummaryError: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.BENEFITS_SUMMARY):
+      return {
+        ...state,
+        fetchingBenefitsSummary: false,
+        benefitsSummaryError: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
       return dispatchMutationReq(state, action);

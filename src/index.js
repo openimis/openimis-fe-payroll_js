@@ -17,6 +17,7 @@ import PayrollsPage from './pages/payroll/PayrollsPage';
 import ApprovedPayrollsPage from './pages/payroll/ApprovedPayrollsPage';
 import ReconciledPayrollsPage from './pages/payroll/ReconciledPayrollsPage';
 import PaymentPointPicker from './components/payment-point/PaymentPointPicker';
+import BenefitConsumptionPayrollSearcher from './components/payroll/BenefitConsumptionPayrollSearcher';
 import {
   PayrollTaskItemFormatters,
   PayrollTaskTableHeaders,
@@ -59,6 +60,7 @@ const DEFAULT_CONFIG = {
     { key: 'payroll.route.payroll', ref: ROUTE_PAYROLL },
     { key: 'payroll.PaymentPointPicker', ref: PaymentPointPicker },
     { key: 'payroll.PaymentPointPicker.projection', ref: ['id', 'name', 'location'] },
+    { key: 'payroll.benefitConsumptionPayrollSearcher', ref: BenefitConsumptionPayrollSearcher },
   ],
   'core.Router': [
     { path: ROUTE_PAYMENT_POINTS, component: PaymentPointsPage },
