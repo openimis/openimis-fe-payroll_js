@@ -44,7 +44,21 @@ function BenefitConsumptionPayrollSearcher({
     'benefitConsumption.dateDue',
     'benefitConsumption.amount',
     'benefitConsumption.type',
+    'benefitConsumption.payedOnTime',
+    'benefitConsumption.paymentDate',
   ];
+
+  const checkBenefitDueDate = (payrollBenefitConsumption) => {
+    if (!payrollBenefitConsumption.benefit.receipt) {
+      return ''; // return empty string if datePayed is null
+    }
+
+    return (
+      payrollBenefitConsumption.benefit
+      && payrollBenefitConsumption.benefit.dateDue
+      >= payrollBenefitConsumption.benefit.benefitAttachment[0].bill.datePayed)
+      ? 'True' : 'False';
+  };
 
   const itemFormatters = () => [
     (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.name,
@@ -58,6 +72,12 @@ function BenefitConsumptionPayrollSearcher({
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.dateDue,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.amount,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.type,
+    (payrollBenefitConsumption) => checkBenefitDueDate(payrollBenefitConsumption),
+    (payrollBenefitConsumption) => (
+      !payrollBenefitConsumption.benefit.receipt
+        ? ''
+        : payrollBenefitConsumption?.benefit?.benefitAttachment[0]?.bill?.datePayed
+    ),
   ];
 
   const rowIdentifier = (benefitConsumption) => benefitConsumption.id;
