@@ -33,7 +33,7 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'id',
   'code',
   'individual {firstName, lastName}',
-  'benefitAttachment {bill {id, code, terms}}',
+  'benefitAttachment {bill {id, code, terms, datePayed}}',
   'receipt',
   'photo',
   'amount',
