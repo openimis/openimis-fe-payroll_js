@@ -113,6 +113,21 @@ function BenefitConsumptionFilterModal({ filters, onChangeFilters }) {
           ])}
         />
       </Grid>
+      <Grid item xs={2} className={classes.item}>
+        <PublishedComponent
+          pubRef="core.DatePicker"
+          module="payroll"
+          label={formatMessage('benefitConsumption.paymentDate')}
+          value={filterValue('bill_DatePayed_Gte')}
+          onChange={(v) => onChangeFilters([
+            {
+              id: 'bill_DatePayed_Gte',
+              value: v,
+              filter: `bill_DatePayed_Gte: "${v}"`,
+            },
+          ])}
+        />
+      </Grid>
     </Grid>
   );
 }

@@ -33,7 +33,7 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
   'id',
   'code',
   'individual {firstName, lastName}',
-  'benefitAttachment {bill {id, code, terms}}',
+  'benefitAttachment {bill {id, code, terms, datePayed}}',
   'receipt',
   'photo',
   'amount',
@@ -45,7 +45,7 @@ const BENEFIT_CONSUMPTION_PROJECTION = () => [
 const PAYROLL_BENEFIT_CONSUMPTION_PROJECTION = () => [
   'id',
   // eslint-disable-next-line max-len
-  'benefit{id,isDeleted,jsonExt,dateCreated,dateUpdated,dateValidFrom,dateValidTo,id,code,individual {firstName, lastName},benefitAttachment {bill {id, code, terms}},receipt,photo,amount,type,status,dateDue}',
+  'benefit{id,isDeleted,jsonExt,dateCreated,dateUpdated,dateValidFrom,dateValidTo,id,code,individual {firstName, lastName},benefitAttachment {bill {id, code, terms, datePayed}},receipt,photo,amount,type,status,dateDue}',
   'payroll {id, name, status, paymentCycle {runMonth, runYear}, paymentMethod, benefitPlanNameCode}',
 ];
 
@@ -55,7 +55,7 @@ const BENEFIT_CONSUMPTION_SUMMARY_PROJECTION = () => [
 
 const BENEFIT_ATTACHMENT_PROJECTION = () => [
   'benefit{id, status, code, dateDue, receipt, individual {firstName, lastName}}',
-  'bill{id, code, terms, amountTotal}',
+  'bill{id, code, terms, amountTotal, datePayed}',
 ];
 
 const PAYROLL_PROJECTION = (modulesManager) => [

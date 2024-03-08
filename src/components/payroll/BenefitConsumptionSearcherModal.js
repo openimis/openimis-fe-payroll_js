@@ -36,8 +36,20 @@ function BenefitConsumptionSearcherModal({
     'benefitConsumption.amount',
     'benefitConsumption.receipt',
     'benefitConsumption.dateDue',
+    'benefitConsumption.payedOnTime',
+    'benefitConsumption.paymentDate',
     '',
   ];
+
+  const checkBenefitDueDate = (benefitAttachment) => {
+    if (!benefitAttachment.benefit.receipt) {
+      return ''; // return empty string if datePayed is null
+    }
+
+    return (
+      benefitAttachment.benefit && benefitAttachment.benefit.dateDue >= benefitAttachment.bill.datePayed)
+      ? 'True' : 'False';
+  };
 
   const itemFormatters = () => [
     (benefitAttachment) => (
@@ -50,6 +62,12 @@ function BenefitConsumptionSearcherModal({
     (benefitAttachment) => benefitAttachment?.bill?.amountTotal,
     (benefitAttachment) => benefitAttachment?.benefit?.receipt,
     (benefitAttachment) => benefitAttachment?.benefit?.dateDue,
+    (benefitAttachment) => checkBenefitDueDate(benefitAttachment),
+    (benefitAttachment) => (
+      !benefitAttachment.benefit.receipt
+        ? ''
+        : benefitAttachment?.bill?.datePayed
+    ),
     (benefitAttachment) => (
       <Button
         onClick={() => {}}
