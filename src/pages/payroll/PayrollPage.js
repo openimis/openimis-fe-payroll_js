@@ -45,6 +45,7 @@ function PayrollPage({
   clearConfirm,
   createPayrollFromFailedInvoices,
   journalize,
+  benefitPlanId,
 }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
@@ -138,6 +139,9 @@ function PayrollPage({
       editedPayroll,
       formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
     );
+    if (benefitPlanId) {
+      back();
+    }
   };
 
   const actions = [];
@@ -169,6 +173,7 @@ function PayrollPage({
         payroll={payroll}
         readOnly={readOnly}
         isPayrollFromFailedInvoices={isPayrollFromFailedInvoices}
+        benefitPlanId={benefitPlanId}
       />
     </div>
     )
@@ -185,8 +190,9 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
-  statePayrollUuid: props?.match?.params.payroll_uuid,
+  statePayrollUuid: props?.match?.params?.payroll_uuid === 'null' ? null : props?.match?.params.payroll_uuid,
   createPayrollFromFailedInvoices: props?.match?.params?.createPayrollFromFailedInvoices,
+  benefitPlanId: props?.match?.params?.benefitPlanId,
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
