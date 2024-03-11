@@ -71,7 +71,7 @@ class PayrollHeadPanel extends FormPanel {
 
   render() {
     const {
-      edited, classes, intl, readOnly, isPayrollFromFailedInvoices,
+      edited, classes, intl, readOnly, isPayrollFromFailedInvoices, benefitPlanId,
     } = this.props;
     const payroll = { ...edited };
     const { appliedCustomFilters, appliedFiltersRowStructure } = this.state;
@@ -114,6 +114,7 @@ class PayrollHeadPanel extends FormPanel {
               onChange={(paymentPlan) => this.updateAttribute('paymentPlan', paymentPlan)}
               value={payroll?.paymentPlan}
               readOnly={readOnly}
+              benefitPlanId={benefitPlanId}
             />
           </Grid>
           <Grid item xs={3} className={classes.item}>

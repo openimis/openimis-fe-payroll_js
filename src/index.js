@@ -7,7 +7,7 @@ import { PinDrop } from '@material-ui/icons';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 import { FormattedMessage } from '@openimis/fe-core';
-import { RIGHT_PAYMENT_POINT_SEARCH, RIGHT_PAYROLL_SEARCH } from './constants';
+import { RIGHT_PAYMENT_POINT_SEARCH, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH } from './constants';
 import reducer from './reducer';
 import messages_en from './translations/en.json';
 import PaymentPointPage from './pages/payment-point/PaymentPointPage';
@@ -61,6 +61,7 @@ const DEFAULT_CONFIG = {
     { key: 'payroll.PaymentPointPicker', ref: PaymentPointPicker },
     { key: 'payroll.PaymentPointPicker.projection', ref: ['id', 'name', 'location'] },
     { key: 'payroll.benefitConsumptionPayrollSearcher', ref: BenefitConsumptionPayrollSearcher },
+    { key: 'payroll.payrollCreateRight', ref: RIGHT_PAYROLL_CREATE },
   ],
   'core.Router': [
     { path: ROUTE_PAYMENT_POINTS, component: PaymentPointsPage },
@@ -68,7 +69,10 @@ const DEFAULT_CONFIG = {
     { path: ROUTE_PAYROLLS, component: PayrollsPage },
     { path: ROUTE_PAYROLLS_APPROVED, component: ApprovedPayrollsPage },
     { path: ROUTE_PAYROLLS_RECONCILED, component: ReconciledPayrollsPage },
-    { path: `${ROUTE_PAYROLL}/:payroll_uuid?/:createPayrollFromFailedInvoices?`, component: PayrollPage },
+    {
+      path: `${ROUTE_PAYROLL}/:payroll_uuid?/:createPayrollFromFailedInvoices?/:benefitPlanId?`,
+      component: PayrollPage,
+    },
   ],
   'invoice.MainMenu': [
     {
