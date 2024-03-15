@@ -85,20 +85,20 @@ function BenefitConsumptionPayrollFilter({ filters, onChangeFilters }) {
       <Grid item xs={2} className={classes.item}>
         <NumberInput
           module="payroll"
-          label={formatMessage('benefitConsumption.payroll.runMonth')}
+          label={formatMessage('benefitConsumption.payroll.startDate')}
           min={0}
           max={12}
-          value={filterValue('payroll_PaymentCycle_RunMonth')}
-          onChange={onChangeFilter('payroll_PaymentCycle_RunMonth')}
+          value={filterValue('payroll_PaymentCycle_StartDate')}
+          onChange={onChangeFilter('payroll_PaymentCycle_StartDate')}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
         <NumberInput
           module="payroll"
-          label={formatMessage('benefitConsumption.payroll.runYear')}
+          label={formatMessage('benefitConsumption.payroll.endDate')}
           min={0}
-          value={filterValue('payroll_PaymentCycle_RunYear')}
-          onChange={onChangeFilter('payroll_PaymentCycle_RunYear')}
+          value={filterValue('payroll_PaymentCycle_EndDate')}
+          onChange={onChangeFilter('payroll_PaymentCycle_EndDate')}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
