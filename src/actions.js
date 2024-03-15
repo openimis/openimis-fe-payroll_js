@@ -46,7 +46,7 @@ const PAYROLL_BENEFIT_CONSUMPTION_PROJECTION = () => [
   'id',
   // eslint-disable-next-line max-len
   'benefit{id,isDeleted,jsonExt,dateCreated,dateUpdated,dateValidFrom,dateValidTo,id,code,individual {firstName, lastName},benefitAttachment {bill {id, code, terms, datePayed}},receipt,photo,amount,type,status,dateDue}',
-  'payroll {id, name, status, paymentCycle {runMonth, runYear}, paymentMethod, benefitPlanNameCode}',
+  'payroll {id, name, status, paymentCycle {code, startDate, endDate}, paymentMethod, benefitPlanNameCode}',
 ];
 
 const BENEFIT_CONSUMPTION_SUMMARY_PROJECTION = () => [

@@ -36,8 +36,8 @@ function BenefitConsumptionPayrollSearcher({
   const headers = () => [
     'benefitConsumption.payroll.name',
     'benefitConsumption.payroll.benefitPlan',
-    'benefitConsumption.payroll.runMonth',
-    'benefitConsumption.payroll.runYear',
+    'benefitConsumption.payroll.startDate',
+    'benefitConsumption.payroll.endDate',
     'benefitConsumption.status',
     'benefitConsumption.code',
     'benefitConsumption.receipt',
@@ -64,8 +64,8 @@ function BenefitConsumptionPayrollSearcher({
     (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.name,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.benefitPlanNameCode,
     // eslint-disable-next-line max-len
-    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.runMonth,
-    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.runYear,
+    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.startDate,
+    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.startDate,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.status,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.code,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.receipt,
@@ -85,8 +85,8 @@ function BenefitConsumptionPayrollSearcher({
   const sorts = () => [
     ['payroll_Name', true],
     ['payroll_benefitPlanName', false],
-    ['payroll_PaymentCycle_RunMonth', true],
-    ['payroll_PaymentCycle_RunYear', true],
+    ['payroll_PaymentCycle_StartDate', true],
+    ['payroll_PaymentCycle_EndDate', true],
     ['benefit_Status', true],
     ['benefit_Code', true],
     ['benefit_Receipt', true],
