@@ -27,6 +27,7 @@ function BenefitConsumptionPayrollSearcher({
   fetchedBenefitsSummary,
   benefitsSummary,
   individualUuid,
+  benefitPlan,
 }) {
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
@@ -109,6 +110,12 @@ function BenefitConsumptionPayrollSearcher({
         filter: `benefit_Individual_Id: "${individualUuid}"`,
       };
     }
+    if (benefitPlan !== null && benefitPlan !== undefined) {
+      filters.benefitPlanUuid = {
+        value: benefitPlan.id,
+        filter: `benefitPlanUuid: "${benefitPlan.id}"`,
+      };
+    }
     return filters;
   };
 
@@ -116,11 +123,20 @@ function BenefitConsumptionPayrollSearcher({
     const params = [
       `individualId: "${individualUuid}"`,
     ];
+    if (benefitPlan !== null && benefitPlan !== undefined) {
+      params.push(
+        `benefitPlanUuid: "${benefitPlan.id}"`,
+      );
+    }
     fetchBenefitsSummary(params);
   }, []);
 
   const benefitConsumptionPayrollFilter = ({ filters, onChangeFilters }) => (
-    <BenefitConsumptionPayrollFilter filters={filters} onChangeFilters={onChangeFilters} />
+    <BenefitConsumptionPayrollFilter
+      filters={filters}
+      onChangeFilters={onChangeFilters}
+      benefitPlan={benefitPlan}
+    />
   );
 
   return (
