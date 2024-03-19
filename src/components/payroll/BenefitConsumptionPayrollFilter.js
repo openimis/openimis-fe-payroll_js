@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BenefitConsumptionPayrollFilter({ filters, onChangeFilters }) {
+function BenefitConsumptionPayrollFilter({ filters, onChangeFilters, benefitPlan }) {
   const modulesManager = useModulesManager();
   const classes = useStyles();
   const { formatMessage } = useTranslations('payroll', modulesManager);
@@ -80,6 +80,7 @@ function BenefitConsumptionPayrollFilter({ filters, onChangeFilters }) {
           label="benefitConsumption.payroll.benefitPlan"
           value={filterTextFieldValue('benefitPlanName')}
           onChange={onChangeStringFilter('benefitPlanName')}
+          readOnly={benefitPlan !== null && benefitPlan !== undefined}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>

@@ -27,6 +27,8 @@ function BenefitConsumptionPayrollSearcher({
   fetchedBenefitsSummary,
   benefitsSummary,
   individualUuid,
+  benefitPlan,
+  groupBeneficiaries,
 }) {
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
@@ -103,10 +105,18 @@ function BenefitConsumptionPayrollSearcher({
         'isDeleted: false',
       },
     };
-    if (individualUuid !== null && individualUuid !== undefined) {
+    if (groupBeneficiaries !== null && groupBeneficiaries !== undefined) {
+      // TO-DO fetching benefits for group once enrollment of group flow will be developed
+    } else if (individualUuid !== null && individualUuid !== undefined) {
       filters.benefit_Individual_Id = {
         value: individualUuid,
         filter: `benefit_Individual_Id: "${individualUuid}"`,
+      };
+    }
+    if (benefitPlan !== null && benefitPlan !== undefined) {
+      filters.benefitPlanUuid = {
+        value: benefitPlan.id,
+        filter: `benefitPlanUuid: "${benefitPlan.id}"`,
       };
     }
     return filters;
@@ -116,11 +126,20 @@ function BenefitConsumptionPayrollSearcher({
     const params = [
       `individualId: "${individualUuid}"`,
     ];
+    if (benefitPlan !== null && benefitPlan !== undefined) {
+      params.push(
+        `benefitPlanUuid: "${benefitPlan.id}"`,
+      );
+    }
     fetchBenefitsSummary(params);
   }, []);
 
   const benefitConsumptionPayrollFilter = ({ filters, onChangeFilters }) => (
-    <BenefitConsumptionPayrollFilter filters={filters} onChangeFilters={onChangeFilters} />
+    <BenefitConsumptionPayrollFilter
+      filters={filters}
+      onChangeFilters={onChangeFilters}
+      benefitPlan={benefitPlan}
+    />
   );
 
   return (
