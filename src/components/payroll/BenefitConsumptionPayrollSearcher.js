@@ -28,6 +28,7 @@ function BenefitConsumptionPayrollSearcher({
   benefitsSummary,
   individualUuid,
   benefitPlan,
+  groupBeneficiaries,
 }) {
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
@@ -104,7 +105,9 @@ function BenefitConsumptionPayrollSearcher({
         'isDeleted: false',
       },
     };
-    if (individualUuid !== null && individualUuid !== undefined) {
+    if (groupBeneficiaries !== null && groupBeneficiaries !== undefined) {
+      // TO-DO fetching benefits for group once enrollment of group flow will be developed
+    } else if (individualUuid !== null && individualUuid !== undefined) {
       filters.benefit_Individual_Id = {
         value: individualUuid,
         filter: `benefit_Individual_Id: "${individualUuid}"`,
