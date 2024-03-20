@@ -67,7 +67,7 @@ function BenefitConsumptionPayrollSearcher({
     (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.benefitPlanNameCode,
     // eslint-disable-next-line max-len
     (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.startDate,
-    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.startDate,
+    (payrollBenefitConsumption) => payrollBenefitConsumption?.payroll?.paymentCycle?.endDate,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.status,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.code,
     (payrollBenefitConsumption) => payrollBenefitConsumption?.benefit?.receipt,
