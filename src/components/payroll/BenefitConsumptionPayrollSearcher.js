@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -29,9 +29,11 @@ function BenefitConsumptionPayrollSearcher({
   individualUuid,
   benefitPlan,
   groupBeneficiaries,
+  paymentCycleUuid,
 }) {
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations('payroll', modulesManager);
+  const [totalNumberOfBenefits, setTotalNumberOfBenefits] = useState(0);
 
   const fetch = (params) => fetchPayrollBenefitConsumptions(modulesManager, params);
 
@@ -113,26 +115,46 @@ function BenefitConsumptionPayrollSearcher({
         filter: `benefit_Individual_Id: "${individualUuid}"`,
       };
     }
-    if (benefitPlan !== null && benefitPlan !== undefined) {
+    if (benefitPlan?.id) {
       filters.benefitPlanUuid = {
         value: benefitPlan.id,
         filter: `benefitPlanUuid: "${benefitPlan.id}"`,
+      };
+    }
+    if (paymentCycleUuid) {
+      filters.paymentCycleUuid = {
+        value: paymentCycleUuid,
+        filter: `paymentCycleUuid: "${paymentCycleUuid}"`,
       };
     }
     return filters;
   };
 
   useEffect(() => {
-    const params = [
-      `individualId: "${individualUuid}"`,
-    ];
-    if (benefitPlan !== null && benefitPlan !== undefined) {
+    const params = [];
+    if (individualUuid) {
+      params.push(
+        `individualId: "${individualUuid}"`,
+      );
+    }
+    if (benefitPlan?.id) {
       params.push(
         `benefitPlanUuid: "${benefitPlan.id}"`,
       );
     }
+    if (paymentCycleUuid) {
+      params.push(
+        `paymentCycleUuid: "${paymentCycleUuid}"`,
+      );
+    }
     fetchBenefitsSummary(params);
   }, []);
+
+  useEffect(() => {
+    if (payrollBenefitConsumptionsTotalCount > totalNumberOfBenefits) {
+      setTotalNumberOfBenefits(payrollBenefitConsumptionsTotalCount);
+    }
+  }, [benefitsSummary]);
 
   const benefitConsumptionPayrollFilter = ({ filters, onChangeFilters }) => (
     <BenefitConsumptionPayrollFilter
@@ -152,7 +174,7 @@ function BenefitConsumptionPayrollSearcher({
               {formatMessage('payroll.summary.totalNumberOfBenefits')}
             </Typography>
             <Typography variant="body1">
-              {payrollBenefitConsumptionsTotalCount}
+              {totalNumberOfBenefits}
             </Typography>
           </Paper>
         </Grid>
