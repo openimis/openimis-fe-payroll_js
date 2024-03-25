@@ -84,22 +84,33 @@ function BenefitConsumptionPayrollFilter({ filters, onChangeFilters, benefitPlan
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
-        <NumberInput
+        <PublishedComponent
+          pubRef="core.DatePicker"
           module="payroll"
           label={formatMessage('benefitConsumption.payroll.startDate')}
-          min={0}
-          max={12}
           value={filterValue('payroll_PaymentCycle_StartDate')}
-          onChange={onChangeFilter('payroll_PaymentCycle_StartDate')}
+          onChange={(v) => onChangeFilters([
+            {
+              id: 'payroll_PaymentCycle_StartDate',
+              value: v,
+              filter: `payroll_PaymentCycle_StartDate: "${v}"`,
+            },
+          ])}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
-        <NumberInput
+        <PublishedComponent
+          pubRef="core.DatePicker"
           module="payroll"
           label={formatMessage('benefitConsumption.payroll.endDate')}
-          min={0}
           value={filterValue('payroll_PaymentCycle_EndDate')}
-          onChange={onChangeFilter('payroll_PaymentCycle_EndDate')}
+          onChange={(v) => onChangeFilters([
+            {
+              id: 'payroll_PaymentCycle_EndDate',
+              value: v,
+              filter: `payroll_PaymentCycle_EndDate: "${v}"`,
+            },
+          ])}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
