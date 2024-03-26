@@ -34,16 +34,6 @@ function BenefitConsumptionPayrollFilter({ filters, onChangeFilters, benefitPlan
 
   const filterValue = (filterName) => filters?.[filterName]?.value ?? null;
 
-  const onChangeFilter = (filterName) => (value) => {
-    debouncedOnChangeFilters([
-      {
-        id: filterName,
-        value: value || null,
-        filter: `${filterName}: ${value}`,
-      },
-    ]);
-  };
-
   const onChangeStringFilter = (filterName, lookup = null) => (value) => {
     if (lookup) {
       debouncedOnChangeFilters([
@@ -166,7 +156,7 @@ function BenefitConsumptionPayrollFilter({ filters, onChangeFilters, benefitPlan
           label={formatMessage('benefitConsumption.amount')}
           min={0}
           value={filterValue('benefit_Amount')}
-          onChange={onChangeFilter('benefit_Amount')}
+          onChange={onChangeStringFilter('benefit_Amount')}
         />
       </Grid>
       <Grid item xs={2} className={classes.item}>
