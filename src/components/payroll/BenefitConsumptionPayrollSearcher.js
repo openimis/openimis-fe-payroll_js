@@ -154,7 +154,7 @@ function BenefitConsumptionPayrollSearcher({
     if (payrollBenefitConsumptionsTotalCount > totalNumberOfBenefits) {
       setTotalNumberOfBenefits(payrollBenefitConsumptionsTotalCount);
     }
-  }, [benefitsSummary]);
+  }, [payrollBenefitConsumptionsTotalCount]);
 
   const benefitConsumptionPayrollFilter = ({ filters, onChangeFilters }) => (
     <BenefitConsumptionPayrollFilter
