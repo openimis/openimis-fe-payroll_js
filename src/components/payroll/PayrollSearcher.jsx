@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { IconButton, Tooltip } from '@mui/material';
+import { useIntl } from 'react-intl';
+
+import { IconButton, LinearProgress, Tooltip } from '@mui/material';
 
 import {
   Searcher,
@@ -17,12 +19,17 @@ import {
 import PayrollFilter from './PayrollFilter';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
-  RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
+  RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import { fetchPayrolls, deletePayrolls } from '../../actions';
+import { getProgress } from '../../utils/jsonExt';
+import { ACTION_TYPE } from '../../reducer';
+import { fetchPayrolls, deletePayrolls, retriggerPayroll } from '../../actions';
 const VisibilityIcon = GetIconComponent("Visibility");
 const DeleteIcon = GetIconComponent("Delete");
+const ReplayIcon = GetIconComponent("Replay");
+
+const DELETABLE_STATUSES = [PAYROLL_STATUS.PENDING_APPROVAL, PAYROLL_STATUS.FAILED];
 
 function PayrollSearcher({
   deletePayrolls,
@@ -33,6 +40,7 @@ function PayrollSearcher({
   pageInfo,
   totalCount,
   fetchPayrolls,
+  retriggerPayroll,
   coreConfirm,
   clearConfirm,
   confirmed,
@@ -42,11 +50,22 @@ function PayrollSearcher({
   const history = useHistory();
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
+  const intl = useIntl();
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
   const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
+  const [retriggeringPayrollUuids, setRetriggeringPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
+  const lastFetchParamsRef = useRef([]);
+
+  // Statuses reaching us from the backend are an open set: modules add their own,
+  // and rows predating a rename keep the old spelling. Fall back to the raw value
+  // rather than letting react-intl echo the missing key.
+  const statusLabel = (status) => {
+    const key = `payroll.payrollStatusPicker.${status}`;
+    return intl.messages[`${MODULE_NAME}.${key}`] ? formatMessage(key) : status;
+  };
 
   const openDeletePayrollConfirmDialog = () => {
     coreConfirm(
@@ -77,6 +96,10 @@ function PayrollSearcher({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
+      if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
+        setRetriggeringPayrollUuids([]);
+        fetchPayrolls(modulesManager, lastFetchParamsRef.current);
+      }
     }
   }, [submittingMutation]);
 
@@ -90,6 +113,8 @@ function PayrollSearcher({
     'payroll.paymentPoint',
     'payroll.status',
     'payroll.paymentMethod',
+    'emptyLabel',
+    'emptyLabel',
     'emptyLabel',
   ];
 
@@ -108,7 +133,10 @@ function PayrollSearcher({
     },
   });
 
-  const fetch = (params) => fetchPayrolls(modulesManager, params);
+  const fetch = (params) => {
+    lastFetchParamsRef.current = params;
+    return fetchPayrolls(modulesManager, params);
+  };
 
   const rowIdentifier = (payroll) => payroll.id;
 
@@ -118,14 +146,35 @@ function PayrollSearcher({
 
   const onDelete = (payroll) => setPayrollToDelete(payroll);
 
+  const onRetrigger = (payroll) => {
+    setRetriggeringPayrollUuids((prev) => [...prev, payroll.id]);
+    retriggerPayroll(
+      payroll,
+      formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),
+    );
+  };
+
   const itemFormatters = () => [
     (payroll) => payroll.name,
     (payroll) => (payroll.benefitPlan
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
     (payroll) => (payroll.paymentPoint
       ? `${payroll.paymentPoint.name}` : ''),
-    (payroll) => (payroll.status
-      ? `${payroll.status}` : ''),
+    (payroll) => {
+      const { status } = payroll;
+      if (!status) return '';
+      if (status !== PAYROLL_STATUS.GENERATING) return statusLabel(status);
+      const progress = getProgress(payroll.jsonExt);
+      return (
+        <div style={{ minWidth: 100 }}>
+          {statusLabel(status)}
+          <LinearProgress
+            variant={progress === null ? 'indeterminate' : 'determinate'}
+            value={progress ?? 0}
+          />
+        </div>
+      );
+    },
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
     (payroll) => (
@@ -141,11 +190,24 @@ function PayrollSearcher({
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id) || payroll.status !== PAYROLL_STATUS.PENDING_APPROVAL}
+          disabled={deletedPayrollUuids.includes(payroll.id)
+            || !DELETABLE_STATUSES.includes(payroll.status)}
         >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
+    ),
+    (payroll) => (
+      rights.includes(RIGHT_PAYROLL_CREATE) && payroll.status === PAYROLL_STATUS.FAILED && (
+        <Tooltip title={formatMessage('tooltip.retrigger')}>
+          <IconButton
+            onClick={() => onRetrigger(payroll)}
+            disabled={retriggeringPayrollUuids.includes(payroll.id)}
+          >
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
+      )
     ),
   ];
 
@@ -197,6 +259,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
   deletePayrolls,
+  retriggerPayroll,
   journalize,
   clearConfirm,
   coreConfirm,

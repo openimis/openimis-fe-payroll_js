@@ -2,7 +2,9 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid, Divider, Typography } from '@mui/material';
+import {
+  Grid, Divider, LinearProgress, Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -16,6 +18,8 @@ import {
 } from '@openimis/fe-core';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
+import { PAYROLL_STATUS } from '../../constants';
+import { getProgress } from '../../utils/jsonExt';
 
 const StyledPayrollHeadPanel = styled('div')(({ theme }) => ({
   '& .tableTitle': theme.table?.title ?? {},
@@ -135,6 +139,14 @@ class PayrollHeadPanel extends FormPanel {
             />
           </Grid>
         </Grid>
+        {payroll?.status === PAYROLL_STATUS.GENERATING && (
+          <div className="item">
+            <LinearProgress
+              variant={getProgress(payroll.jsonExt) === null ? 'indeterminate' : 'determinate'}
+              value={getProgress(payroll.jsonExt) ?? 0}
+            />
+          </div>
+        )}
         <Divider />
         {!isPayrollFromFailedInvoices
           && (
