@@ -60,6 +60,7 @@ export const MUTATION_SERVICE = {
 
 const STORE_STATE = {
   submittingMutation: false,
+  mutationInFlight: false,
   mutation: {},
   fetchingPaymentPoints: false,
   fetchedPaymentPoints: false,
@@ -125,6 +126,14 @@ const STORE_STATE = {
   systemStatus: null,
   systemStatusError: null,
 };
+
+// dispatchMutationErr leaves submittingMutation set, so the completion effects
+// see a true-to-false edge only for answered requests; mutationInFlight follows
+// the request itself and clears on the answer and on a transport error alike.
+const mutationDone = (state, service, action) => ({
+  ...dispatchMutationResp(state, service, action),
+  mutationInFlight: false,
+});
 
 function reducer(
   state = STORE_STATE,
@@ -445,23 +454,23 @@ function reducer(
         benefitsSummaryError: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
-      return dispatchMutationReq(state, action);
+      return { ...dispatchMutationReq(state, action), mutationInFlight: true };
     case ERROR(ACTION_TYPE.MUTATION):
-      return dispatchMutationErr(state, action);
+      return { ...dispatchMutationErr(state, action), mutationInFlight: false };
     case SUCCESS(ACTION_TYPE.CREATE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.CREATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.CREATE, action);
     case SUCCESS(ACTION_TYPE.DELETE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.DELETE, action);
     case SUCCESS(ACTION_TYPE.UPDATE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.UPDATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.UPDATE, action);
     case SUCCESS(ACTION_TYPE.CREATE_PAYROLL):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.CREATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.CREATE, action);
     case SUCCESS(ACTION_TYPE.DELETE_PAYROLL):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.DELETE, action);
     case SUCCESS(ACTION_TYPE.RETRIGGER_PAYROLL):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.RETRIGGER, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.RETRIGGER, action);
     case SUCCESS(ACTION_TYPE.DELETE_BENEFIT_CONSUMPTION):
-      return dispatchMutationResp(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
     case REQUEST(ACTION_TYPE.GET_SYSTEM_STATUS):
       return {
         ...state,

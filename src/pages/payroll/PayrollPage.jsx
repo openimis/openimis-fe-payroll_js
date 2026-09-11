@@ -43,6 +43,7 @@ function PayrollPage({
   rights,
   confirmed,
   submittingMutation,
+  mutationInFlight,
   mutation,
   payroll,
   systemStatus,
@@ -170,7 +171,7 @@ function PayrollPage({
     payroll?.status === PAYROLL_STATUS.FAILED && {
       icon: <ReplayIcon />,
       tooltip: formatMessage('tooltip.retrigger'),
-      disabled: submittingMutation || triggersDown,
+      disabled: mutationInFlight || triggersDown,
       doIt: () => {
         retriggerPayroll(
           payroll,
@@ -238,6 +239,7 @@ const mapStateToProps = (state, props) => ({
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
+  mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
   payroll: state.payroll.payroll,
   systemStatus: state.payroll.systemStatus,

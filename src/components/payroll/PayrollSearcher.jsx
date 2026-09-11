@@ -48,6 +48,7 @@ function PayrollSearcher({
   clearConfirm,
   confirmed,
   submittingMutation,
+  mutationInFlight,
   mutation,
 }) {
   const history = useHistory();
@@ -182,7 +183,7 @@ function PayrollSearcher({
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => onDelete(payroll)}
-          disabled={submittingMutation
+          disabled={mutationInFlight
             || deletedPayrollUuids.includes(payroll.id)
             || !DELETABLE_STATUSES.includes(payroll.status)}
         >
@@ -195,7 +196,7 @@ function PayrollSearcher({
         <Tooltip title={formatMessage('tooltip.retrigger')}>
           <IconButton
             onClick={() => onRetrigger(payroll)}
-            disabled={submittingMutation || triggersDown || deletedPayrollUuids.includes(payroll.id)}
+            disabled={mutationInFlight || triggersDown || deletedPayrollUuids.includes(payroll.id)}
           >
             <ReplayIcon />
           </IconButton>
@@ -246,6 +247,7 @@ const mapStateToProps = (state) => ({
   totalCount: state.payroll.payrollsTotalCount,
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
+  mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
   systemStatus: state.payroll.systemStatus,
 });
