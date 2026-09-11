@@ -72,9 +72,9 @@ function PayrollPage({
 
   const back = () => history.goBack();
 
-  // Only a backend that answered and reported unsynced triggers blocks creation;
+  // Only a backend that explicitly reported unsynced triggers blocks creation;
   // a query that failed leaves it enabled and is surfaced separately.
-  const triggersDown = !!systemStatus && !systemStatus.triggersSynced;
+  const triggersDown = systemStatus?.triggersSynced === false;
 
   useEffect(() => {
     fetchPayrollSystemStatus();

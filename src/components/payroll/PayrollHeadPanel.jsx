@@ -41,6 +41,7 @@ class PayrollHeadPanel extends FormPanel {
       edited, classes, intl, readOnly, isPayrollFromFailedInvoices, benefitPlanId,
     } = this.props;
     const payroll = { ...edited };
+    const progress = getProgress(payroll.jsonExt);
 
     let effectiveBenefitPlanId = benefitPlanId;
     if (!effectiveBenefitPlanId && payroll?.paymentPlan?.benefitPlan) {
@@ -142,8 +143,8 @@ class PayrollHeadPanel extends FormPanel {
         {payroll?.status === PAYROLL_STATUS.GENERATING && (
           <div className="item">
             <LinearProgress
-              variant={getProgress(payroll.jsonExt) === null ? 'indeterminate' : 'determinate'}
-              value={getProgress(payroll.jsonExt) ?? 0}
+              variant={progress === null ? 'indeterminate' : 'determinate'}
+              value={progress ?? 0}
             />
           </div>
         )}
