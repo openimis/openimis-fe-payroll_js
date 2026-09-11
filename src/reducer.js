@@ -127,9 +127,7 @@ const STORE_STATE = {
   systemStatusError: null,
 };
 
-// dispatchMutationErr leaves submittingMutation set, so the completion effects
-// see a true-to-false edge only for answered requests; mutationInFlight follows
-// the request itself and clears on the answer and on a transport error alike.
+// Set on request, cleared on every answer and on a transport error.
 const mutationDone = (state, service, action) => ({
   ...dispatchMutationResp(state, service, action),
   mutationInFlight: false,
@@ -469,6 +467,12 @@ function reducer(
       return mutationDone(state, MUTATION_SERVICE.PAYROLL.DELETE, action);
     case SUCCESS(ACTION_TYPE.RETRIGGER_PAYROLL):
       return mutationDone(state, MUTATION_SERVICE.PAYROLL.RETRIGGER, action);
+    case SUCCESS(ACTION_TYPE.CLOSE_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.CLOSE, action);
+    case SUCCESS(ACTION_TYPE.REJECT_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.REJECT, action);
+    case SUCCESS(ACTION_TYPE.MAKE_PAYMENT_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.MAKE_PAYMENT, action);
     case SUCCESS(ACTION_TYPE.DELETE_BENEFIT_CONSUMPTION):
       return mutationDone(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
     case REQUEST(ACTION_TYPE.GET_SYSTEM_STATUS):
