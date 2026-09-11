@@ -462,6 +462,12 @@ function reducer(
       return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.RETRIGGER, action);
     case SUCCESS(ACTION_TYPE.DELETE_BENEFIT_CONSUMPTION):
       return dispatchMutationResp(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
+    case REQUEST(ACTION_TYPE.GET_SYSTEM_STATUS):
+      return {
+        ...state,
+        systemStatus: null,
+        systemStatusError: null,
+      };
     case SUCCESS(ACTION_TYPE.GET_SYSTEM_STATUS):
       return {
         ...state,

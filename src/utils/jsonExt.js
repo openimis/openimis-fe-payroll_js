@@ -14,7 +14,9 @@ export const parseJsonExt = (jsonExt) => {
  * a bar pinned at zero.
  */
 export const getProgress = (jsonExt) => {
-  const raw = Number(parseJsonExt(jsonExt)?.progress);
+  const value = parseJsonExt(jsonExt)?.progress;
+  if (value === null || value === undefined || value === '') return null;
+  const raw = Number(value);
   if (!Number.isFinite(raw)) return null;
   return Math.min(100, Math.max(0, raw));
 };
