@@ -2,9 +2,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import {
-  Grid, Divider, LinearProgress, Typography,
-} from '@mui/material';
+import { Grid, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -18,8 +16,8 @@ import {
 } from '@openimis/fe-core';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
+import GenerationProgress from './GenerationProgress';
 import { PAYROLL_STATUS } from '../../constants';
-import { getProgress } from '../../utils/jsonExt';
 
 const StyledPayrollHeadPanel = styled('div')(({ theme }) => ({
   '& .tableTitle': theme.table?.title ?? {},
@@ -41,7 +39,6 @@ class PayrollHeadPanel extends FormPanel {
       edited, classes, intl, readOnly, isPayrollFromFailedInvoices, benefitPlanId,
     } = this.props;
     const payroll = { ...edited };
-    const progress = getProgress(payroll.jsonExt);
 
     let effectiveBenefitPlanId = benefitPlanId;
     if (!effectiveBenefitPlanId && payroll?.paymentPlan?.benefitPlan) {
@@ -142,10 +139,7 @@ class PayrollHeadPanel extends FormPanel {
         </Grid>
         {payroll?.status === PAYROLL_STATUS.GENERATING && (
           <div className="item">
-            <LinearProgress
-              variant={progress === null ? 'indeterminate' : 'determinate'}
-              value={progress ?? 0}
-            />
+            <GenerationProgress jsonExt={payroll.jsonExt} />
           </div>
         )}
         <Divider />

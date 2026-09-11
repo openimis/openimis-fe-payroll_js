@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { useIntl } from 'react-intl';
 
-import { IconButton, LinearProgress, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 
 import {
   Searcher,
@@ -17,12 +17,12 @@ import {
   GetIconComponent,
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
+import GenerationProgress from './GenerationProgress';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
   RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import { getProgress } from '../../utils/jsonExt';
 import { ACTION_TYPE } from '../../reducer';
 import { fetchPayrolls, deletePayrolls, retriggerPayroll } from '../../actions';
 const VisibilityIcon = GetIconComponent("Visibility");
@@ -56,7 +56,7 @@ function PayrollSearcher({
   const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
-  const lastFetchParamsRef = useRef([]);
+  const lastFetchParamsRef = useRef(null);
 
   // Statuses are an open set; show the raw value when no translation key matches.
   const statusLabel = (status) => {
@@ -93,7 +93,7 @@ function PayrollSearcher({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
-      if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
+      if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL && lastFetchParamsRef.current) {
         fetchPayrolls(modulesManager, lastFetchParamsRef.current);
       }
     }
@@ -159,14 +159,10 @@ function PayrollSearcher({
       const { status } = payroll;
       if (!status) return '';
       if (status !== PAYROLL_STATUS.GENERATING) return statusLabel(status);
-      const progress = getProgress(payroll.jsonExt);
       return (
         <div style={{ minWidth: 100 }}>
           {statusLabel(status)}
-          <LinearProgress
-            variant={progress === null ? 'indeterminate' : 'determinate'}
-            value={progress ?? 0}
-          />
+          <GenerationProgress jsonExt={payroll.jsonExt} />
         </div>
       );
     },

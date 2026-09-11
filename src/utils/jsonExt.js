@@ -15,7 +15,8 @@ export const parseJsonExt = (jsonExt) => {
  */
 export const getProgress = (jsonExt) => {
   const value = parseJsonExt(jsonExt)?.progress;
-  if (value === null || value === undefined || value === '') return null;
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (value === '') return null;
   const raw = Number(value);
   if (!Number.isFinite(raw)) return null;
   return Math.min(100, Math.max(0, raw));

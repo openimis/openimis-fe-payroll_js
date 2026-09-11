@@ -471,7 +471,7 @@ function reducer(
     case SUCCESS(ACTION_TYPE.GET_SYSTEM_STATUS):
       return {
         ...state,
-        systemStatus: action.payload.data.payrollSystemStatus,
+        systemStatus: action.payload.data?.payrollSystemStatus ?? null,
         systemStatusError: formatGraphQLError(action.payload),
       };
     case ERROR(ACTION_TYPE.GET_SYSTEM_STATUS):
