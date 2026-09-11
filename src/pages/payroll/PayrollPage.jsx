@@ -78,7 +78,7 @@ function PayrollPage({
 
   useEffect(() => {
     if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
-  }, []);
+  }, [rights]);
 
   useEffect(() => {
     if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
