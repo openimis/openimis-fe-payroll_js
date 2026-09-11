@@ -59,9 +59,7 @@ function PayrollSearcher({
   const prevSubmittingMutationRef = useRef();
   const lastFetchParamsRef = useRef([]);
 
-  // Statuses reaching us from the backend are an open set: modules add their own,
-  // and rows predating a rename keep the old spelling. Fall back to the raw value
-  // rather than letting react-intl echo the missing key.
+  // Statuses are an open set; show the raw value when no translation key matches.
   const statusLabel = (status) => {
     const key = `payroll.payrollStatusPicker.${status}`;
     return intl.messages[`${MODULE_NAME}.${key}`] ? formatMessage(key) : status;

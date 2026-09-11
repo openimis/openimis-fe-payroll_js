@@ -64,7 +64,6 @@ export const PAYROLL_STATUS = {
   PENDING_APPROVAL: 'PENDING_APPROVAL',
   APPROVE_FOR_PAYMENT: 'APPROVE_FOR_PAYMENT',
   REJECTED: 'REJECTED',
-  // Spelling used by the backend before Feb 2024; rows written then still carry it.
   RECONCILIATED: 'RECONCILIATED',
   RECONCILED: 'RECONCILED',
   FAILED: 'FAILED',
