@@ -55,7 +55,6 @@ function PayrollSearcher({
 
   const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
-  const [retriggeringPayrollUuids, setRetriggeringPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
   const lastFetchParamsRef = useRef([]);
 
@@ -95,7 +94,6 @@ function PayrollSearcher({
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
       if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
-        setRetriggeringPayrollUuids([]);
         fetchPayrolls(modulesManager, lastFetchParamsRef.current);
       }
     }
@@ -145,7 +143,6 @@ function PayrollSearcher({
   const onDelete = (payroll) => setPayrollToDelete(payroll);
 
   const onRetrigger = (payroll) => {
-    setRetriggeringPayrollUuids((prev) => [...prev, payroll.id]);
     retriggerPayroll(
       payroll,
       formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),
@@ -200,7 +197,7 @@ function PayrollSearcher({
         <Tooltip title={formatMessage('tooltip.retrigger')}>
           <IconButton
             onClick={() => onRetrigger(payroll)}
-            disabled={retriggeringPayrollUuids.includes(payroll.id)}
+            disabled={submittingMutation}
           >
             <ReplayIcon />
           </IconButton>
