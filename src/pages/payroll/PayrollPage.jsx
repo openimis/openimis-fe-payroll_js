@@ -67,7 +67,6 @@ function PayrollPage({
   const [readOnly, setReadOnly] = useState(false);
   const [isPayrollFromFailedInvoices, setIsPayrollFromFailedInvoices] = useState(false);
   const [confirmedAction, setConfirmedAction] = useState(() => null);
-  const [isRetriggering, setIsRetriggering] = useState(false);
   const prevSubmittingMutationRef = useRef();
 
   const back = () => history.goBack();
@@ -106,7 +105,6 @@ function PayrollPage({
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
       if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
-        setIsRetriggering(false);
         if (payrollUuid) {
           fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
         }
@@ -172,9 +170,8 @@ function PayrollPage({
     payroll?.status === PAYROLL_STATUS.FAILED && {
       icon: <ReplayIcon />,
       tooltip: formatMessage('tooltip.retrigger'),
-      disabled: isRetriggering || triggersDown,
+      disabled: submittingMutation || triggersDown,
       doIt: () => {
-        setIsRetriggering(true);
         retriggerPayroll(
           payroll,
           formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),

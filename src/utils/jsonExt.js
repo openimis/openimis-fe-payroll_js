@@ -8,11 +8,7 @@ export const parseJsonExt = (jsonExt) => {
   }
 };
 
-/**
- * Generation progress as a percentage, or null when the payroll carries no
- * usable value. Callers render an indeterminate indicator on null rather than
- * a bar pinned at zero.
- */
+/** Generation progress clamped to 0-100, or null when json_ext carries no numeric progress. */
 export const getProgress = (jsonExt) => {
   const value = parseJsonExt(jsonExt)?.progress;
   if (typeof value !== 'number' && typeof value !== 'string') return null;

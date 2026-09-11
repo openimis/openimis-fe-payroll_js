@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { useIntl } from 'react-intl';
-
 import { IconButton, Tooltip } from '@mui/material';
 
 import {
@@ -18,13 +16,16 @@ import {
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
 import GenerationProgress from './GenerationProgress';
+import PayrollStatusLabel from './PayrollStatusLabel';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
   RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
 import { ACTION_TYPE } from '../../reducer';
-import { fetchPayrolls, deletePayrolls, retriggerPayroll } from '../../actions';
+import {
+  fetchPayrolls, deletePayrolls, retriggerPayroll, fetchPayrollSystemStatus,
+} from '../../actions';
 const VisibilityIcon = GetIconComponent("Visibility");
 const DeleteIcon = GetIconComponent("Delete");
 const ReplayIcon = GetIconComponent("Replay");
@@ -41,6 +42,8 @@ function PayrollSearcher({
   totalCount,
   fetchPayrolls,
   retriggerPayroll,
+  fetchPayrollSystemStatus,
+  systemStatus,
   coreConfirm,
   clearConfirm,
   confirmed,
@@ -50,7 +53,6 @@ function PayrollSearcher({
   const history = useHistory();
   const modulesManager = useModulesManager();
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
-  const intl = useIntl();
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
   const [payrollToDelete, setPayrollToDelete] = useState(null);
@@ -58,11 +60,11 @@ function PayrollSearcher({
   const prevSubmittingMutationRef = useRef();
   const lastFetchParamsRef = useRef(null);
 
-  // Statuses are an open set; show the raw value when no translation key matches.
-  const statusLabel = (status) => {
-    const key = `payroll.payrollStatusPicker.${status}`;
-    return intl.messages[`${MODULE_NAME}.${key}`] ? formatMessage(key) : status;
-  };
+  const triggersDown = systemStatus?.triggersSynced === false;
+
+  useEffect(() => {
+    fetchPayrollSystemStatus();
+  }, []);
 
   const openDeletePayrollConfirmDialog = () => {
     coreConfirm(
@@ -157,11 +159,10 @@ function PayrollSearcher({
       ? `${payroll.paymentPoint.name}` : ''),
     (payroll) => {
       const { status } = payroll;
-      if (!status) return '';
-      if (status !== PAYROLL_STATUS.GENERATING) return statusLabel(status);
+      if (status !== PAYROLL_STATUS.GENERATING) return <PayrollStatusLabel status={status} />;
       return (
         <div style={{ minWidth: 100 }}>
-          {statusLabel(status)}
+          <PayrollStatusLabel status={status} />
           <GenerationProgress jsonExt={payroll.jsonExt} />
         </div>
       );
@@ -181,7 +182,8 @@ function PayrollSearcher({
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id)
+          disabled={submittingMutation
+            || deletedPayrollUuids.includes(payroll.id)
             || !DELETABLE_STATUSES.includes(payroll.status)}
         >
           <DeleteIcon />
@@ -193,7 +195,7 @@ function PayrollSearcher({
         <Tooltip title={formatMessage('tooltip.retrigger')}>
           <IconButton
             onClick={() => onRetrigger(payroll)}
-            disabled={submittingMutation}
+            disabled={submittingMutation || triggersDown || deletedPayrollUuids.includes(payroll.id)}
           >
             <ReplayIcon />
           </IconButton>
@@ -245,12 +247,14 @@ const mapStateToProps = (state) => ({
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
+  systemStatus: state.payroll.systemStatus,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
   deletePayrolls,
   retriggerPayroll,
+  fetchPayrollSystemStatus,
   journalize,
   clearConfirm,
   coreConfirm,
