@@ -12,6 +12,7 @@ import {
   journalize,
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
+import PayrollStatusLabel from './PayrollStatusLabel';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
@@ -90,8 +91,7 @@ function PayrollSearcherPending({
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
     (payroll) => (payroll.paymentPoint
       ? `${payroll.paymentPoint.name}` : ''),
-    (payroll) => (payroll.status
-      ? `${payroll.status}` : ''),
+    (payroll) => <PayrollStatusLabel status={payroll.status} />,
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
     (payroll) => (

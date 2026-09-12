@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -12,20 +13,25 @@ import {
   coreConfirm,
   clearConfirm,
   journalize,
+  GetIconComponent,
 } from '@openimis/fe-core';
 import {
   fetchPayroll,
   clearPayroll,
   createPayroll,
+  retriggerPayroll,
+  fetchPayrollSystemStatus,
 } from '../../actions';
 import {
   MODULE_NAME, PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
-  RIGHT_PAYROLL_CREATE,
+  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
 import PayrollHeadPanel from '../../components/payroll/PayrollHeadPanel';
 import PayrollTab from '../../components/payroll/PayrollTab';
+
+const ReplayIcon = GetIconComponent("Replay");
 
 const StyledPayrollPage = styled('div')(({ theme }) => ({
   '&.page': theme.page ?? {},
@@ -37,10 +43,15 @@ function PayrollPage({
   rights,
   confirmed,
   submittingMutation,
+  mutationInFlight,
   mutation,
   payroll,
+  systemStatus,
+  systemStatusError,
   fetchPayroll,
   createPayroll,
+  retriggerPayroll,
+  fetchPayrollSystemStatus,
   clearPayroll,
   clearConfirm,
   createPayrollFromFailedInvoices,
@@ -60,6 +71,14 @@ function PayrollPage({
   const prevSubmittingMutationRef = useRef();
 
   const back = () => history.goBack();
+
+  // Only a backend that explicitly reported unsynced triggers blocks creation;
+  // a query that failed leaves it enabled and is surfaced separately.
+  const triggersDown = systemStatus?.triggersSynced === false;
+
+  useEffect(() => {
+    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
+  }, [rights]);
 
   useEffect(() => {
     if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
@@ -86,6 +105,11 @@ function PayrollPage({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
+      if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
+        if (payrollUuid) {
+          fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+        }
+      }
       if (mutation?.actionType === ACTION_TYPE.DELETE_PAYROLL) {
         back();
       }
@@ -143,11 +167,29 @@ function PayrollPage({
     }
   };
 
-  const actions = [];
+  const actions = [
+    payroll?.status === PAYROLL_STATUS.FAILED && {
+      icon: <ReplayIcon />,
+      tooltip: formatMessage('tooltip.retrigger'),
+      disabled: mutationInFlight || triggersDown,
+      doIt: () => {
+        retriggerPayroll(
+          payroll,
+          formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),
+        );
+      },
+    },
+  ].filter(Boolean);
 
   return (
     rights.includes(RIGHT_PAYROLL_CREATE) && (
     <StyledPayrollPage className="page">
+      {triggersDown && (
+        <Alert severity="warning">{systemStatus.message}</Alert>
+      )}
+      {!triggersDown && systemStatusError && (
+        <Alert severity="warning">{formatMessage('systemStatus.unavailable')}</Alert>
+      )}
       <Form
         key={payrollUuid}
         module="payroll"
@@ -159,7 +201,7 @@ function PayrollPage({
         onEditedChanged={setEditedPayroll}
         back={!isInTask && back}
         mandatoryFieldsEmpty={mandatoryFieldsEmpty}
-        canSave={canSave}
+        canSave={() => canSave() && !triggersDown}
         save={handleSave}
         HeadPanel={PayrollHeadPanel}
         Panels={[PayrollTab]}
@@ -182,6 +224,8 @@ function PayrollPage({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayroll,
   createPayroll,
+  retriggerPayroll,
+  fetchPayrollSystemStatus,
   clearPayroll,
   coreConfirm,
   clearConfirm,
@@ -195,8 +239,11 @@ const mapStateToProps = (state, props) => ({
   rights: state.core?.user?.i_user?.rights ?? [],
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
+  mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
   payroll: state.payroll.payroll,
+  systemStatus: state.payroll.systemStatus,
+  systemStatusError: state.payroll.systemStatusError,
 });
 
 export { StyledPayrollPage };
