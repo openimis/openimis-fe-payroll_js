@@ -15,14 +15,22 @@ import {
   GetIconComponent,
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
+import GenerationProgress from './GenerationProgress';
+import PayrollStatusLabel from './PayrollStatusLabel';
 import {
   DEFAULT_PAGE_SIZE, MODULE_NAME, PAYROLL_PAYROLL_ROUTE,
-  RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
+  RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import { fetchPayrolls, deletePayrolls } from '../../actions';
+import { ACTION_TYPE } from '../../reducer';
+import {
+  fetchPayrolls, deletePayrolls, retriggerPayroll, fetchPayrollSystemStatus,
+} from '../../actions';
 const VisibilityIcon = GetIconComponent("Visibility");
 const DeleteIcon = GetIconComponent("Delete");
+const ReplayIcon = GetIconComponent("Replay");
+
+const DELETABLE_STATUSES = [PAYROLL_STATUS.PENDING_APPROVAL, PAYROLL_STATUS.FAILED];
 
 function PayrollSearcher({
   deletePayrolls,
@@ -33,10 +41,14 @@ function PayrollSearcher({
   pageInfo,
   totalCount,
   fetchPayrolls,
+  retriggerPayroll,
+  fetchPayrollSystemStatus,
+  systemStatus,
   coreConfirm,
   clearConfirm,
   confirmed,
   submittingMutation,
+  mutationInFlight,
   mutation,
 }) {
   const history = useHistory();
@@ -47,6 +59,13 @@ function PayrollSearcher({
   const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
+  const lastFetchParamsRef = useRef(null);
+
+  const triggersDown = systemStatus?.triggersSynced === false;
+
+  useEffect(() => {
+    fetchPayrollSystemStatus();
+  }, []);
 
   const openDeletePayrollConfirmDialog = () => {
     coreConfirm(
@@ -77,6 +96,9 @@ function PayrollSearcher({
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
+      if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL && lastFetchParamsRef.current) {
+        fetchPayrolls(modulesManager, lastFetchParamsRef.current);
+      }
     }
   }, [submittingMutation]);
 
@@ -90,6 +112,8 @@ function PayrollSearcher({
     'payroll.paymentPoint',
     'payroll.status',
     'payroll.paymentMethod',
+    'emptyLabel',
+    'emptyLabel',
     'emptyLabel',
   ];
 
@@ -108,7 +132,10 @@ function PayrollSearcher({
     },
   });
 
-  const fetch = (params) => fetchPayrolls(modulesManager, params);
+  const fetch = (params) => {
+    lastFetchParamsRef.current = params;
+    return fetchPayrolls(modulesManager, params);
+  };
 
   const rowIdentifier = (payroll) => payroll.id;
 
@@ -118,14 +145,29 @@ function PayrollSearcher({
 
   const onDelete = (payroll) => setPayrollToDelete(payroll);
 
+  const onRetrigger = (payroll) => {
+    retriggerPayroll(
+      payroll,
+      formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),
+    );
+  };
+
   const itemFormatters = () => [
     (payroll) => payroll.name,
     (payroll) => (payroll.benefitPlan
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
     (payroll) => (payroll.paymentPoint
       ? `${payroll.paymentPoint.name}` : ''),
-    (payroll) => (payroll.status
-      ? `${payroll.status}` : ''),
+    (payroll) => {
+      const { status } = payroll;
+      if (status !== PAYROLL_STATUS.GENERATING) return <PayrollStatusLabel status={status} />;
+      return (
+        <div style={{ minWidth: 100 }}>
+          <PayrollStatusLabel status={status} />
+          <GenerationProgress jsonExt={payroll.jsonExt} />
+        </div>
+      );
+    },
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
     (payroll) => (
@@ -141,11 +183,25 @@ function PayrollSearcher({
       <Tooltip title={formatMessage('tooltip.delete')}>
         <IconButton
           onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id) || payroll.status !== PAYROLL_STATUS.PENDING_APPROVAL}
+          disabled={mutationInFlight
+            || deletedPayrollUuids.includes(payroll.id)
+            || !DELETABLE_STATUSES.includes(payroll.status)}
         >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
+    ),
+    (payroll) => (
+      rights.includes(RIGHT_PAYROLL_CREATE) && payroll.status === PAYROLL_STATUS.FAILED && (
+        <Tooltip title={formatMessage('tooltip.retrigger')}>
+          <IconButton
+            onClick={() => onRetrigger(payroll)}
+            disabled={mutationInFlight || triggersDown || deletedPayrollUuids.includes(payroll.id)}
+          >
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
+      )
     ),
   ];
 
@@ -191,12 +247,16 @@ const mapStateToProps = (state) => ({
   totalCount: state.payroll.payrollsTotalCount,
   confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
+  mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
+  systemStatus: state.payroll.systemStatus,
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
   deletePayrolls,
+  retriggerPayroll,
+  fetchPayrollSystemStatus,
   journalize,
   clearConfirm,
   coreConfirm,

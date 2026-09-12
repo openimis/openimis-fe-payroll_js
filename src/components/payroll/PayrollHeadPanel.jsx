@@ -16,6 +16,8 @@ import {
 } from '@openimis/fe-core';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
+import GenerationProgress from './GenerationProgress';
+import { PAYROLL_STATUS } from '../../constants';
 
 const StyledPayrollHeadPanel = styled('div')(({ theme }) => ({
   '& .tableTitle': theme.table?.title ?? {},
@@ -135,6 +137,11 @@ class PayrollHeadPanel extends FormPanel {
             />
           </Grid>
         </Grid>
+        {payroll?.status === PAYROLL_STATUS.GENERATING && (
+          <div className="item">
+            <GenerationProgress jsonExt={payroll.jsonExt} />
+          </div>
+        )}
         <Divider />
         {!isPayrollFromFailedInvoices
           && (

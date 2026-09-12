@@ -22,6 +22,7 @@ export const ACTION_TYPE = {
   SEARCH_PAYMENT_POINTS: 'PAYROLL_PAYMENT_POINTS',
   CREATE_PAYROLL: 'PAYROLL_MUTATION_CREATE_PAYROLL',
   DELETE_PAYROLL: 'PAYROLL_MUTATION_DELETE_PAYROLL',
+  RETRIGGER_PAYROLL: 'PAYROLL_MUTATION_RETRIGGER_PAYROLL',
   SEARCH_PAYROLLS: 'PAYROLL_PAYROLLS',
   GET_PAYMENT_POINT: 'PAYROLL_PAYMENT_POINT',
   GET_PAYROLL: 'PAYROLL_GET_PAYROLL',
@@ -35,6 +36,7 @@ export const ACTION_TYPE = {
   GET_PAYROLL_PAYMENT_FILES: 'GET_PAYROLL_PAYMENT_FILES',
   BENEFITS_SUMMARY: 'PAYROLL_BENEFITS_SUMMARY',
   DELETE_BENEFIT_CONSUMPTION: 'BENEFIT_CONSUMPTION_MUTATION_DELETE_BENEFIT_CONSUMPTION',
+  GET_SYSTEM_STATUS: 'PAYROLL_SYSTEM_STATUS',
 };
 
 export const MUTATION_SERVICE = {
@@ -49,6 +51,7 @@ export const MUTATION_SERVICE = {
     CLOSE: 'closePayroll',
     REJECT: 'rejectPayroll',
     MAKE_PAYMENT: 'makePaymentForPayroll',
+    RETRIGGER: 'retriggerPayroll',
   },
   BENEFIT_CONSUMPTION: {
     DELETE: 'deleteBenefitConsumption',
@@ -57,6 +60,7 @@ export const MUTATION_SERVICE = {
 
 const STORE_STATE = {
   submittingMutation: false,
+  mutationInFlight: false,
   mutation: {},
   fetchingPaymentPoints: false,
   fetchedPaymentPoints: false,
@@ -118,7 +122,16 @@ const STORE_STATE = {
   benefitsSummaryError: null,
   fetchingBenefitsSummary: true,
   fetchedBenefitsSummary: false,
+
+  systemStatus: null,
+  systemStatusError: null,
 };
+
+// Set on request, cleared on every answer and on a transport error.
+const mutationDone = (state, service, action) => ({
+  ...dispatchMutationResp(state, service, action),
+  mutationInFlight: false,
+});
 
 function reducer(
   state = STORE_STATE,
@@ -439,21 +452,47 @@ function reducer(
         benefitsSummaryError: formatServerError(action.payload),
       };
     case REQUEST(ACTION_TYPE.MUTATION):
-      return dispatchMutationReq(state, action);
+      return { ...dispatchMutationReq(state, action), mutationInFlight: true };
     case ERROR(ACTION_TYPE.MUTATION):
-      return dispatchMutationErr(state, action);
+      return { ...dispatchMutationErr(state, action), mutationInFlight: false };
     case SUCCESS(ACTION_TYPE.CREATE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.CREATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.CREATE, action);
     case SUCCESS(ACTION_TYPE.DELETE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.DELETE, action);
     case SUCCESS(ACTION_TYPE.UPDATE_PAYMENT_POINT):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYMENT_POINT.UPDATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYMENT_POINT.UPDATE, action);
     case SUCCESS(ACTION_TYPE.CREATE_PAYROLL):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.CREATE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.CREATE, action);
     case SUCCESS(ACTION_TYPE.DELETE_PAYROLL):
-      return dispatchMutationResp(state, MUTATION_SERVICE.PAYROLL.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.DELETE, action);
+    case SUCCESS(ACTION_TYPE.RETRIGGER_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.RETRIGGER, action);
+    case SUCCESS(ACTION_TYPE.CLOSE_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.CLOSE, action);
+    case SUCCESS(ACTION_TYPE.REJECT_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.REJECT, action);
+    case SUCCESS(ACTION_TYPE.MAKE_PAYMENT_PAYROLL):
+      return mutationDone(state, MUTATION_SERVICE.PAYROLL.MAKE_PAYMENT, action);
     case SUCCESS(ACTION_TYPE.DELETE_BENEFIT_CONSUMPTION):
-      return dispatchMutationResp(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
+      return mutationDone(state, MUTATION_SERVICE.BENEFIT_CONSUMPTION.DELETE, action);
+    case REQUEST(ACTION_TYPE.GET_SYSTEM_STATUS):
+      return {
+        ...state,
+        systemStatus: null,
+        systemStatusError: null,
+      };
+    case SUCCESS(ACTION_TYPE.GET_SYSTEM_STATUS):
+      return {
+        ...state,
+        systemStatus: action.payload.data?.payrollSystemStatus ?? null,
+        systemStatusError: formatGraphQLError(action.payload),
+      };
+    case ERROR(ACTION_TYPE.GET_SYSTEM_STATUS):
+      return {
+        ...state,
+        systemStatus: null,
+        systemStatusError: formatServerError(action.payload),
+      };
     default:
       return state;
   }
