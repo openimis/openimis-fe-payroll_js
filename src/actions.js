@@ -13,7 +13,6 @@ import {
   CLEAR, ERROR, REQUEST, SUCCESS,
 } from './utils/action-type';
 import { isBase64Encoded } from './utils/advanced-filters-utils';
-import { PAYROLL_STATUS } from './constants';
 
 export const PAYMENT_POINT_PROJECTION = (modulesManager) => [
   'id',
@@ -66,8 +65,7 @@ const PAYROLL_PROJECTION = (modulesManager) => [
   'paymentPlan { code, id, name, benefitPlan }',
   `paymentPoint { ${PAYMENT_POINT_PROJECTION(modulesManager).join(' ')} }`,
   'paymentCycle { code, startDate, endDate }',
-  // eslint-disable-next-line max-len
-  'benefitConsumption{id, status, code, dateDue, receipt, individual {firstName, lastName}, benefitAttachment{bill{id, code, terms, amountTotal}}}',
+  'benefitConsumption{status, benefitAttachment{bill{amountTotal}}}',
   'jsonExt',
   'status',
   'dateValidFrom',
@@ -114,7 +112,6 @@ const formatPayrollGQL = (payroll) => `
   ${payroll?.paymentPlan ? `paymentPlanId: "${decodeId(payroll.paymentPlan.id)}"` : ''}
   ${payroll?.paymentCycle ? `paymentCycleId: "${decodeId(payroll.paymentCycle.id)}"` : ''}
   ${payroll?.paymentMethod ? `paymentMethod: "${payroll.paymentMethod}"` : ''}
-  ${`status: ${PAYROLL_STATUS.PENDING_APPROVAL}`}
   ${
   payroll?.jsonExt
     ? `jsonExt: ${JSON.stringify(payroll.jsonExt)}`
@@ -218,6 +215,21 @@ export function deletePayrolls(payroll, clientMutationLabel) {
     MUTATION_SERVICE.PAYROLL.DELETE,
     payrollUuids,
     ACTION_TYPE.DELETE_PAYROLL,
+    clientMutationLabel,
+  );
+}
+
+export function fetchPayrollSystemStatus() {
+  const payload = formatQuery('payrollSystemStatus', null, ['triggersSynced', 'message']);
+  return graphql(payload, ACTION_TYPE.GET_SYSTEM_STATUS);
+}
+
+export function retriggerPayroll(payroll, clientMutationLabel) {
+  const uuid = isBase64Encoded(payroll.id) ? decodeId(payroll?.id) : payroll?.id;
+  return PERFORM_MUTATION(
+    MUTATION_SERVICE.PAYROLL.RETRIGGER,
+    `id: "${uuid}"`,
+    ACTION_TYPE.RETRIGGER_PAYROLL,
     clientMutationLabel,
   );
 }
