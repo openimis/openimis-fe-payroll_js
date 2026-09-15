@@ -24,7 +24,7 @@ import {
 } from '../../actions';
 import {
   MODULE_NAME, PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
-  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH,
+  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
@@ -77,8 +77,8 @@ function PayrollPage({
   const triggersDown = systemStatus?.triggersSynced === false;
 
   useEffect(() => {
-    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
-  }, [rights]);
+    fetchPayrollSystemStatus();
+  }, []);
 
   useEffect(() => {
     if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
