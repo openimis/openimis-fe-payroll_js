@@ -1,11 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable camelcase */
 
-import React from 'react';
-
-
-import { GetIconComponent, FormattedMessage } from '@openimis/fe-core';
-import { RIGHT_PAYMENT_POINT_SEARCH, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH } from './constants';
+import {
+  RIGHT_PAYMENT_POINT_CREATE,
+  RIGHT_PAYMENT_POINT_SEARCH,
+  RIGHT_PAYROLL_CREATE,
+  RIGHT_PAYROLL_SEARCH,
+} from './constants';
 import reducer from './reducer';
 import messages_en from './translations/en.json';
 import PaymentPointPage from './pages/payment-point/PaymentPointPage';
@@ -40,8 +41,6 @@ import { PayrollDeleteTaskItemFormatters, PayrollDeleteTaskTableHeaders } from '
 import { PayrollPaymentFilesTabLabel, PayrollPaymentFilesTabPanel } from './components/payroll/PayrollPaymentFilesTab';
 import PendingPayrollsPage from './pages/payroll/PendingPayrollsPage';
 
-const PinDrop = GetIconComponent("PinDrop");
-const MonetizationOnIcon = GetIconComponent("MonetizationOn");
 const ROUTE_PAYMENT_POINTS = 'paymentPoints';
 const ROUTE_PAYMENT_POINT = 'paymentPoints/paymentPoint';
 const ROUTE_PAYROLLS = 'payrolls';
@@ -75,7 +74,13 @@ const DEFAULT_CONFIG = {
       id: 'legalAndFinance.paymentPoint',
       component: PaymentPointsPage 
     },
-    { path: `${ROUTE_PAYMENT_POINT}/:payment_point_uuid?`, component: PaymentPointPage },
+    {
+      path: `${ROUTE_PAYMENT_POINT}/:payment_point_uuid?`,
+      icon: "PinDrop",
+      rights: [RIGHT_PAYMENT_POINT_SEARCH, RIGHT_PAYMENT_POINT_CREATE],
+      id: 'legalAndFinance.paymentPoint.detail',
+      component: PaymentPointPage,
+    },
     { 
       path: ROUTE_PAYROLLS,
       text: "payroll.payroll.payroll.route",
@@ -108,7 +113,13 @@ const DEFAULT_CONFIG = {
       rights:[RIGHT_PAYROLL_SEARCH],
       id: 'legalAndFinance.payrollsReconciled',
     },
-
+    {
+      path: `${ROUTE_PAYROLL}/:payroll_uuid?/:createPayrollFromFailedInvoices?/:benefitPlanId?`,
+      icon: "MonetizationOn",
+      rights: [RIGHT_PAYROLL_SEARCH, RIGHT_PAYROLL_CREATE],
+      id: 'legalAndFinance.payroll',
+      component: PayrollPage,
+    },
   ],
   'invoice.MainMenu': [
     {
