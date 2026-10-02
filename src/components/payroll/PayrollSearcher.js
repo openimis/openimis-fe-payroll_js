@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { IconButton, Tooltip } from '@material-ui/core';
+import { IconButton, Tooltip, LinearProgress } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ReplayIcon from '@material-ui/icons/Replay';
 
 import {
   Searcher,
@@ -21,7 +22,10 @@ import {
   RIGHT_PAYROLL_SEARCH, ROWS_PER_PAGE_OPTIONS, PAYROLL_STATUS,
 } from '../../constants';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
-import { fetchPayrolls, deletePayrolls } from '../../actions';
+import { getProgress } from '../../utils/jsonExt';
+import {
+  fetchPayrolls, deletePayrolls, retriggerPayroll,
+} from '../../actions';
 
 function PayrollSearcher({
   deletePayrolls,
@@ -32,6 +36,7 @@ function PayrollSearcher({
   pageInfo,
   totalCount,
   fetchPayrolls,
+  retriggerPayroll,
   coreConfirm,
   clearConfirm,
   confirmed,
@@ -45,6 +50,7 @@ function PayrollSearcher({
 
   const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
+  const [retriggeringPayrollUuids, setRetriggeringPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
 
   const openDeletePayrollConfirmDialog = () => {
@@ -87,6 +93,8 @@ function PayrollSearcher({
     'payroll.status',
     'payroll.paymentMethod',
     'emptyLabel',
+    'emptyLabel',
+    'emptyLabel',
   ];
 
   const sorts = () => [
@@ -114,14 +122,32 @@ function PayrollSearcher({
 
   const onDelete = (payroll) => setPayrollToDelete(payroll);
 
+  const onRetrigger = (payroll) => {
+    setRetriggeringPayrollUuids((prev) => [...prev, payroll.id]);
+    retriggerPayroll(
+      payroll,
+      formatMessageWithValues('payroll.mutation.retriggerLabel', mutationLabel(payroll)),
+    );
+  };
+
   const itemFormatters = () => [
     (payroll) => payroll.name,
     (payroll) => (payroll.benefitPlan
       ? `${payroll.benefitPlan.code} ${payroll.benefitPlan.name}` : ''),
     (payroll) => (payroll.paymentPoint
       ? `${payroll.paymentPoint.name}` : ''),
-    (payroll) => (payroll.status
-      ? `${payroll.status}` : ''),
+    (payroll) => {
+      if (payroll.status === PAYROLL_STATUS.GENERATING) {
+        return (
+          <div style={{ width: '100%', minWidth: 100 }}>
+            {formatMessage(`payroll.payrollStatusPicker.${payroll.status}`)}
+            <LinearProgress variant="determinate" value={getProgress(payroll.jsonExt)} />
+          </div>
+        );
+      }
+      return payroll.status
+        ? formatMessage(`payroll.payrollStatusPicker.${payroll.status}`) : '';
+    },
     (payroll) => (payroll.paymentMethod
       ? `${payroll.paymentMethod}` : ''),
     (payroll) => (
@@ -133,15 +159,33 @@ function PayrollSearcher({
         </IconButton>
       </Tooltip>
     ),
+    (payroll) => {
+      const isDeletable = [
+        PAYROLL_STATUS.PENDING_APPROVAL,
+        PAYROLL_STATUS.FAILED,
+      ].includes(payroll.status);
+      return (
+        <Tooltip title={formatMessage('tooltip.delete')}>
+          <IconButton
+            onClick={() => onDelete(payroll)}
+            disabled={deletedPayrollUuids.includes(payroll.id) || !isDeletable}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    },
     (payroll) => (
-      <Tooltip title={formatMessage('tooltip.delete')}>
-        <IconButton
-          onClick={() => onDelete(payroll)}
-          disabled={deletedPayrollUuids.includes(payroll.id) || payroll.status !== PAYROLL_STATUS.PENDING_APPROVAL}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Tooltip>
+      payroll.status === PAYROLL_STATUS.FAILED && (
+        <Tooltip title={formatMessage('tooltip.retrigger')}>
+          <IconButton
+            onClick={() => onRetrigger(payroll)}
+            disabled={retriggeringPayrollUuids.includes(payroll.id)}
+          >
+            <ReplayIcon />
+          </IconButton>
+        </Tooltip>
+      )
     ),
   ];
 
@@ -193,6 +237,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
   deletePayrolls,
+  retriggerPayroll,
   journalize,
   clearConfirm,
   coreConfirm,
