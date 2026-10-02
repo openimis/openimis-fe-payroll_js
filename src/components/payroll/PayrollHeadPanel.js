@@ -2,7 +2,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid, Divider } from '@material-ui/core';
+import { Grid, Divider, LinearProgress } from '@material-ui/core';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 
 import {
@@ -13,8 +13,10 @@ import {
   withModulesManager,
 } from '@openimis/fe-core';
 import FilterDialog from './FilterDialog';
+import { getProgress } from '../../utils/jsonExt';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
+import { PAYROLL_STATUS } from '../../constants';
 
 const styles = (theme) => ({
   tableTitle: theme.table.title,
@@ -86,14 +88,14 @@ class PayrollHeadPanel extends FormPanel {
             />
           </Grid>
           {readOnly && !isPayrollFromFailedInvoices && (
-          <Grid item xs={3} className={classes.item}>
-            <PayrollStatusPicker
-              required
-              withNull={false}
-              readOnly={readOnly}
-              value={!!payroll?.status && payroll.status}
-            />
-          </Grid>
+            <Grid item xs={3} className={classes.item}>
+              <PayrollStatusPicker
+                required
+                withNull={false}
+                readOnly={readOnly}
+                value={!!payroll?.status && payroll.status}
+              />
+            </Grid>
           )}
           <Grid item xs={3} className={classes.item}>
             <PaymentMethodPicker
@@ -128,6 +130,11 @@ class PayrollHeadPanel extends FormPanel {
             />
           </Grid>
         </Grid>
+        {payroll?.status === PAYROLL_STATUS.GENERATING && (
+          <div style={{ padding: '0 16px 16px 16px' }}>
+            <LinearProgress variant="determinate" value={getProgress(payroll.jsonExt)} />
+          </div>
+        )}
         <Divider />
         {!isPayrollFromFailedInvoices && (
           <FilterDialog
