@@ -15,6 +15,7 @@ import {
   coreConfirm,
   clearConfirm,
   journalize,
+  overridable,
 } from '@openimis/fe-core';
 import {
   fetchPayroll,
@@ -253,4 +254,4 @@ const mapStateToProps = (state, props) => ({
   systemStatus: state.payroll.systemStatus,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PayrollPage);
+export default overridable('payroll.PayrollPage')(connect(mapStateToProps, mapDispatchToProps)(PayrollPage));
