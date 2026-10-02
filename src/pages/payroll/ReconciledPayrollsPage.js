@@ -7,6 +7,7 @@ import {
   Helmet,
   useModulesManager,
   useTranslations,
+  overridable,
 } from '@openimis/fe-core';
 import {
   MODULE_NAME,
@@ -34,4 +35,4 @@ function ReconciledPayrollsPage() {
   );
 }
 
-export default ReconciledPayrollsPage;
+export default overridable('payroll.ReconciledPayrollsPage')(ReconciledPayrollsPage);

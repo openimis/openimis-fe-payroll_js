@@ -19,6 +19,14 @@ In development mode, you can use `npm link` and `npm start` to continuously scan
 ## Available Contribution Points
 
 
+## Overridable Components
+The payroll pages are exported through the fe-core `overridable(key)` wrapper. Another module replaces one with a `core.ComponentOverrides` entry `{ key, component }`; its routes and the payroll task view then render the replacement:
+* `payroll.PayrollPage`
+* `payroll.PayrollsPage`
+* `payroll.ApprovedPayrollsPage`
+* `payroll.PendingPayrollsPage`
+* `payroll.ReconciledPayrollsPage`
+
 ## Dispatched Redux Actions
 
 
