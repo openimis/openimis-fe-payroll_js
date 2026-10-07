@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { injectIntl } from 'react-intl';
 import Button from '@mui/material/Button';
 import { Grid, Divider, Typography } from '@mui/material';
@@ -16,6 +16,48 @@ import _ from 'lodash';
 import AdvancedFiltersRowValue from './AdvancedFiltersRowValue';
 import { BENEFIT_PLAN } from '../../constants';
 import { isBase64Encoded } from '../../utils/advanced-filters-utils';
+import { parseJsonExt } from '../../utils/jsonExt';
+
+const hasFilterValue = (value) => value !== null && value !== undefined && value !== '';
+
+// field__filter__type=value, or field__type=value when no operator was stored.
+const parseCustomFilterCondition = (condition) => {
+  if (typeof condition !== 'string') return null;
+  const separator = condition.indexOf('=');
+  if (separator <= 0) return null;
+  const left = condition.slice(0, separator);
+  const value = condition.slice(separator + 1);
+  const parts = left.split('__');
+  if (parts.length >= 3) {
+    const type = parts.pop();
+    const filter = parts.pop();
+    const field = parts.join('__');
+    if (!field || !type) return null;
+    return {
+      customFilterCondition: condition, field, filter, type, value,
+    };
+  }
+  if (parts.length === 2) {
+    const [field, type] = parts;
+    if (!field || !type) return null;
+    return {
+      customFilterCondition: condition, field, filter: '', type, value,
+    };
+  }
+  return null;
+};
+
+const customFilterConditionForRow = (row) => {
+  if (!row?.field || !hasFilterValue(row.value)) return null;
+  if (row.filter) {
+    return `${row.field}__${row.filter}__${row.type}=${row.value}`;
+  }
+  // Keep a condition that was stored without an operator (field__type=value).
+  if (row.customFilterCondition && row.type) {
+    return `${row.field}__${row.type}=${row.value}`;
+  }
+  return null;
+};
 
 const AddCircle = GetIconComponent('Add');
 
@@ -42,40 +84,43 @@ function FilterDialog({
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selectedLocations, setSelectedLocations] = useState([]);
   const [advancedFilters, setAdvancedFilters] = useState([]);
+  // The jsonExt string this dialog last wrote. Reloading it would replace the
+  // rows on screen, including a criterion the user has started but not finished.
+  const writtenJsonExt = useRef(null);
 
   useEffect(() => {
-    if (objectToSave?.jsonExt) {
-      const jsonData = JSON.parse(objectToSave.jsonExt);
-
-      const filterCriteria = jsonData.filter_criteria || {};
-      const projectIds = filterCriteria.project_ids || [];
-      setSelectedProjects(projectIds.map((id) => ({ id })));
-
-      const locationIds = filterCriteria.location_ids || [];
-      setSelectedLocations(locationIds.map((uuid) => ({ uuid })));
-
-      const advancedCriteria = jsonData.advanced_criteria || [];
-      const transformedCriteria = advancedCriteria.map((criterion) => {
-        const customFilterCondition = criterion.custom_filter_condition;
-        const [field, filter, typeValue] = customFilterCondition.split('__');
-        const [type, value] = typeValue.split('=');
-        return {
-          customFilterCondition,
-          field,
-          filter,
-          type,
-          value,
-        };
-      });
-      setAdvancedFilters(transformedCriteria);
+    const jsonExt = objectToSave?.jsonExt;
+    if (!jsonExt || jsonExt === writtenJsonExt.current) {
+      return;
     }
+    const jsonData = parseJsonExt(jsonExt);
+    if (!jsonData || typeof jsonData !== 'object' || Array.isArray(jsonData)) {
+      return;
+    }
+
+    const filterCriteria = jsonData.filter_criteria || {};
+    const projectIds = Array.isArray(filterCriteria.project_ids) ? filterCriteria.project_ids : [];
+    setSelectedProjects(projectIds.map((id) => ({ id })));
+
+    const locationIds = Array.isArray(filterCriteria.location_ids) ? filterCriteria.location_ids : [];
+    setSelectedLocations(locationIds.map((uuid) => ({ uuid })));
+
+    const advancedCriteria = Array.isArray(jsonData.advanced_criteria)
+      ? jsonData.advanced_criteria
+      : [];
+    setAdvancedFilters(
+      advancedCriteria
+        .map((criterion) => parseCustomFilterCondition(criterion?.custom_filter_condition))
+        .filter(Boolean),
+    );
   }, [objectToSave?.jsonExt]);
 
   const updateJsonExt = (projects, locations, filters) => {
-    let jsonData = {};
-    if (objectToSave?.jsonExt) {
-      jsonData = JSON.parse(objectToSave.jsonExt);
+    const parsed = objectToSave?.jsonExt ? parseJsonExt(objectToSave.jsonExt) : {};
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return;
     }
+    const jsonData = { ...parsed };
 
     const filterCriteria = {};
     if (projects && projects.length > 0) {
@@ -91,17 +136,18 @@ function FilterDialog({
       delete jsonData.filter_criteria;
     }
 
-    if (filters && filters.length > 0) {
-      jsonData.advanced_criteria = filters.map(({
-        filter, value, field, type,
-      }) => ({
-        custom_filter_condition: `${field}__${filter}__${type}=${value}`,
+    const conditions = (filters || []).map(customFilterConditionForRow).filter(Boolean);
+    if (conditions.length > 0) {
+      jsonData.advanced_criteria = conditions.map((customFilterCondition) => ({
+        custom_filter_condition: customFilterCondition,
       }));
     } else {
       delete jsonData.advanced_criteria;
     }
 
-    updateAttribute('jsonExt', JSON.stringify(jsonData));
+    const nextJsonExt = JSON.stringify(jsonData);
+    writtenJsonExt.current = nextJsonExt;
+    updateAttribute('jsonExt', nextJsonExt);
   };
 
   // Write jsonExt only on user changes: an effect on this state would race the
