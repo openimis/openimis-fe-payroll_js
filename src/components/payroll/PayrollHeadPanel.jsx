@@ -2,7 +2,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid, Divider, Typography } from '@mui/material';
+import { Grid, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -11,9 +11,9 @@ import {
   PublishedComponent,
   TextInput,
   withModulesManager,
-  FormattedMessage,
   GRID_RESPONSIVE_STANDARD,
 } from '@openimis/fe-core';
+import FilterDialog from './FilterDialog';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 import GenerationProgress from './GenerationProgress';
@@ -143,45 +143,19 @@ class PayrollHeadPanel extends FormPanel {
           </div>
         )}
         <Divider />
-        {!isPayrollFromFailedInvoices
-          && (
-            <>
-              <>
-                <Typography>
-                  <div className="item">
-                    <FormattedMessage module="contributionPlan" id="paymentPlan.advancedCriteria" />
-                  </div>
-                </Typography>
-                {!readOnly && (
-                  <div className="item">
-                    <FormattedMessage module="contributionPlan" id="paymentPlan.advancedCriteria.tip" />
-                  </div>
-                )}
-                <Divider />
-                <Grid container className="form">
-
-                  <AdvancedFiltersDialog
-                    object={payroll?.paymentPlan?.benefitPlan
-                      ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
-                      : null}
-                    objectToSave={payroll}
-                    moduleName="social_protection"
-                    objectType="BenefitPlan"
-                    setAppliedCustomFilters={this.setAppliedCustomFilters}
-                    appliedCustomFilters={appliedCustomFilters}
-                    appliedFiltersRowStructure={appliedFiltersRowStructure}
-                    setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
-                    updateAttributes={this.updateJsonExt}
-                    getDefaultAppliedCustomFilters={() => this.getDefaultAppliedCustomFilters(payroll.jsonExt)}
-                    readOnly={readOnly}
-                    edited={this.props.edited}
-                  />
-
-                </Grid>
-              </>
-              <Divider />
-            </>
-          )}
+        {!isPayrollFromFailedInvoices && (
+          <FilterDialog
+            object={payroll?.paymentPlan?.benefitPlan
+              ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
+              : null}
+            objectToSave={payroll}
+            moduleName="social_protection"
+            objectType="BenefitPlan"
+            updateAttribute={this.updateAttribute}
+            readOnly={readOnly}
+            benefitPlanId={effectiveBenefitPlanId}
+          />
+        )}
       </StyledPayrollHeadPanel>
     );
   }
