@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable camelcase */
 
+import { FormattedMessage } from '@openimis/fe-core';
 import {
   RIGHT_PAYMENT_POINT_CREATE,
   RIGHT_PAYMENT_POINT_SEARCH,
@@ -146,25 +147,25 @@ const DEFAULT_CONFIG = {
   'payroll.TabPanel.label': [BenefitConsumptionsTabLabel, PayrollTaskTabLabel, PayrollPaymentFilesTabLabel],
   'payroll.TabPanel.panel': [BenefitConsumptionsTabPanel, PayrollTaskTabPanel, PayrollPaymentFilesTabPanel],
   'tasksManagement.tasks': [{
-    text: "payroll.payroll.tasks.update.title",
+    text: <FormattedMessage module="payroll" id="tasks.update.title" />,
     tableHeaders: PayrollTaskTableHeaders,
     itemFormatters: PayrollTaskItemFormatters,
     taskSource: ['payroll'],
   },
   {
-    text: "payroll.payroll.tasks.reconciliation.title",
+    text: <FormattedMessage module="payroll" id="tasks.reconciliation.title" />,
     tableHeaders: PayrollReconciliationTaskTableHeaders,
     itemFormatters: PayrollReconciliationTaskItemFormatters,
     taskSource: ['payroll_reconciliation'],
   },
   {
-    text: "payroll.payroll.tasks.rejected.title",
+    text: <FormattedMessage module="payroll" id="tasks.rejected.title" />,
     tableHeaders: PayrollRejectedTaskTableHeaders,
     itemFormatters: PayrollRejectedTaskItemFormatters,
     taskSource: ['payroll_reject'],
   },
   {
-    text: "payroll.payroll.tasks.delete.title",
+    text: <FormattedMessage module="payroll" id="tasks.delete.title" />,
     tableHeaders: PayrollDeleteTaskTableHeaders,
     itemFormatters: PayrollDeleteTaskItemFormatters,
     taskSource: ['payroll_delete'],
