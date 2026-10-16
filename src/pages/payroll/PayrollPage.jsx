@@ -67,7 +67,6 @@ function PayrollPage({
   const [isInTask, setIsInTask] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [isPayrollFromFailedInvoices, setIsPayrollFromFailedInvoices] = useState(false);
-  const [confirmedAction, setConfirmedAction] = useState(null);
   const prevSubmittingMutationRef = useRef();
 
   const back = () => history.goBack();
@@ -75,34 +74,6 @@ function PayrollPage({
   // Only a backend that explicitly reported unsynced triggers blocks creation;
   // a query that failed leaves it enabled and is surfaced separately.
   const triggersDown = systemStatus?.triggersSynced === false;
-
-  useEffect(() => {
-    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
-  }, [rights]);
-
-  useEffect(() => {
-    if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
-      setIsPayrollFromFailedInvoices(true);
-    }
-  }, [createPayrollFromFailedInvoices, payrollUuid]);
-
-  useEffect(() => {
-    setPayrollUuid(statePayrollUuid ?? taskPayrollUuid);
-    setIsInTask(!!taskPayrollUuid);
-  }, [taskPayrollUuid, statePayrollUuid]);
-
-  useEffect(() => {
-    if (payrollUuid) {
-      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
-    }
-  }, [payrollUuid]);
-
-  useEffect(() => {
-    // Was `typeof confirmed === 'function'`, which tests the flag rather than the action:
-    // never true, so deleting a payroll did nothing at all.
-    if (confirmed && typeof confirmedAction === "function") confirmedAction();
-    return () => confirmed && clearConfirm(null);
-  }, [confirmed]);
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
