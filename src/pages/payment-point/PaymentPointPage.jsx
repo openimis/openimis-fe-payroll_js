@@ -55,7 +55,7 @@ function PaymentPointPage({
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
 
   const [editedPaymentPoint, setEditedPaymentPoint] = useState({});
-  const [confirmedAction, setConfirmedAction] = useState(() => null);
+  const [confirmedAction, setConfirmedAction] = useState(null);
   const prevSubmittingMutationRef = useRef();
   const pageLocked = editedPaymentPoint?.isDeleted;
 
@@ -68,7 +68,9 @@ function PaymentPointPage({
   }, [paymentPointUuid]);
 
   useEffect(() => {
-    if (confirmed) confirmedAction();
+    // `confirmed` is not reset once a dialog has been answered, so this effect also runs
+    // on mount with a stale `true` - and until something sets it, confirmedAction is null.
+    if (confirmed && typeof confirmedAction === "function") confirmedAction();
     return () => confirmed && clearConfirm(null);
   }, [confirmed]);
 

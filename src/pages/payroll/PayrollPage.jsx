@@ -67,7 +67,7 @@ function PayrollPage({
   const [isInTask, setIsInTask] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [isPayrollFromFailedInvoices, setIsPayrollFromFailedInvoices] = useState(false);
-  const [confirmedAction, setConfirmedAction] = useState(() => null);
+  const [confirmedAction, setConfirmedAction] = useState(null);
   const prevSubmittingMutationRef = useRef();
 
   const back = () => history.goBack();
@@ -98,7 +98,9 @@ function PayrollPage({
   }, [payrollUuid]);
 
   useEffect(() => {
-    if (confirmed && typeof confirmed === 'function') confirmedAction();
+    // Was `typeof confirmed === 'function'`, which tests the flag rather than the action:
+    // never true, so deleting a payroll did nothing at all.
+    if (confirmed && typeof confirmedAction === "function") confirmedAction();
     return () => confirmed && clearConfirm(null);
   }, [confirmed]);
 
