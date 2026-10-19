@@ -149,7 +149,6 @@ function PaymentPointPage({
             readOnly={pageLocked}
             rights={rights}
             actions={actions}
-            setConfirmedAction={setConfirmedAction}
             saveTooltip={formatMessage('tooltip.save')}
           />
         </div>

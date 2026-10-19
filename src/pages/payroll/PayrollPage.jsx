@@ -180,7 +180,6 @@ function PayrollPage({
         Panels={[PayrollTab]}
         rights={rights}
         actions={actions}
-        setConfirmedAction={setConfirmedAction}
         payrollUuid={payrollUuid}
         saveTooltip={formatMessage('tooltip.save')}
         isInTask={!!taskPayrollUuid}
