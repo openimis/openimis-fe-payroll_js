@@ -11,7 +11,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -41,7 +40,6 @@ function PayrollPage({
   statePayrollUuid,
   taskPayrollUuid,
   rights,
-  confirmed,
   submittingMutation,
   mutationInFlight,
   mutation,
@@ -53,7 +51,6 @@ function PayrollPage({
   retriggerPayroll,
   fetchPayrollSystemStatus,
   clearPayroll,
-  clearConfirm,
   createPayrollFromFailedInvoices,
   journalize,
   benefitPlanId,
@@ -200,7 +197,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrollSystemStatus,
   clearPayroll,
   coreConfirm,
-  clearConfirm,
   journalize,
 }, dispatch);
 
@@ -209,7 +205,6 @@ const mapStateToProps = (state, props) => ({
   createPayrollFromFailedInvoices: props?.match?.params?.createPayrollFromFailedInvoices,
   benefitPlanId: props?.match?.params?.benefitPlanId,
   rights: state.core?.user?.i_user?.rights ?? [],
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
