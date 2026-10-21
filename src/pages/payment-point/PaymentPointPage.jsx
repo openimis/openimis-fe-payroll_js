@@ -10,7 +10,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -43,12 +42,10 @@ function PaymentPointPage({
   paymentPointUuid,
   fetchPaymentPoint,
   rights,
-  confirmed,
   submittingMutation,
   mutation,
   paymentPoint,
   coreConfirm,
-  clearConfirm,
 }) {
   const modulesManager = useModulesManager();
   const history = useHistory();
@@ -165,14 +162,12 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePaymentPoint,
   fetchPaymentPoint,
   coreConfirm,
-  clearConfirm,
   journalize,
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
   paymentPointUuid: props.match.params.payment_point_uuid,
   rights: state.core?.user?.i_user?.rights ?? [],
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
   paymentPoint: state.payroll.paymentPoint,

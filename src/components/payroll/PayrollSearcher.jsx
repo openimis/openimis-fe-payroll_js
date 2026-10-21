@@ -10,7 +10,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -45,8 +44,6 @@ function PayrollSearcher({
   fetchPayrollSystemStatus,
   systemStatus,
   coreConfirm,
-  clearConfirm,
-  confirmed,
   submittingMutation,
   mutationInFlight,
   mutation,
@@ -56,7 +53,6 @@ function PayrollSearcher({
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
-  const [payrollToDelete, setPayrollToDelete] = useState(null);
   const [deletedPayrollUuids, setDeletedPayrollUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
   const lastFetchParamsRef = useRef(null);
@@ -67,31 +63,20 @@ function PayrollSearcher({
     fetchPayrollSystemStatus();
   }, []);
 
-  const openDeletePayrollConfirmDialog = () => {
-    coreConfirm(
-      formatMessageWithValues('payroll.delete.confirm.title', pageTitle(payrollToDelete)),
-      formatMessage('payroll.delete.confirm.message'),
-    );
-  };
-
-  useEffect(() => {
-    if (payrollToDelete) {
-      openDeletePayrollConfirmDialog();
-    }
-  }, [payrollToDelete]);
-
-  useEffect(() => {
-    if (payrollToDelete && confirmed) {
-      deletePayrolls(
-        payrollToDelete,
-        formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payrollToDelete)),
-      );
-      setDeletedPayrollUuids([...deletedPayrollUuids, payrollToDelete.id]);
-    }
-    if (payrollToDelete && confirmed !== null) {
-      setPayrollToDelete(null);
-    }
-  }, [confirmed]);
+  // state.core.confirmed deleted the row on any other dialog's "Yes" (OP-3211).
+  const onDelete = (payroll) => coreConfirm(
+    formatMessageWithValues('payroll.delete.confirm.title', pageTitle(payroll)),
+    formatMessage('payroll.delete.confirm.message'),
+    {
+      onConfirm: () => {
+        deletePayrolls(
+          payroll,
+          formatMessageWithValues('payroll.mutation.deleteLabel', mutationLabel(payroll)),
+        );
+        setDeletedPayrollUuids((uuids) => [...uuids, payroll.id]);
+      },
+    },
+  );
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
@@ -142,8 +127,6 @@ function PayrollSearcher({
   const openPayroll = (payroll) => rights.includes(RIGHT_PAYROLL_SEARCH) && history.push(
     `/${modulesManager.getRef(PAYROLL_PAYROLL_ROUTE)}/${payroll?.id}`,
   );
-
-  const onDelete = (payroll) => setPayrollToDelete(payroll);
 
   const onRetrigger = (payroll) => {
     retriggerPayroll(
@@ -245,7 +228,6 @@ const mapStateToProps = (state) => ({
   payrolls: state.payroll.payrolls,
   pageInfo: state.payroll.payrollsPageInfo,
   totalCount: state.payroll.payrollsTotalCount,
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,
@@ -258,7 +240,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   retriggerPayroll,
   fetchPayrollSystemStatus,
   journalize,
-  clearConfirm,
   coreConfirm,
 }, dispatch);
 

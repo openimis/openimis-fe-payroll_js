@@ -8,7 +8,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
 } from '@openimis/fe-core';
 import PayrollFilter from './PayrollFilter';
@@ -144,7 +143,6 @@ const mapStateToProps = (state) => ({
   payrolls: state.payroll.payrolls,
   pageInfo: state.payroll.payrollsPageInfo,
   totalCount: state.payroll.payrollsTotalCount,
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
 });
@@ -152,7 +150,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrolls,
   journalize,
-  clearConfirm,
   coreConfirm,
 }, dispatch);
 
