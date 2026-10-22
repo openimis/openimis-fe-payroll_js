@@ -73,6 +73,27 @@ function PayrollPage({
   const triggersDown = systemStatus?.triggersSynced === false;
 
   useEffect(() => {
+    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
+  }, [rights, fetchPayrollSystemStatus]);
+
+  useEffect(() => {
+    if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
+      setIsPayrollFromFailedInvoices(true);
+    }
+  }, [createPayrollFromFailedInvoices, payrollUuid]);
+
+  useEffect(() => {
+    setPayrollUuid(statePayrollUuid ?? taskPayrollUuid);
+    setIsInTask(!!taskPayrollUuid);
+  }, [taskPayrollUuid, statePayrollUuid]);
+
+  useEffect(() => {
+    if (payrollUuid) {
+      fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
+    }
+  }, [payrollUuid, fetchPayroll, modulesManager]);
+
+  useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
       journalize(mutation);
       if (mutation?.actionType === ACTION_TYPE.RETRIGGER_PAYROLL) {
