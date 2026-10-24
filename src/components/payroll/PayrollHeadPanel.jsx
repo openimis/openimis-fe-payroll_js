@@ -17,7 +17,7 @@ import FilterDialog from './FilterDialog';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 import GenerationProgress from './GenerationProgress';
-import { PAYROLL_STATUS } from '../../constants';
+import { PAYMENT_PLAN_TYPE_BENEFIT_PLAN, PAYROLL_STATUS } from '../../constants';
 
 const StyledPayrollHeadPanel = styled('div')(({ theme }) => ({
   '& .tableTitle': theme.table?.title ?? {},
@@ -40,13 +40,12 @@ class PayrollHeadPanel extends FormPanel {
     } = this.props;
     const payroll = { ...edited };
 
-    let effectiveBenefitPlanId = benefitPlanId;
-    if (!effectiveBenefitPlanId && payroll?.paymentPlan?.benefitPlan) {
-      const benefitPlan = JSON.parse(payroll.paymentPlan.benefitPlan);
-      if (benefitPlan) {
-        effectiveBenefitPlanId = JSON.parse(benefitPlan)?.id;
-      }
-    }
+    // the payment plan carries its benefit plan as a JSON string, itself JSON-encoded
+    const encodedBenefitPlan = payroll?.paymentPlan?.benefitPlan
+      ? JSON.parse(payroll.paymentPlan.benefitPlan)
+      : null;
+    const paymentPlanBenefitPlan = encodedBenefitPlan ? JSON.parse(encodedBenefitPlan) : null;
+    const effectiveBenefitPlanId = benefitPlanId || paymentPlanBenefitPlan?.id;
     return (
       <StyledPayrollHeadPanel>
         <Grid container className="form">
@@ -69,8 +68,19 @@ class PayrollHeadPanel extends FormPanel {
               value={payroll?.paymentPlan}
               readOnly={readOnly}
               benefitPlanId={effectiveBenefitPlanId}
+              benefitPlanType={PAYMENT_PLAN_TYPE_BENEFIT_PLAN}
             />
           </Grid>
+          {paymentPlanBenefitPlan && (
+            <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
+              <TextInput
+                module="payroll"
+                label="payroll.benefitPlan"
+                value={`${paymentPlanBenefitPlan.code} - ${paymentPlanBenefitPlan.name}`}
+                readOnly
+              />
+            </Grid>
+          )}
           <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
             <PublishedComponent
               pubRef="payroll.PaymentPointPicker"
