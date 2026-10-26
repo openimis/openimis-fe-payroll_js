@@ -17,9 +17,13 @@ vi.mock('@openimis/fe-core', async () => {
     FormPanel,
     formatMessage: (intl, module, id) => `${module}.${id}`,
     GRID_RESPONSIVE_STANDARD: 4,
-    PublishedComponent: ({ pubRef, benefitPlanType }) => ReactActual.createElement('div', {
+    PublishedComponent: ({
+      pubRef, benefitPlanType, entityType, entityId,
+    }) => ReactActual.createElement('div', {
       'data-testid': pubRef,
       'data-benefit-plan-type': benefitPlanType ?? '',
+      'data-entity-type': entityType ?? '',
+      'data-entity-id': entityId ?? '',
     }),
     TextInput: ({ label, value, readOnly }) => ReactActual.createElement('input', {
       'aria-label': label,
@@ -66,5 +70,14 @@ describe('PayrollHeadPanel', () => {
     renderWithProviders(<PayrollHeadPanel edited={{}} />);
 
     expect(screen.queryByLabelText('payroll.benefitPlan')).toBeNull();
+  });
+
+  // OP-3279: a payroll with a pending task cannot be updated until the task is resolved.
+  it('shows the pending tasks of the payroll', () => {
+    renderWithProviders(<PayrollHeadPanel edited={{ id: 'payroll-uuid' }} />);
+
+    const count = screen.getByTestId('tasksManagement.PendingTaskCount');
+    expect(count.dataset.entityType).toBe('payroll.payroll');
+    expect(count.dataset.entityId).toBe('payroll-uuid');
   });
 });

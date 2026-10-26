@@ -49,6 +49,14 @@ class PayrollHeadPanel extends FormPanel {
     return (
       <StyledPayrollHeadPanel>
         <Grid container className="form">
+          {/* Nothing is shown without a pending task, nor without the tasks module. */}
+          <Grid size={12}>
+            <PublishedComponent
+              pubRef="tasksManagement.PendingTaskCount"
+              entityType="payroll.payroll"
+              entityId={payroll?.id}
+            />
+          </Grid>
           <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
             <TextInput
               module="payroll"
