@@ -153,7 +153,8 @@ function PayrollPage({
   const handleSave = () => {
     createPayroll(
       editedPayroll,
-      formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
+      // From the form being saved: on create the loaded payroll is still empty.
+      formatMessageWithValues('payroll.mutation.create', pageTitle(editedPayroll)),
     );
     if (benefitPlanId) {
       back();

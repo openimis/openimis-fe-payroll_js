@@ -26,7 +26,7 @@
   "payroll.payroll.customFilter": "Custom Filter",
   "payroll.payroll.paymentStrategy": "Payment Strategy",
   "payroll.payrollSearcher.results": "{totalCount} Payrolls Found",
-  "payroll.payroll.mutation.create": "Create Payroll {id}",
+  "payroll.payroll.mutation.create": "Create Payroll {name}",
   "payroll.payroll.mutation.closeLabel": "Close Payroll {id}",
   "payroll.payroll.mutation.deleteLabel": "Request deletion of Payroll {id} (done once its task is approved)",
   "payroll.payroll.mutation.retriggerLabel": "Retry Payroll {id}",
