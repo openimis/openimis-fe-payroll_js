@@ -1,18 +1,27 @@
 /* eslint-disable import/no-extraneous-dependencies -- Vitest runs from the frontend assembly */
-import React from 'react';
+import React, { act } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { makeStore, renderWithProviders } from '@openimis/fe-core/testing';
-import { fetchPayrollSystemStatus } from '../../actions';
+import { createPayroll, fetchPayrollSystemStatus } from '../../actions';
 import { RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH } from '../../constants';
 import PayrollPage from './PayrollPage';
+
+// The props the page last gave its Form, to drive edits and the save from a test.
+const form = vi.hoisted(() => ({ props: null }));
 
 // The fe-core barrel cannot be loaded from a test (see FilterDialog.test.jsx): stub only the
 // exports this page reaches.
 vi.mock('@openimis/fe-core', () => ({
-  Form: () => null,
+  Form: (props) => {
+    form.props = props;
+    return null;
+  },
   useHistory: () => ({ goBack: () => {} }),
   useModulesManager: () => ({}),
-  useTranslations: () => ({ formatMessage: (id) => id, formatMessageWithValues: (id) => id }),
+  useTranslations: () => ({
+    formatMessage: (id) => id,
+    formatMessageWithValues: (id, values) => `${id} ${JSON.stringify(values ?? {})}`,
+  }),
   coreConfirm: () => ({ type: 'TEST_CONFIRM' }),
   journalize: () => ({ type: 'TEST_JOURNALIZE' }),
   GetIconComponent: () => () => null,
@@ -20,7 +29,7 @@ vi.mock('@openimis/fe-core', () => ({
 vi.mock('../../actions', () => ({
   fetchPayroll: () => ({ type: 'TEST_FETCH_PAYROLL' }),
   clearPayroll: () => ({ type: 'TEST_CLEAR_PAYROLL' }),
-  createPayroll: () => ({ type: 'TEST_CREATE_PAYROLL' }),
+  createPayroll: vi.fn(() => ({ type: 'TEST_CREATE_PAYROLL' })),
   retriggerPayroll: () => ({ type: 'TEST_RETRIGGER_PAYROLL' }),
   fetchPayrollSystemStatus: vi.fn(() => ({ type: 'TEST_FETCH_SYSTEM_STATUS' })),
 }));
@@ -48,5 +57,19 @@ describe('PayrollPage', () => {
     renderPage([RIGHT_PAYROLL_SEARCH]);
 
     expect(fetchPayrollSystemStatus).toHaveBeenCalled();
+  });
+
+  // OP-3278: on create the loaded payroll is still empty, so a label built from it named
+  // nothing ("Create Payroll "). The journal entry must name the payroll being saved.
+  it('names the payroll being created in the mutation label', () => {
+    renderPage([RIGHT_PAYROLL_CREATE]);
+
+    act(() => form.props.onEditedChanged({ name: 'UAT Payroll X' }));
+    act(() => form.props.save());
+
+    expect(createPayroll).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'UAT Payroll X' }),
+      expect.stringContaining('UAT Payroll X'),
+    );
   });
 });
