@@ -23,7 +23,7 @@ import {
 } from '../../actions';
 import {
   MODULE_NAME, PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
-  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH,
+  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
@@ -72,9 +72,11 @@ function PayrollPage({
   // a query that failed leaves it enabled and is surfaced separately.
   const triggersDown = systemStatus?.triggersSynced === false;
 
+  // Creation needs the status too: a user who may create but not search payrolls
+  // would otherwise create while the triggers are not synced (OP-3268).
   useEffect(() => {
-    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
-  }, [rights, fetchPayrollSystemStatus]);
+    fetchPayrollSystemStatus();
+  }, [fetchPayrollSystemStatus]);
 
   useEffect(() => {
     if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
