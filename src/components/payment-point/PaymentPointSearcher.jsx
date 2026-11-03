@@ -10,7 +10,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -31,10 +30,8 @@ function PaymentPointSearcher({
   deletePaymentPoint,
   paymentPoints,
   coreConfirm,
-  clearConfirm,
   pageInfo,
   totalCount,
-  confirmed,
   submittingMutation,
   mutation,
 }) {
@@ -43,35 +40,23 @@ function PaymentPointSearcher({
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
   const rights = useSelector((store) => store.core.user.i_user.rights ?? []);
 
-  const [paymentPointToDelete, setPaymentPointToDelete] = useState(null);
   const [deletedPaymentPointUuids, setDeletedPaymentPointUuids] = useState([]);
   const prevSubmittingMutationRef = useRef();
 
-  const openDeletePaymentPointConfirmDialog = () => {
-    coreConfirm(
-      formatMessageWithValues('paymentPoint.delete.confirm.title', pageTitle(paymentPointToDelete)),
-      formatMessage('paymentPoint.delete.confirm.message'),
-    );
-  };
-
-  useEffect(() => {
-    if (paymentPointToDelete) {
-      openDeletePaymentPointConfirmDialog();
-    }
-  }, [paymentPointToDelete]);
-
-  useEffect(() => {
-    if (paymentPointToDelete && confirmed) {
-      deletePaymentPoint(
-        paymentPointToDelete,
-        formatMessageWithValues('paymentPoint.mutation.deleteLabel', mutationLabel(paymentPointToDelete)),
-      );
-      setDeletedPaymentPointUuids([...deletedPaymentPointUuids, paymentPointToDelete.id]);
-    }
-    if (paymentPointToDelete && confirmed !== null) {
-      setPaymentPointToDelete(null);
-    }
-  }, [confirmed]);
+  // state.core.confirmed deleted the row on any other dialog's "Yes" (OP-3211).
+  const onDelete = (paymentPoint) => coreConfirm(
+    formatMessageWithValues('paymentPoint.delete.confirm.title', pageTitle(paymentPoint)),
+    formatMessage('paymentPoint.delete.confirm.message'),
+    {
+      onConfirm: () => {
+        deletePaymentPoint(
+          paymentPoint,
+          formatMessageWithValues('paymentPoint.mutation.deleteLabel', mutationLabel(paymentPoint)),
+        );
+        setDeletedPaymentPointUuids((uuids) => [...uuids, paymentPoint.id]);
+      },
+    },
+  );
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
@@ -103,8 +88,6 @@ function PaymentPointSearcher({
   const openPaymentPoint = (paymentPoint) => rights.includes(RIGHT_PAYMENT_POINT_SEARCH) && history.push(
     `/${modulesManager.getRef(PAYROLL_PAYMENT_POINT_ROUTE)}/${paymentPoint?.id}`,
   );
-
-  const onDelete = (paymentPoint) => setPaymentPointToDelete(paymentPoint);
 
   const itemFormatters = () => [
     (paymentPoint) => paymentPoint.name,
@@ -178,7 +161,6 @@ const mapStateToProps = (state) => ({
   paymentPoints: state.payroll.paymentPoints,
   pageInfo: state.payroll.paymentPointsPageInfo,
   totalCount: state.payroll.paymentPointsTotalCount,
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
 });
@@ -187,7 +169,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPaymentPoints,
   deletePaymentPoint,
   journalize,
-  clearConfirm,
   coreConfirm,
 }, dispatch);
 

@@ -273,7 +273,6 @@ function PaymentApproveForPaymentDialog({
 
 const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
-  confirmed: state.core.confirmed,
   payroll: state.payroll.payroll,
 });
 

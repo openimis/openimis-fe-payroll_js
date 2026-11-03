@@ -10,7 +10,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -43,19 +42,16 @@ function PaymentPointPage({
   paymentPointUuid,
   fetchPaymentPoint,
   rights,
-  confirmed,
   submittingMutation,
   mutation,
   paymentPoint,
   coreConfirm,
-  clearConfirm,
 }) {
   const modulesManager = useModulesManager();
   const history = useHistory();
   const { formatMessage, formatMessageWithValues } = useTranslations(MODULE_NAME, modulesManager);
 
   const [editedPaymentPoint, setEditedPaymentPoint] = useState({});
-  const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
   const pageLocked = editedPaymentPoint?.isDeleted;
 
@@ -66,11 +62,6 @@ function PaymentPointPage({
       fetchPaymentPoint(modulesManager, [`id: "${paymentPointUuid}"`]);
     }
   }, [paymentPointUuid]);
-
-  useEffect(() => {
-    if (confirmed) confirmedAction();
-    return () => confirmed && clearConfirm(null);
-  }, [confirmed]);
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
@@ -121,10 +112,10 @@ function PaymentPointPage({
   );
 
   const openDeletePaymentPointConfirmDialog = () => {
-    setConfirmedAction(() => deletePaymentPointCallback);
     coreConfirm(
       formatMessageWithValues('paymentPoint.delete.confirm.title', pageTitle(paymentPoint)),
       formatMessage('paymentPoint.delete.confirm.message'),
+      { onConfirm: deletePaymentPointCallback },
     );
   };
 
@@ -155,7 +146,6 @@ function PaymentPointPage({
             readOnly={pageLocked}
             rights={rights}
             actions={actions}
-            setConfirmedAction={setConfirmedAction}
             saveTooltip={formatMessage('tooltip.save')}
           />
         </div>
@@ -172,14 +162,12 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   updatePaymentPoint,
   fetchPaymentPoint,
   coreConfirm,
-  clearConfirm,
   journalize,
 }, dispatch);
 
 const mapStateToProps = (state, props) => ({
   paymentPointUuid: props.match.params.payment_point_uuid,
   rights: state.core?.user?.i_user?.rights ?? [],
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutation: state.payroll.mutation,
   paymentPoint: state.payroll.paymentPoint,

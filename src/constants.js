@@ -50,6 +50,8 @@ export const CLEARED_STATE_FILTER = {
   field: '', filter: '', type: '', value: '',
 };
 export const BENEFIT_PLAN = 'BenefitPlan';
+// contribution plan's benefitPlanType_Model of a payment plan linked to a programme
+export const PAYMENT_PLAN_TYPE_BENEFIT_PLAN = 'benefitplan';
 export const INTEGER = 'integer';
 export const STRING = 'string';
 export const BOOLEAN = 'boolean';

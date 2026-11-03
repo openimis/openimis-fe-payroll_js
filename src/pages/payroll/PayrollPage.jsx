@@ -11,7 +11,6 @@ import {
   useModulesManager,
   useTranslations,
   coreConfirm,
-  clearConfirm,
   journalize,
   GetIconComponent,
 } from '@openimis/fe-core';
@@ -24,7 +23,7 @@ import {
 } from '../../actions';
 import {
   MODULE_NAME, PAYROLL_FROM_FAILED_INVOICES_URL_PARAM,
-  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE, RIGHT_PAYROLL_SEARCH,
+  PAYROLL_STATUS, RIGHT_PAYROLL_CREATE,
 } from '../../constants';
 import { ACTION_TYPE } from '../../reducer';
 import { mutationLabel, pageTitle } from '../../utils/string-utils';
@@ -41,7 +40,6 @@ function PayrollPage({
   statePayrollUuid,
   taskPayrollUuid,
   rights,
-  confirmed,
   submittingMutation,
   mutationInFlight,
   mutation,
@@ -53,7 +51,6 @@ function PayrollPage({
   retriggerPayroll,
   fetchPayrollSystemStatus,
   clearPayroll,
-  clearConfirm,
   createPayrollFromFailedInvoices,
   journalize,
   benefitPlanId,
@@ -67,7 +64,6 @@ function PayrollPage({
   const [isInTask, setIsInTask] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [isPayrollFromFailedInvoices, setIsPayrollFromFailedInvoices] = useState(false);
-  const [confirmedAction, setConfirmedAction] = useState(() => null);
   const prevSubmittingMutationRef = useRef();
 
   const back = () => history.goBack();
@@ -76,9 +72,11 @@ function PayrollPage({
   // a query that failed leaves it enabled and is surfaced separately.
   const triggersDown = systemStatus?.triggersSynced === false;
 
+  // Creation needs the status too: a user who may create but not search payrolls
+  // would otherwise create while the triggers are not synced (OP-3268).
   useEffect(() => {
-    if (rights.includes(RIGHT_PAYROLL_SEARCH)) fetchPayrollSystemStatus();
-  }, [rights]);
+    fetchPayrollSystemStatus();
+  }, [fetchPayrollSystemStatus]);
 
   useEffect(() => {
     if (createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM) {
@@ -95,12 +93,7 @@ function PayrollPage({
     if (payrollUuid) {
       fetchPayroll(modulesManager, [`id: "${payrollUuid}"`]);
     }
-  }, [payrollUuid]);
-
-  useEffect(() => {
-    if (confirmed && typeof confirmed === 'function') confirmedAction();
-    return () => confirmed && clearConfirm(null);
-  }, [confirmed]);
+  }, [payrollUuid, fetchPayroll, modulesManager]);
 
   useEffect(() => {
     if (prevSubmittingMutationRef.current && !submittingMutation) {
@@ -160,7 +153,8 @@ function PayrollPage({
   const handleSave = () => {
     createPayroll(
       editedPayroll,
-      formatMessageWithValues('payroll.mutation.create', mutationLabel(payroll)),
+      // From the form being saved: on create the loaded payroll is still empty.
+      formatMessageWithValues('payroll.mutation.create', pageTitle(editedPayroll)),
     );
     if (benefitPlanId) {
       back();
@@ -207,7 +201,6 @@ function PayrollPage({
         Panels={[PayrollTab]}
         rights={rights}
         actions={actions}
-        setConfirmedAction={setConfirmedAction}
         payrollUuid={payrollUuid}
         saveTooltip={formatMessage('tooltip.save')}
         isInTask={!!taskPayrollUuid}
@@ -228,7 +221,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchPayrollSystemStatus,
   clearPayroll,
   coreConfirm,
-  clearConfirm,
   journalize,
 }, dispatch);
 
@@ -237,7 +229,6 @@ const mapStateToProps = (state, props) => ({
   createPayrollFromFailedInvoices: props?.match?.params?.createPayrollFromFailedInvoices,
   benefitPlanId: props?.match?.params?.benefitPlanId,
   rights: state.core?.user?.i_user?.rights ?? [],
-  confirmed: state.core.confirmed,
   submittingMutation: state.payroll.submittingMutation,
   mutationInFlight: state.payroll.mutationInFlight,
   mutation: state.payroll.mutation,

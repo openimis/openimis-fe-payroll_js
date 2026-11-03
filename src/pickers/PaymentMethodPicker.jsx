@@ -53,7 +53,6 @@ function PaymentMethodPicker({
 
 const mapStateToProps = (state) => ({
   rights: !!state.core && !!state.core.user && !!state.core.user.i_user ? state.core.user.i_user.rights : [],
-  confirmed: state.core.confirmed,
   fetchingPaymentMethods: state.payroll.fetchingPaymentMethods,
   errorPaymentMethods: state.payroll.errorPaymentMethods,
   fetchedPaymentMethods: state.payroll.fetchedPaymentMethods,

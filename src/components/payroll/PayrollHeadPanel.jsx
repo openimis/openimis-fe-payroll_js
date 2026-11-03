@@ -2,7 +2,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Grid, Divider, Typography } from '@mui/material';
+import { Grid, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -11,13 +11,13 @@ import {
   PublishedComponent,
   TextInput,
   withModulesManager,
-  FormattedMessage,
   GRID_RESPONSIVE_STANDARD,
 } from '@openimis/fe-core';
+import FilterDialog from './FilterDialog';
 import PayrollStatusPicker from './PayrollStatusPicker';
 import PaymentMethodPicker from '../../pickers/PaymentMethodPicker';
 import GenerationProgress from './GenerationProgress';
-import { PAYROLL_STATUS } from '../../constants';
+import { PAYMENT_PLAN_TYPE_BENEFIT_PLAN, PAYROLL_STATUS } from '../../constants';
 
 const StyledPayrollHeadPanel = styled('div')(({ theme }) => ({
   '& .tableTitle': theme.table?.title ?? {},
@@ -40,16 +40,23 @@ class PayrollHeadPanel extends FormPanel {
     } = this.props;
     const payroll = { ...edited };
 
-    let effectiveBenefitPlanId = benefitPlanId;
-    if (!effectiveBenefitPlanId && payroll?.paymentPlan?.benefitPlan) {
-      const benefitPlan = JSON.parse(payroll.paymentPlan.benefitPlan);
-      if (benefitPlan) {
-        effectiveBenefitPlanId = JSON.parse(benefitPlan)?.id;
-      }
-    }
+    // the payment plan carries its benefit plan as a JSON string, itself JSON-encoded
+    const encodedBenefitPlan = payroll?.paymentPlan?.benefitPlan
+      ? JSON.parse(payroll.paymentPlan.benefitPlan)
+      : null;
+    const paymentPlanBenefitPlan = encodedBenefitPlan ? JSON.parse(encodedBenefitPlan) : null;
+    const effectiveBenefitPlanId = benefitPlanId || paymentPlanBenefitPlan?.id;
     return (
       <StyledPayrollHeadPanel>
         <Grid container className="form">
+          {/* Nothing is shown without a pending task, nor without the tasks module. */}
+          <Grid size={12}>
+            <PublishedComponent
+              pubRef="tasksManagement.PendingTaskCount"
+              entityType="payroll.payroll"
+              entityId={payroll?.id}
+            />
+          </Grid>
           <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
             <TextInput
               module="payroll"
@@ -69,8 +76,19 @@ class PayrollHeadPanel extends FormPanel {
               value={payroll?.paymentPlan}
               readOnly={readOnly}
               benefitPlanId={effectiveBenefitPlanId}
+              benefitPlanType={PAYMENT_PLAN_TYPE_BENEFIT_PLAN}
             />
           </Grid>
+          {paymentPlanBenefitPlan && (
+            <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
+              <TextInput
+                module="payroll"
+                label="payroll.benefitPlan"
+                value={`${paymentPlanBenefitPlan.code} - ${paymentPlanBenefitPlan.name}`}
+                readOnly
+              />
+            </Grid>
+          )}
           <Grid size={GRID_RESPONSIVE_STANDARD} className="item">
             <PublishedComponent
               pubRef="payroll.PaymentPointPicker"
@@ -143,45 +161,19 @@ class PayrollHeadPanel extends FormPanel {
           </div>
         )}
         <Divider />
-        {!isPayrollFromFailedInvoices
-          && (
-            <>
-              <>
-                <Typography>
-                  <div className="item">
-                    <FormattedMessage module="contributionPlan" id="paymentPlan.advancedCriteria" />
-                  </div>
-                </Typography>
-                {!readOnly && (
-                  <div className="item">
-                    <FormattedMessage module="contributionPlan" id="paymentPlan.advancedCriteria.tip" />
-                  </div>
-                )}
-                <Divider />
-                <Grid container className="form">
-
-                  <AdvancedFiltersDialog
-                    object={payroll?.paymentPlan?.benefitPlan
-                      ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
-                      : null}
-                    objectToSave={payroll}
-                    moduleName="social_protection"
-                    objectType="BenefitPlan"
-                    setAppliedCustomFilters={this.setAppliedCustomFilters}
-                    appliedCustomFilters={appliedCustomFilters}
-                    appliedFiltersRowStructure={appliedFiltersRowStructure}
-                    setAppliedFiltersRowStructure={this.setAppliedFiltersRowStructure}
-                    updateAttributes={this.updateJsonExt}
-                    getDefaultAppliedCustomFilters={() => this.getDefaultAppliedCustomFilters(payroll.jsonExt)}
-                    readOnly={readOnly}
-                    edited={this.props.edited}
-                  />
-
-                </Grid>
-              </>
-              <Divider />
-            </>
-          )}
+        {!isPayrollFromFailedInvoices && (
+          <FilterDialog
+            object={payroll?.paymentPlan?.benefitPlan
+              ? JSON.parse(JSON.parse(payroll.paymentPlan.benefitPlan))
+              : null}
+            objectToSave={payroll}
+            moduleName="social_protection"
+            objectType="BenefitPlan"
+            updateAttribute={this.updateAttribute}
+            readOnly={readOnly}
+            benefitPlanId={effectiveBenefitPlanId}
+          />
+        )}
       </StyledPayrollHeadPanel>
     );
   }
