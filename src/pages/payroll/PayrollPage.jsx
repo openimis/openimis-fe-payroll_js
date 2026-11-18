@@ -127,7 +127,12 @@ function PayrollPage({
       } else {
         setEditedPayroll(payroll);
       }
-      if (!payrollUuid && payroll?.id && !isPayrollFromFailedInvoices) {
+      // Read from the route, not from the state copies: those are set by effects that run
+      // after this one on mount, when the store may still hold a payroll loaded elsewhere
+      // (the reconciliation summary dialog loads it before opening the failed invoices route).
+      const routePayrollUuid = statePayrollUuid ?? taskPayrollUuid;
+      const fromFailedInvoices = createPayrollFromFailedInvoices === PAYROLL_FROM_FAILED_INVOICES_URL_PARAM;
+      if (!routePayrollUuid && !fromFailedInvoices && payroll?.id && !isPayrollFromFailedInvoices) {
         const payrollRouteRef = modulesManager.getRef('payroll.route.payroll');
         history.replace(`/${payrollRouteRef}/${payroll.id}`);
       }
