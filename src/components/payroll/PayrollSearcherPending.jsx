@@ -19,6 +19,12 @@ import { fetchPayrolls } from '../../actions';
 import PayrollReconciliationFilesDialog from './dialogs/PayrollReconciliationFilesDialog';
 import PayrollPendingPayrollSummary from './dialogs/PayrollPendingPayrollSummary';
 
+// Declared once: a component type created on each render would make React remount the
+// filters, and their pickers would query the server again.
+function StatusReadOnlyPayrollFilter({ filters, onChangeFilters }) {
+  return <PayrollFilter filters={filters} onChangeFilters={onChangeFilters} statusReadOnly />;
+}
+
 function PayrollSearcherPending({
   fetchingPayrolls,
   fetchedPayrolls,
@@ -109,14 +115,10 @@ function PayrollSearcherPending({
 
   const onDoubleClick = (payroll) => openPayroll(payroll);
 
-  const payrollFilter = ({ filters, onChangeFilters }) => (
-    <PayrollFilter filters={filters} onChangeFilters={onChangeFilters} statusReadOnly />
-  );
-
   return (
     <Searcher
       module="payroll"
-      FilterPane={payrollFilter}
+      FilterPane={StatusReadOnlyPayrollFilter}
       fetch={fetch}
       items={payrolls}
       itemsPageInfo={pageInfo}
