@@ -131,15 +131,17 @@ function PaymentApproveForPaymentDialog({
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        PaperProps={{
-          style: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-            width: '75%',
-            maxWidth: '75%',
-          },
+        slotProps={{
+          paper: {
+            style: {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%,-50%)',
+              width: '75%',
+              maxWidth: '75%',
+            },
+          }
         }}
       >
         <DialogTitle

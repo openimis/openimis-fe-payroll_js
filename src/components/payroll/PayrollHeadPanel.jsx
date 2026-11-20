@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import React from 'react';
-import { injectIntl } from 'react-intl';
 
 import { Grid, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -12,6 +11,7 @@ import {
   TextInput,
   withModulesManager,
   GRID_RESPONSIVE_STANDARD,
+  injectIntl,
 } from '@openimis/fe-core';
 import FilterDialog from './FilterDialog';
 import PayrollStatusPicker from './PayrollStatusPicker';

@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { injectIntl } from 'react-intl';
 import {
   PublishedComponent,
   TextInput,
@@ -11,6 +10,7 @@ import {
   SelectInput,
   CustomFilterTypeStatusPicker,
   CustomFilterFieldStatusPicker,
+  injectIntl,
 } from '@openimis/fe-core';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
