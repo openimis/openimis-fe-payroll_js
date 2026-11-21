@@ -109,15 +109,17 @@ function PaymentReconcilationSummarytDialog({
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        PaperProps={{
-          style: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-            width: '90%',
-            maxWidth: '90%',
-          },
+        slotProps={{
+          paper: {
+            style: {
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%,-50%)',
+              width: '90%',
+              maxWidth: '90%',
+            },
+          }
         }}
       >
         <DialogTitle

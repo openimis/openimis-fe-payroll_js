@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
-import { injectIntl } from 'react-intl';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +9,7 @@ import {
   formatMessage,
   renderInputComponent,
   createFieldsBasedOnJSON,
+  injectIntl,
 } from '@openimis/fe-core';
 import { styled } from '@mui/material/styles';
 import { connect } from 'react-redux';
@@ -55,12 +55,14 @@ function AdditionalFieldsDialog({
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        PaperProps={{
-          style: {
-            width: 1200,
-            maxWidth: 1200,
-            maxHeight: 900,
-          },
+        slotProps={{
+          paper: {
+            style: {
+              width: 1200,
+              maxWidth: 1200,
+              maxHeight: 900,
+            },
+          }
         }}
       >
         <form noValidate>

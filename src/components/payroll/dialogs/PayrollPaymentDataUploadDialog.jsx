@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Input, Grid } from '@mui/material';
-import { injectIntl } from 'react-intl';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,6 +9,7 @@ import {
   apiHeaders,
   baseApiUrl,
   formatMessage,
+  injectIntl,
 } from '@openimis/fe-core';
 import { styled } from '@mui/material/styles';
 import { connect } from 'react-redux';
@@ -92,11 +92,13 @@ function PayrollPaymentDataUploadDialog({
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        PaperProps={{
-          style: {
-            width: 600,
-            maxWidth: 1000,
-          },
+        slotProps={{
+          paper: {
+            style: {
+              width: 600,
+              maxWidth: 1000,
+            },
+          }
         }}
       >
         <form noValidate>
