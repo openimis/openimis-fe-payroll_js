@@ -31,7 +31,7 @@ function PayrollPaymentFilesTabPanel({ value, payrollUuid, isInTask }) {
 
   return (
     <PublishedComponent
-      pubRef="policyHolder.TabPanel"
+      pubRef="core.TabPanel"
       module="payroll"
       index={PAYROLL_PAYMENT_FILES_TAB_VALUE}
       value={value}
