@@ -15,6 +15,7 @@ function PaymentMethodPicker({
   required = false,
   paymentMethods,
   fetchPaymentMethods,
+  fetchingPaymentMethods,
 }) {
   const fetch = () => {
     fetchPaymentMethods({});
@@ -47,6 +48,7 @@ function PaymentMethodPicker({
       onChange={onChange}
       readOnly={readOnly}
       required={required}
+      loading={fetchingPaymentMethods}
     />
   );
 }
