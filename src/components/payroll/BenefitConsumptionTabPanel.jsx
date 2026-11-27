@@ -27,7 +27,7 @@ function BenefitConsumptionsTabPanel({
 }) {
   return (
     <PublishedComponent
-      pubRef="policyHolder.TabPanel"
+      pubRef="core.TabPanel"
       module="payroll"
       index={BENEFIT_CONSUMPTION_LIST_TAB_VALUE}
       value={value}
