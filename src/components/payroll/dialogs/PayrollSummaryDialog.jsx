@@ -31,9 +31,9 @@ export function summarizePayroll(payroll) {
   benefits.forEach((benefit) => {
     (benefit.benefitAttachment ?? []).forEach((attachment) => {
       if (attachment.bill && attachment.bill.amountTotal) {
-        totalBillAmount += parseFloat(attachment.bill.amountTotal);
+        totalBillAmount += Number.parseFloat(attachment.bill.amountTotal);
         if (benefit.status === BENEFIT_CONSUMPTION_STATUS.RECONCILED) {
-          totalReconciledBillAmount += parseFloat(attachment.bill.amountTotal);
+          totalReconciledBillAmount += Number.parseFloat(attachment.bill.amountTotal);
         }
       }
     });
