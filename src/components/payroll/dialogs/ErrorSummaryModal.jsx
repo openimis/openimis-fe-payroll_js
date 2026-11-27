@@ -16,16 +16,22 @@ function ErrorSummaryModal({ open, onClose, benefitAttachment }) {
       open={open}
       onClose={onClose}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
+      slots={{
+        backdrop: Backdrop
+      }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+        }
       }}
     >
       <Fade in={open}>
         <Box
-          p={4}
           style={{
             backgroundColor: 'white', margin: 'auto', maxWidth: 400, outline: 'none',
+          }}
+          sx={{
+            p: 4
           }}
         >
           <Typography variant="h6">{formatMessage('payroll.errorSummary.title')}</Typography>
@@ -39,7 +45,12 @@ function ErrorSummaryModal({ open, onClose, benefitAttachment }) {
               {outputGateway}
             </Typography>
           )}
-          <Box display="flex" justifyContent="center" mt={2}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 2
+            }}>
             <Button onClick={onClose} variant="contained" color="primary">
               {formatMessage('payroll.errorSummary.close')}
             </Button>

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { injectIntl } from 'react-intl';
 import Button from '@mui/material/Button';
 import { Grid, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -9,6 +8,7 @@ import {
   fetchCustomFilter,
   PublishedComponent,
   GetIconComponent,
+  injectIntl,
 } from '@openimis/fe-core';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

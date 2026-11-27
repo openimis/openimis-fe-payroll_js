@@ -18,7 +18,7 @@ import PayrollPaymentDataUploadDialog from './dialogs/PayrollPaymentDataUploadDi
 import downloadPayroll from '../../utils/export';
 
 const StyledPayrollTab = styled(Paper)(({ theme }) => ({
-  ...theme.paper?.paper ?? {},
+  ...theme.paper?.paper,
   '& .tableTitle': theme.table?.title ?? {},
   '& .tabs': {
     display: 'flex',
