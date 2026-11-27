@@ -190,16 +190,14 @@ function PayrollSearcher({
 
   const onDoubleClick = (payroll) => openPayroll(payroll);
 
-  const payrollFilter = ({ filters, onChangeFilters }) => (
-    <PayrollFilter filters={filters} onChangeFilters={onChangeFilters} />
-  );
-
   const isRowDisabled = (_, payroll) => deletedPayrollUuids.includes(payroll.id);
 
   return (
     <Searcher
       module="payroll"
-      FilterPane={payrollFilter}
+      // A component type created here would differ on each render: React would remount the
+      // filters, and their pickers would query the server again.
+      FilterPane={PayrollFilter}
       fetch={fetch}
       items={payrolls}
       itemsPageInfo={pageInfo}

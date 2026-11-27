@@ -39,11 +39,13 @@ function PayrollReconciliationFilesDialog({
       <Dialog
         open={isOpen}
         onClose={handleClose}
-        PaperProps={{
-          style: {
-            width: 1000,
-            maxWidth: 1000,
-          },
+        slotProps={{
+          paper: {
+            style: {
+              width: 1000,
+              maxWidth: 1000,
+            },
+          }
         }}
       >
         <form noValidate>

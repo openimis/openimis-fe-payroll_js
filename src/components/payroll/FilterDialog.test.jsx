@@ -13,6 +13,7 @@ vi.mock('@openimis/fe-core', async () => {
   const passthrough = () => ReactActual.createElement('input', {});
 
   return {
+    injectIntl: (await import("@openimis/fe-core/testing")).injectIntl,
     decodeId: (id) => id,
     fetchCustomFilter: () => ({ type: 'TEST_FETCH_CUSTOM_FILTER' }),
     formatMessage: (intl, module, id) => {
